@@ -4,7 +4,7 @@ import 'package:flip/models/model.dart';
 import 'package:flutter/material.dart';
 
 class CardFlipper extends StatefulWidget {
-  final List<WordCard> cards;
+  final List<WordViewModel> cards;
   final Function(double scrollPercent) onScroll;
 
   const CardFlipper({
@@ -103,22 +103,22 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
 
   List<Widget> _buildCards() {
     int index = -1;
-    return widget.cards.map((WordCard wordCard) {
+    return widget.cards.map((WordViewModel wordViewModel) {
       index++;
-      return _buildCard(wordCard, index);
+      return _buildCard(wordViewModel, index);
     }).toList();
   }
 
-  Widget _buildCard(WordCard wordCard, int cardIndex) {
+  Widget _buildCard(WordViewModel wordViewModel, int cardIndex) {
     final numOfCards = widget.cards.length;
     final cardScrollPercent = scrollPercent / (1 / numOfCards);
 
     return FractionalTranslation(
       translation: Offset(cardIndex - cardScrollPercent, 0.0),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: WordCardWidget(
-          word: wordCard.word
+          viewModel: wordViewModel
         ),
       ),
     );
@@ -126,11 +126,11 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
 }
 
 class WordCardWidget extends StatelessWidget {
-  final String word;
+  final WordViewModel viewModel;
 
   const WordCardWidget({
     Key key,
-    @required this.word
+    @required this.viewModel
   }) : super(key: key);
 
   @override
@@ -142,7 +142,7 @@ class WordCardWidget extends StatelessWidget {
         height: 200.0,
         alignment: Alignment.center,
         child: Text(
-          word,
+          viewModel.word,
           style: TextStyle(
               fontSize: 25.0,
               letterSpacing: 2

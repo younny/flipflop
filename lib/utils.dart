@@ -1,6 +1,6 @@
 import 'package:flip/models/model.dart';
 
-List<WordCard> applyFilter(String filter, List<WordCard> cards) {
+List<WordViewModel> applyFilter(String filter, List<WordViewModel> cards) {
 
   if(filter != 'all') {
     return cards.where((card) => card.category == filter).toList();

@@ -22,17 +22,17 @@ class FlipApi {
     return categories;
   }
 
-  Future<List<WordCard>> getCards({
+  Future<List<WordViewModel>> getCards({
     String category = "celabrity",
     String filterBy = "popular"
   }) async {
-    List<WordCard> cards = [];
+    List<WordViewModel> cards = [];
 
     await _client.get(Uri.parse(_baseUrl))
     .then((response) => response.body)
     .then(json.decode)
     .then((json) => json.forEach((cardJson) {
-      WordCard card = WordCard.fromJson(cardJson);
+      WordViewModel card = WordViewModel.fromJson(cardJson);
 
       cards.add(card);
     }));
