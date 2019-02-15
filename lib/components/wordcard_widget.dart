@@ -33,6 +33,10 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
   void _onHorizontalDragStart(DragStartDetails details) {
     startDrag = details.globalPosition;
     startDragPercentScroll = scrollPercent;
+
+    if(flipped) {
+      flipController.reverse();
+    }
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
@@ -247,7 +251,8 @@ class WordCardWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Expanded(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(
             viewModel.word,
             style: TextStyle(
@@ -256,13 +261,14 @@ class WordCardWidget extends StatelessWidget {
             )
           ),
         ),
-        Expanded(
-          child: Text(
-            'blah blah blah blah blah',
-            style: TextStyle(
-              fontSize: 19.0,
+        Text(
+          ' ${viewModel.meaning}',
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 8,
+          style: TextStyle(
+              fontSize: 15.0,
               letterSpacing: 2
-            ),
           ),
         )
       ],
