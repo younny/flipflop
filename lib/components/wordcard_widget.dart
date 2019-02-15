@@ -25,6 +25,7 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
   double finishScrollEnd;
 
   bool flipped = false;
+  bool flipping = false;
 
   AnimationController finishScrollController;
   AnimationController flipController;
@@ -94,17 +95,18 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
 
     flipController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500)
+      duration: Duration(milliseconds: 300)
     )..addListener(() {
       setState(() {
-
+        flipping = true;
       });
     })
     ..addStatusListener((AnimationStatus status) {
-      if(status == AnimationStatus.forward
-        || status == AnimationStatus.reverse) {
+      if(status == AnimationStatus.completed
+        || status == AnimationStatus.dismissed) {
         setState(() {
           flipped = !flipped;
+          flipping = false;
         });
       }
     });
@@ -150,7 +152,9 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
         child: Transform(
           transform: _buildCardProjection(),
           child: WordCardWidget(
-            viewModel: wordViewModel
+            viewModel: wordViewModel,
+            flipping: flipping,
+            flipped: flipped
           ),
         ),
       ),
@@ -158,7 +162,7 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
   }
 
   Matrix4 _buildCardProjection() {
-    final perspective = 0.002;
+    final perspective = 0.001;
     final radius = 1.0;
     final angle = flipController.value * pi;
     final width = MediaQuery.of(context).size.width - 16.0 * 2;
@@ -182,29 +186,86 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
 }
 
 class WordCardWidget extends StatelessWidget {
+  static const double OUTER_PADDING = 16.0;
+  static const double INNER_PADDING = 16.0;
+
   final WordViewModel viewModel;
+  final bool flipped;
+  final bool flipping;
 
   const WordCardWidget({
     Key key,
-    @required this.viewModel
+    @required this.viewModel,
+    this.flipped = false,
+    this.flipping = false
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Card(
       color: Colors.amber,
+      elevation: 5,
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: screenWidth,
         height: 200.0,
-        alignment: Alignment.center,
-        child: Text(
-          viewModel.word,
-          style: TextStyle(
-              fontSize: 25.0,
-              letterSpacing: 2
-          ),
+        padding: const EdgeInsets.all(INNER_PADDING),
+        child: _buildCardView(screenWidth - (OUTER_PADDING * 2 + INNER_PADDING * 2)),
+      ),
+    );
+  }
+
+  Widget _buildCardView(double cardWidth) {
+
+    if(flipping) {
+      return Container();
+    }
+
+    if(flipped) {
+      return Transform(
+        transform: Matrix4.rotationY(pi) * Matrix4.translationValues(-cardWidth + 5, 0.0, 0.0),
+        child: _buildBackView()
+      );
+    }
+
+    return _buildFrontView();
+  }
+
+  Widget _buildFrontView() {
+    return Center(
+      child: Text(
+        viewModel.word,
+        style: TextStyle(
+            fontSize: 25.0,
+            letterSpacing: 2
         ),
       ),
+    );
+  }
+
+  Widget _buildBackView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            viewModel.word,
+            style: TextStyle(
+              fontSize: 24.0,
+              letterSpacing: 2
+            )
+          ),
+        ),
+        Expanded(
+          child: Text(
+            'blah blah blah blah blah',
+            style: TextStyle(
+              fontSize: 19.0,
+              letterSpacing: 2
+            ),
+          ),
+        )
+      ],
     );
   }
 }
