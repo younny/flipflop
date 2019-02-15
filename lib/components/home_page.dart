@@ -29,6 +29,11 @@ class _HomePageState extends State<HomePage> {
         BottomBar(
           numOfSteps: mockCards.length,
           scrollPercent: 0.0
+        ),
+
+        Container(
+            width: double.infinity,
+            height: 20.0
         )
       ],
     );
