@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 
 class CardFlipper extends StatefulWidget {
   final List<WordCard> cards;
+  final Function(double scrollPercent) onScroll;
 
   const CardFlipper({
-    this.cards
+    this.cards,
+    this.onScroll
   });
 
   @override
@@ -39,6 +41,10 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
       scrollPercent = (startDragPercentScroll +
                           (-singleCardDragPercent / numOfCards))
                           .clamp(0.0, 1.0 - (1/numOfCards));
+
+      if(widget.onScroll != null) {
+        widget.onScroll(scrollPercent);
+      }
     });
 
   }
@@ -67,6 +73,10 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
     ..addListener(() {
       setState(() {
         scrollPercent = lerpDouble(finishScrollStart, finishScrollEnd, finishScrollController.value);
+
+        if(widget.onScroll != null) {
+          widget.onScroll(scrollPercent);
+        }
       });
     });
 
