@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flip/models/model.dart';
@@ -23,7 +24,10 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
   double finishScrollStart;
   double finishScrollEnd;
 
+  bool flipped = false;
+
   AnimationController finishScrollController;
+  AnimationController flipController;
 
   void _onHorizontalDragStart(DragStartDetails details) {
     startDrag = details.globalPosition;
@@ -62,6 +66,14 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
     });
   }
 
+  void _onTap() {
+    if(flipped) {
+      flipController.reverse();
+    } else {
+      flipController.forward();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -80,11 +92,28 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
       });
     });
 
+    flipController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500)
+    )..addListener(() {
+      setState(() {
+
+      });
+    })
+    ..addStatusListener((AnimationStatus status) {
+      if(status == AnimationStatus.forward
+        || status == AnimationStatus.reverse) {
+        setState(() {
+          flipped = !flipped;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     finishScrollController.dispose();
+    flipController.dispose();
     super.dispose();
   }
 
@@ -94,6 +123,7 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
       onHorizontalDragStart: _onHorizontalDragStart,
       onHorizontalDragUpdate: _onHorizontalDragUpdate,
       onHorizontalDragEnd: _onHorizontalDragEnd,
+      onTap: _onTap,
       behavior: HitTestBehavior.translucent,
       child: Stack(
         children: _buildCards(),
@@ -117,11 +147,37 @@ class _CardFlipperState extends State<CardFlipper> with TickerProviderStateMixin
       translation: Offset(cardIndex - cardScrollPercent, 0.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: WordCardWidget(
-          viewModel: wordViewModel
+        child: Transform(
+          transform: _buildCardProjection(),
+          child: WordCardWidget(
+            viewModel: wordViewModel
+          ),
         ),
       ),
     );
+  }
+
+  Matrix4 _buildCardProjection() {
+    final perspective = 0.002;
+    final radius = 1.0;
+    final angle = flipController.value * pi;
+    final width = MediaQuery.of(context).size.width - 16.0 * 2;
+
+    Matrix4 projection = Matrix4.identity()
+    ..setEntry(0, 0, 1/radius)
+    ..setEntry(1, 1, 1/radius)
+    ..setEntry(3, 2, -perspective)
+    ..setEntry(2, 3, -radius)
+    ..setEntry(3, 3, perspective * radius + 1.0);
+
+    projection *= Matrix4.translationValues(width/2, 0.0, 0.0)
+        * Matrix4.rotationY(angle)
+        * Matrix4.translationValues(0.0, 0.0, radius)
+        * Matrix4.translationValues(-width/2, 0.0, 0.0)
+        ;
+
+
+    return projection;
   }
 }
 
@@ -138,7 +194,7 @@ class WordCardWidget extends StatelessWidget {
     return Card(
       color: Colors.amber,
       child: Container(
-        width: double.infinity,
+        width: MediaQuery.of(context).size.width,
         height: 200.0,
         alignment: Alignment.center,
         child: Text(
