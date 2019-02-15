@@ -139,7 +139,7 @@ class WordCardWidget extends StatelessWidget {
       color: Colors.amber,
       child: Container(
         width: double.infinity,
-        height: 180.0,
+        height: 200.0,
         alignment: Alignment.center,
         child: Text(
           word,
