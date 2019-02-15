@@ -1,3 +1,4 @@
+import 'package:flip/components/scroll_indicator.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatelessWidget {
