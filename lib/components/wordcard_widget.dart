@@ -9,9 +9,10 @@ class CardFlipper extends StatefulWidget {
   final Function(double scrollPercent) onScroll;
 
   const CardFlipper({
+    Key key,
     this.cards,
     this.onScroll
-  });
+  }) : super(key: key);
 
   @override
   _CardFlipperState createState() => _CardFlipperState();
