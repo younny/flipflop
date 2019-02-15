@@ -1,3 +1,4 @@
+import 'package:flip/components/bottom_bar.dart';
 import 'package:flip/components/wordcard_widget.dart';
 import 'package:flip/models/model.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  double scrollPercent = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -21,14 +24,19 @@ class _HomePageState extends State<HomePage> {
         Expanded(
           child: Center(
             child: CardFlipper(
-              cards: mockCards
+              cards: mockCards,
+              onScroll: (double scrollPercent) {
+                setState(() {
+                  this.scrollPercent = scrollPercent;
+                });
+              }
             ),
           ),
         ),
 
         BottomBar(
           numOfSteps: mockCards.length,
-          scrollPercent: 0.0
+          scrollPercent: scrollPercent
         ),
 
         Container(
@@ -40,44 +48,4 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class BottomBar extends StatelessWidget {
-  final int numOfSteps;
-  final double scrollPercent;
 
-  const BottomBar({
-    this.numOfSteps,
-    this.scrollPercent
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              child: Center(
-                child: Icon(
-                  Icons.settings
-                ),
-              ),
-            ),
-            Container(
-
-            ),
-            Container(
-              child: Center(
-                child: Icon(
-                  Icons.add
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
