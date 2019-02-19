@@ -83,8 +83,10 @@ class _CardListWidgetState extends State<CardListWidget> with TickerProviderStat
       ..addListener(() {
         setState(() {
           scrollPercent = lerpDouble(finishScrollStart, finishScrollEnd, finishScrollController.value);
-          final cardScrollPercent = scrollPercent * mockCards.length;
+
+          final cardScrollPercent = scrollPercent * widget.cards.length;
           final cardWidth = MediaQuery.of(context).size.width;
+
           scrollController.animateTo(cardWidth * cardScrollPercent, duration: Duration(milliseconds: 150), curve: Curves.easeOut);
 
           if(widget.onScroll != null) {
@@ -112,11 +114,11 @@ class _CardListWidgetState extends State<CardListWidget> with TickerProviderStat
       child: ListView.builder(
         controller: scrollController,
         itemExtent: MediaQuery.of(context).size.width,
-        itemCount: mockCards.length,
+        itemCount: widget.cards.length,
         physics: NeverScrollableScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
-          return _buildCard(mockCards[index], index);
+          return _buildCard(widget.cards[index], index);
         },
       ),
     );
