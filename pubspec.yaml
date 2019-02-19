@@ -71,9 +71,10 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
   fonts:
-    - family: DoHyeon
+    - family: NanumMyeongjo
       fonts:
-        - asset: assets/fonts/DoHyeon-Regular.ttf
-    - family: LuckiestGuy
-      fonts:
-        - asset: assets/fonts/LuckiestGuy-Regular.ttf
+        - asset: NanumMyeongjo-Regular.ttf
+        - asset: NanumMyeongjo-ExtraBold.ttf
+          weight: 900
+        - asset: NanumMyeongjo-Bold.ttf
+          weight: 700
