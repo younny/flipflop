@@ -1,4 +1,5 @@
 import 'package:flip/components/scroll_indicator.dart';
+import 'package:flip/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatelessWidget {
@@ -21,8 +22,14 @@ class BottomBar extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Center(
-                child: Icon(
-                    Icons.settings
+                child: IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsPage())
+                    );
+                  },
                 ),
               ),
             ),
