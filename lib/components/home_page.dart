@@ -1,5 +1,5 @@
 import 'package:flip/components/bottom_bar.dart';
-import 'package:flip/components/wordcard_widget.dart';
+import 'package:flip/components/card_list.dart';
 import 'package:flip/models/model.dart';
 import 'package:flutter/material.dart';
 
@@ -22,15 +22,13 @@ class _HomePageState extends State<HomePage> {
         ),
         
         Expanded(
-          child: Center(
-            child: CardFlipper(
-              cards: mockCards,
-              onScroll: (double scrollPercent) {
-                setState(() {
-                  this.scrollPercent = scrollPercent;
-                });
-              }
-            ),
+          child: CardListWidget(
+            cards: mockCards,
+            onScroll: (double scrollPercent) {
+              setState(() {
+                this.scrollPercent = scrollPercent;
+              });
+            }
           ),
         ),
 
