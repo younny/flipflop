@@ -51,7 +51,7 @@ class RootApp extends StatelessWidget {
                 buttonColor: Colors.amber,
                 disabledColor: Colors.grey
             ),
-            fontFamily: 'NanumMyeongjo',
+            fontFamily: 'Binggrae',
             primarySwatch: Colors.amber,
           ),
           child: widget,
