@@ -21,20 +21,20 @@ class WordCardWidget extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     return Center(
       child: SizedBox.fromSize(
-        size: Size(screenWidth, 220),
+        size: Size(screenWidth, screenWidth * 0.65),
         child: Padding(
           padding: const EdgeInsets.all(INNER_PADDING),
           child: Card(
             color: Colors.amber,
             elevation: 5,
-            child: _buildCardView(screenWidth - (INNER_PADDING * 2)),
+            child: _buildCardView(),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCardView(double cardWidth) {
+  Widget _buildCardView() {
     if(flipped) {
       return _buildBackView();
     } else {
@@ -48,6 +48,7 @@ class WordCardWidget extends StatelessWidget {
         viewModel.word,
         style: TextStyle(
             fontSize: 25.0,
+            fontWeight: FontWeight.bold,
             letterSpacing: 2
         ),
       ),
@@ -58,7 +59,7 @@ class WordCardWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -66,18 +67,18 @@ class WordCardWidget extends StatelessWidget {
               viewModel.word,
               style: TextStyle(
                 fontSize: 24.0,
-                letterSpacing: 2
+                letterSpacing: 2,
+                fontWeight: FontWeight.bold
               )
             ),
           ),
           Text(
-            ' ${viewModel.meaning}',
-            softWrap: true,
+            '${viewModel.meaning}',
             overflow: TextOverflow.ellipsis,
-            maxLines: 8,
+            maxLines: 3,
             style: TextStyle(
-                fontSize: 14.0,
-                letterSpacing: 2
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold
             ),
           )
         ],
