@@ -97,7 +97,7 @@ void main() {
 
     await tester.tap(find.byKey(listKey));
 
-    expect(find.text(' $mockMeaning'), findsOneWidget);
+    expect(find.text(': $mockMeaning'), findsOneWidget);
 
     await tester.fling(find.byWidget(cardList), Offset(-800.0, 0.0), 150);
 
@@ -111,6 +111,6 @@ void main() {
 
     await tester.pumpAndSettle(Duration(milliseconds: 150));
 
-    expect(find.text(' $mockMeaning 2'), findsOneWidget);
+    expect(find.text(': $mockMeaning 2'), findsOneWidget);
   });
 }

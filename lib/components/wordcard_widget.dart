@@ -63,17 +63,30 @@ class WordCardWidget extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text(
-              viewModel.word,
-              style: TextStyle(
-                fontSize: 24.0,
-                letterSpacing: 2,
-                fontWeight: FontWeight.bold
-              )
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  viewModel.word,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.bold
+                  )
+                ),
+                Text(
+                  '[${viewModel.pronunciation}]',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.normal
+                  )
+                )
+              ],
             ),
           ),
           Text(
-            '${viewModel.meaning}',
+            ': ${viewModel.meaning}',
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
             style: TextStyle(
