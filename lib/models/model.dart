@@ -39,6 +39,33 @@ class Category {
     created = json['created'];
 }
 
+final List<Category> mockCategories = [
+  Category(
+    name: 'food',
+    created: '20 Feb 2019'
+  ),
+  Category(
+    name: 'emotion',
+    created: '20 Feb 2019'
+  ),
+  Category(
+    name: 'transportation',
+    created: '20 Feb 2019'
+  ),
+  Category(
+    name: 'greetings',
+    created: '20 Feb 2019'
+  ),
+  Category(
+    name: 'hipster',
+    created: '20 Feb 2019'
+  ),
+  Category(
+    name: 'random',
+    created: '20 Feb 2019'
+  )
+];
+
 final List<WordViewModel> mockCards = [
   WordViewModel(
     category: 'fruit',
