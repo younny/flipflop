@@ -71,10 +71,7 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
   fonts:
-    - family: NanumMyeongjo
+    - family: Binggrae
       fonts:
-        - asset: assets/fonts/NanumMyeongjo-Regular.ttf
-        - asset: assets/fonts/NanumMyeongjo-ExtraBold.ttf
-          weight: 900
-        - asset: assets/fonts/NanumMyeongjo-Bold.ttf
-          weight: 700
+        - asset: assets/fonts/Binggrae.ttf
+        - asset: assets/fonts/Binggrae-Bold.ttf
