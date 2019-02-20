@@ -73,8 +73,8 @@ flutter:
   fonts:
     - family: NanumMyeongjo
       fonts:
-        - asset: NanumMyeongjo-Regular.ttf
-        - asset: NanumMyeongjo-ExtraBold.ttf
+        - asset: fonts/NanumMyeongjo-Regular.ttf
+        - asset: fonts/NanumMyeongjo-ExtraBold.ttf
           weight: 900
-        - asset: NanumMyeongjo-Bold.ttf
+        - asset: fonts/NanumMyeongjo-Bold.ttf
           weight: 700
