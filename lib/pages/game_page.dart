@@ -3,12 +3,12 @@ import 'package:flip/components/card_list.dart';
 import 'package:flip/models/model.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class GamePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _GamePageState createState() => _GamePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _GamePageState extends State<GamePage> {
   double scrollPercent = 0.0;
 
   @override
