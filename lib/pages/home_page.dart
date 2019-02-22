@@ -22,32 +22,38 @@ class _HomePageState extends State<HomePage> {
         SliverPadding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
         ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Category",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-              },
-            childCount: 1
-          ),
+
+        SliverPersistentHeader(
+          delegate: _SliverHeaderDelegate(
+            minHeight: 40,
+            maxHeight: 40,
+            text: "Category"
+          )
         ),
-        SliverFixedExtentList(
+
+        SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 10.0,
+            crossAxisSpacing: 10.0,
+            childAspectRatio: 1.5
+          ),
           delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return _buildListItem(index);
               },
             childCount: mockCategories.length
           ),
-          itemExtent: 70.0
-        )
+        ),
+//        SliverFixedExtentList(
+//          delegate: SliverChildBuilderDelegate(
+//              (BuildContext context, int index) {
+//                return _buildListItem(index);
+//              },
+//            childCount: mockCategories.length
+//          ),
+//          itemExtent: 70.0
+//        )
       ],
     );
   }
@@ -56,7 +62,7 @@ class _HomePageState extends State<HomePage> {
     Category category = mockCategories[index];
     return Container(
       alignment: Alignment.center,
-      margin: const EdgeInsets.all(4.0),
+      margin: EdgeInsets.only(left: 10.0 * ((index+1)%2), right: 10.0 * (index%2)),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.amber
@@ -73,4 +79,45 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+class _SliverHeaderDelegate extends SliverPersistentHeaderDelegate {
+
+  _SliverHeaderDelegate({
+    @required this.text,
+    @required this.maxHeight,
+    @required this.minHeight
+  });
+
+  final String text;
+  final double maxHeight;
+  final double minHeight;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.w500
+          )
+        ),
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return minHeight != oldDelegate.minExtent || maxHeight != oldDelegate.maxExtent;
+  }
+
 }
