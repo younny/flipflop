@@ -12,7 +12,7 @@ Widget wrapWithMaterial(Widget child) {
 }
 
 void main() {
-  testWidgets('Card list renders a card correctly', (WidgetTester tester) async {
+  testWidgets('card list renders a card', (WidgetTester tester) async {
     final List<WordViewModel> cards = [
       WordViewModel(
         word: 'TEST',
@@ -21,31 +21,25 @@ void main() {
     ];
 
     final CardListWidget cardList = CardListWidget(
-      cards: cards,
-      onScroll: (double scrollPercent) {
-      },
+      cards: cards
     );
 
     await tester.pumpWidget(wrapWithMaterial(cardList));
-
     expect(find.text('TEST'), findsNWidgets(2));
 
   });
 
-  testWidgets('Card list scrolling', (WidgetTester tester) async {
+  testWidgets('scrolling card list', (WidgetTester tester) async {
     final Key listKey = Key('card-list');
 
     double percent = 0.0;
-    const String mockMeaning = 'This is test';
 
     final List<WordViewModel> cards = [
       WordViewModel(
-          word: 'TEST',
-          meaning: mockMeaning
+        word: 'TEST'
       ),
       WordViewModel(
-          word: 'TEST2',
-          meaning: '$mockMeaning 2'
+        word: 'TEST2'
       )
     ];
 
@@ -71,33 +65,53 @@ void main() {
 
   });
 
-  testWidgets('Card flipped correctly', (WidgetTester tester) async {
+  testWidgets('flip a single card', (WidgetTester tester) async {
     final Key listKey = Key('card-list');
-
-    const String mockMeaning = 'This is test';
-
+    const String firstCardMeaning = 'This is test';
     final List<WordViewModel> cards = [
       WordViewModel(
           word: 'TEST',
-          meaning: mockMeaning
-      ),
-      WordViewModel(
-          word: 'TEST2',
-          meaning: '$mockMeaning 2'
+          meaning: firstCardMeaning
       )
     ];
 
     final CardListWidget cardList = CardListWidget(
-      key: listKey,
-      cards: cards,
-      onScroll: (double scrollPercent) {},
+        key: listKey,
+        cards: cards
     );
 
     await tester.pumpWidget(wrapWithMaterial(cardList));
 
     await tester.tap(find.byKey(listKey));
 
-    expect(find.text(': $mockMeaning'), findsOneWidget);
+    expect(find.text(': $firstCardMeaning'), findsOneWidget);
+  });
+
+  testWidgets('flip multiple cards', (WidgetTester tester) async {
+    final Key listKey = Key('card-list');
+    const String firstCardMeaning = 'This is test';
+    const String secondCardMeaning = 'This is test2';
+    final List<WordViewModel> cards = [
+      WordViewModel(
+        word: 'TEST',
+        meaning: firstCardMeaning
+      ),
+      WordViewModel(
+        word: 'TEST2',
+        meaning: secondCardMeaning
+      )
+    ];
+
+    final CardListWidget cardList = CardListWidget(
+      key: listKey,
+      cards: cards
+    );
+
+    await tester.pumpWidget(wrapWithMaterial(cardList));
+
+    await tester.tap(find.byKey(listKey));
+
+    expect(find.text(': $firstCardMeaning'), findsOneWidget);
 
     await tester.fling(find.byWidget(cardList), Offset(-800.0, 0.0), 150);
 
@@ -111,6 +125,21 @@ void main() {
 
     await tester.pumpAndSettle(Duration(milliseconds: 150));
 
-    expect(find.text(': $mockMeaning 2'), findsOneWidget);
+    expect(find.text(': $secondCardMeaning'), findsOneWidget);
   });
+
+
+//  testWidgets('handles success case of cards loading correctly', (WidgetTester tester) async {
+//    List<WordViewModel> results = [];
+//    bool success = false;
+//
+//    expect(success, isTrue);
+//  });
+//
+//  testWidgets('handles failure case of cards loading correctly', (WidgetTester tester) async {
+//    List<WordViewModel> results = [];
+//    bool failed = false;
+//
+//    expect(failed, isTrue);
+//  });
 }
