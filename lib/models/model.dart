@@ -1,6 +1,8 @@
+import 'package:flip/models/meaning.dart';
+
 class WordViewModel {
   final String word;
-  final String meaning;
+  final Meaning meaning;
   final String pronunciation;
   final String category;
   final String created;
@@ -17,7 +19,7 @@ class WordViewModel {
 
   WordViewModel.fromJson(Map json)
   : word = json['word'],
-    meaning = json['meaning'],
+    meaning = Meaning(source: json['meaning']),
     pronunciation = json['pronunciation'],
     category = json['catetory'],
     created = json['created'],
@@ -71,7 +73,7 @@ final List<WordViewModel> mockCards = [
     category: 'fruit',
     created: '14 Feb 2019',
     word: '사과',
-    meaning: 'Apple',
+    meaning: Meaning(source: 'Apple'),
     pronunciation: 'sa-g-wa',
     lang: 'ko'
   ),
@@ -79,7 +81,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '멜론',
-      meaning: 'Melon',
+      meaning: Meaning(source: 'Melon'),
       pronunciation: 'mael-ron',
       lang: 'ko'
   ),
@@ -87,7 +89,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '바나나',
-      meaning: 'Banana',
+      meaning: Meaning(source: 'Banana'),
       pronunciation: 'ba-na-na',
       lang: 'ko'
   ),
@@ -95,7 +97,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '키위',
-      meaning: 'Kiwi',
+      meaning: Meaning(source: 'Kiwi'),
       pronunciation: 'ki-wi',
       lang: 'ko'
   ),
@@ -103,7 +105,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '수박',
-      meaning: 'Watermelon',
+      meaning: Meaning(source: 'Watermelon'),
       pronunciation: 'soo-bak',
       lang: 'ko'
   ),
@@ -111,7 +113,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '포도',
-      meaning: 'Grape',
+      meaning: Meaning(source: 'Grape'),
       pronunciation: 'po-do',
       lang: 'ko'
   ),
@@ -119,7 +121,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '체리',
-      meaning: 'Cherry',
+      meaning: Meaning(source: 'Cherry'),
       pronunciation: 'chae-lee',
       lang: 'ko'
   ),
@@ -127,7 +129,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '귤',
-      meaning: 'Tangerin',
+      meaning: Meaning(source: 'Tangerin'),
       pronunciation: 'gyu-eul',
       lang: 'ko'
   ),
@@ -135,7 +137,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '망고',
-      meaning: 'Mango',
+      meaning: Meaning(source: 'Mango'),
       pronunciation: 'mang-go',
       lang: 'ko'
   ),
@@ -143,7 +145,7 @@ final List<WordViewModel> mockCards = [
       category: 'fruit',
       created: '14 Feb 2019',
       word: '배',
-      meaning: 'Pear',
+      meaning: Meaning(source: 'Pear'),
       pronunciation: 'bae',
       lang: 'ko'
   )

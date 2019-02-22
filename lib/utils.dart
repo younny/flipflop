@@ -9,4 +9,3 @@ List<WordViewModel> applyFilter(String filter, List<WordViewModel> cards) {
   return cards;
 }
 
-String meaningFormatter(String meaning) => ': $meaning';
