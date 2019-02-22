@@ -1,5 +1,5 @@
+import 'package:flip/models/meaning.dart';
 import 'package:flip/models/model.dart';
-import 'package:flip/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flip/components/wordcard_widget.dart';
@@ -39,7 +39,9 @@ void main() {
 
     final key = Key('word-card');
     const String word = 'TEST';
-    const String meaning = 'This is test.';
+    final Meaning meaning = Meaning(
+      source: 'This is test.'
+    );
     final WordViewModel viewModel = WordViewModel(
         word: word,
         meaning: meaning
@@ -55,7 +57,7 @@ void main() {
 
     expect(wordCard.viewModel.meaning, equals(meaning));
 
-    expect(find.text(meaningFormatter(meaning)), findsOneWidget);
+    expect(find.text(meaning.format()), findsOneWidget);
 
   });
 
@@ -63,9 +65,12 @@ void main() {
 
     final key = Key('word-card');
     const String word = 'TEST';
-    const String meaning = 'This is test.This is test.This isTh'
-        'is is test.This is test.This is test. test.This This is test.'
-        'is test.This is test.This is test.This is test.This is test.';
+    final Meaning meaning = Meaning(
+      source: 'This is test.This is test.This isTh'
+          'is is test.This is test.This is test. test.This This is test.'
+          'is test.This is test.This is test.This is test.This is test.'
+    );
+
     final WordViewModel viewModel = WordViewModel(
         word: word,
         meaning: meaning
@@ -81,7 +86,7 @@ void main() {
 
     expect(wordCard.viewModel.meaning, equals(meaning));
 
-    expect(find.text(meaningFormatter(meaning)), findsOneWidget);
+    expect(find.text(meaning.format()), findsOneWidget);
 
   });
 }
