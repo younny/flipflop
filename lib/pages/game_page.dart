@@ -1,6 +1,6 @@
 import 'package:flip/components/bottom_bar.dart';
 import 'package:flip/components/card_list.dart';
-import 'package:flip/models/model.dart';
+import 'package:flip/fixtures/mock_data.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
@@ -33,7 +33,7 @@ class _GamePageState extends State<GamePage> {
         ),
 
         BottomBar(
-          numOfSteps: mockCards.length,
+          numOfSteps: 0,
           scrollPercent: scrollPercent
         ),
 
