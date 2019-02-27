@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flip/models/model.dart';
+import 'package:flip/models/category_view_model.dart';
+import 'package:flip/models/word_view_model.dart';
 import 'package:http/http.dart';
 
 class FlipApi {
