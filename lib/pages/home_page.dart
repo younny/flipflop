@@ -1,4 +1,4 @@
-import 'package:flip/models/model.dart';
+import 'package:flip/models/category_view_model.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
               (BuildContext context, int index) {
                 return _buildListItem(index);
               },
-            childCount: mockCategories.length
+            childCount: 0
           ),
         ),
 //        SliverFixedExtentList(
@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildListItem(int index) {
-    Category category = mockCategories[index];
+    Category category = new Category(name: 'food', created: '123123');
     return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(left: 10.0 * ((index+1)%2), right: 10.0 * (index%2)),
