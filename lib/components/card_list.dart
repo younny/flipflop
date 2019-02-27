@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flip/components/card_flipper.dart';
@@ -40,7 +41,7 @@ class _CardListWidgetState extends State<CardListWidget> with TickerProviderStat
     final dragDistance = currDrag.dx - startDrag.dx;
     final singleCardDragPercent = dragDistance / context.size.width;
 
-    final numOfCards = widget.cards.length;
+    final numOfCards = max(widget.cards.length, 1);
 
     setState(() {
       scrollPercent = (startDragPercentScroll +
@@ -58,10 +59,10 @@ class _CardListWidgetState extends State<CardListWidget> with TickerProviderStat
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) {
-    final numberOfCards = widget.cards.length;
+    final numOfCards = max(widget.cards.length, 1);
 
     finishScrollStart = scrollPercent;
-    finishScrollEnd = (scrollPercent * numberOfCards).round() / numberOfCards;
+    finishScrollEnd = (scrollPercent * numOfCards).round() / numOfCards;
     finishScrollController.forward(from: 0.0);
 
     setState(() {
