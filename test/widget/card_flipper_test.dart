@@ -1,6 +1,5 @@
 import 'package:flip/components/card_list.dart';
-import 'package:flip/models/meaning.dart';
-import 'package:flip/models/model.dart';
+import 'package:flip/models/word_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,7 +16,7 @@ void main() {
     final List<WordViewModel> cards = [
       WordViewModel(
         word: 'TEST',
-        meaning: Meaning(source: 'This is test')
+        meaning: 'This is test'
       )
     ];
 
@@ -68,7 +67,7 @@ void main() {
 
   testWidgets('flip a single card', (WidgetTester tester) async {
     final Key listKey = Key('card-list');
-    final Meaning firstCardMeaning = Meaning(source: 'This is test');
+    final String firstCardMeaning = 'This is test';
     final List<WordViewModel> cards = [
       WordViewModel(
         word: 'TEST',
@@ -90,8 +89,8 @@ void main() {
 
   testWidgets('flip multiple cards', (WidgetTester tester) async {
     final Key listKey = Key('card-list');
-    final Meaning firstCardMeaning = Meaning(source: 'This is test');
-    final Meaning secondCardMeaning = Meaning(source: 'This is test2');
+    final String firstCardMeaning = 'This is test';
+    final String secondCardMeaning = 'This is test2';
     final List<WordViewModel> cards = [
       WordViewModel(
         word: 'TEST',
