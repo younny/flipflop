@@ -3,13 +3,7 @@ import 'package:flip/models/word_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget wrapWithMaterial(Widget child) {
-  return MaterialApp(
-    home: Material(
-      child: child,
-    ),
-  );
-}
+import '../helper/widget_wrapper.dart';
 
 void main() {
   testWidgets('card list renders a card', (WidgetTester tester) async {
@@ -24,7 +18,7 @@ void main() {
       cards: cards
     );
 
-    await tester.pumpWidget(wrapWithMaterial(cardList));
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
     expect(find.text('TEST'), findsNWidgets(2));
 
   });
@@ -51,7 +45,7 @@ void main() {
       },
     );
 
-    await tester.pumpWidget(wrapWithMaterial(cardList));
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
 
     await tester.fling(find.byWidget(cardList), Offset(-800.0, 0.0), 150);
 
@@ -80,7 +74,7 @@ void main() {
       cards: cards
     );
 
-    await tester.pumpWidget(wrapWithMaterial(cardList));
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
 
     await tester.tap(find.byKey(listKey));
 
@@ -107,7 +101,7 @@ void main() {
       cards: cards
     );
 
-    await tester.pumpWidget(wrapWithMaterial(cardList));
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
 
     await tester.tap(find.byKey(listKey));
 

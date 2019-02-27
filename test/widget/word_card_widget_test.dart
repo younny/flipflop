@@ -4,13 +4,7 @@ import 'package:flip/components/wordcard_widget.dart';
 import 'package:flip/models/word_view_model.dart';
 import 'package:flip/utils/string_formatter.dart';
 
-Widget wrapWithMaterial(Widget child) {
-  return MaterialApp(
-    home: Material(
-      child: child,
-    ),
-  );
-}
+import '../helper/widget_wrapper.dart';
 
 void main() {
   testWidgets('renders front view of a card', (WidgetTester tester) async {
@@ -27,7 +21,7 @@ void main() {
       flipped: false,
     );
 
-    await tester.pumpWidget(wrapWithMaterial(wordCard));
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
 
     expect(wordCard.viewModel.word, equals(word));
 
@@ -51,7 +45,7 @@ void main() {
       flipped: true,
     );
 
-    await tester.pumpWidget(wrapWithMaterial(wordCard));
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
 
     expect(wordCard.viewModel.meaning, equals(meaning));
 
@@ -78,9 +72,33 @@ void main() {
       flipped: true,
     );
 
-    await tester.pumpWidget(wrapWithMaterial(wordCard));
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
 
     expect(wordCard.viewModel.meaning, equals(meaning));
+
+    expect(find.text(StringFormatter.formatMeaning(viewModel.meaning)), findsOneWidget);
+
+  });
+
+  testWidgets('renders back view of a card with empty meaning', (WidgetTester tester) async {
+
+    final key = Key('word-card');
+    const String word = 'TEST';
+
+    final WordViewModel viewModel = WordViewModel(
+        word: word,
+        meaning: null
+    );
+
+    final wordCard = WordCardWidget(
+      key: key,
+      viewModel: viewModel,
+      flipped: true,
+    );
+
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
+
+    expect(wordCard.viewModel.meaning, equals(null));
 
     expect(find.text(StringFormatter.formatMeaning(viewModel.meaning)), findsOneWidget);
 
