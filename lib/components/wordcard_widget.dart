@@ -1,6 +1,7 @@
 import 'dart:ui';
 
-import 'package:flip/models/model.dart';
+import 'package:flip/models/word_view_model.dart';
+import 'package:flip/utils/string_formatter.dart';
 import 'package:flutter/material.dart';
 
 class WordCardWidget extends StatelessWidget {
@@ -86,7 +87,7 @@ class WordCardWidget extends StatelessWidget {
             ),
           ),
           Text(
-            ': ${viewModel.meaning}',
+            StringFormatter.formatMeaning(viewModel.meaning),
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
             style: TextStyle(
