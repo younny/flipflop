@@ -33,7 +33,7 @@ class _GamePageState extends State<GamePage> {
         ),
 
         BottomBar(
-          numOfSteps: 0,
+          numOfSteps: mockCards.length,
           scrollPercent: scrollPercent
         ),
 
