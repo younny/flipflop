@@ -4,4 +4,16 @@ class StringFormatter {
     if(source == null || source.length == 0) return ': ' + TAG_UNAVAILABLE;
     return ': ' + source;
   }
+
+  static String formatPronunciation(String source) {
+    if(source == null || source.length == 0) return '[$TAG_UNAVAILABLE]';
+
+    return '[$source]';
+  }
+
+  static String formatWord(String source) {
+    if(source == null || source.length == 0) return TAG_UNAVAILABLE;
+
+    return source;
+  }
 }

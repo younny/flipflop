@@ -25,7 +25,29 @@ void main() {
 
     expect(wordCard.viewModel.word, equals(word));
 
-    expect(find.text(word), findsOneWidget);
+    expect(find.text(StringFormatter.formatWord(viewModel.word)), findsOneWidget);
+
+  });
+
+  testWidgets('renders front view of a card with null word', (WidgetTester tester) async {
+
+    final key = Key('word-card');
+    String word;
+    final WordViewModel viewModel = WordViewModel(
+        word: word
+    );
+
+    final wordCard = WordCardWidget(
+      key: key,
+      viewModel: viewModel,
+      flipped: false,
+    );
+
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
+
+    expect(wordCard.viewModel.word, equals(word));
+
+    expect(find.text(StringFormatter.formatWord(viewModel.word)), findsOneWidget);
 
   });
 
@@ -80,7 +102,7 @@ void main() {
 
   });
 
-  testWidgets('renders back view of a card with empty meaning', (WidgetTester tester) async {
+  testWidgets('renders back view of a card with null meaning', (WidgetTester tester) async {
 
     final key = Key('word-card');
     const String word = 'TEST';

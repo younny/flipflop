@@ -46,7 +46,7 @@ class WordCardWidget extends StatelessWidget {
   Widget _buildFrontView() {
     return Center(
       child: Text(
-        viewModel.word,
+        StringFormatter.formatWord(viewModel.word),
         style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class WordCardWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  viewModel.word,
+                  StringFormatter.formatWord(viewModel.word),
                   style: TextStyle(
                     fontSize: 24.0,
                     letterSpacing: 1,
@@ -76,7 +76,7 @@ class WordCardWidget extends StatelessWidget {
                   )
                 ),
                 Text(
-                  '[${viewModel.pronunciation}]',
+                  StringFormatter.formatPronunciation(viewModel.pronunciation),
                   style: TextStyle(
                     fontSize: 24.0,
                     letterSpacing: 1,
