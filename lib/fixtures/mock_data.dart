@@ -1,7 +1,7 @@
 import 'package:flip/models/category_view_model.dart';
 import 'package:flip/models/word_view_model.dart';
 
-final mockCards = [
+final mockCards = <WordViewModel>[
   WordViewModel(
       word: '사과',
       meaning: 'Apple',
