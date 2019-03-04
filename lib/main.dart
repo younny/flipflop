@@ -1,7 +1,8 @@
+import 'package:flipflop/models/flipflop_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:flipflop/blocs/card_bloc.dart';
+import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/pages/home_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
 import 'package:flutter/services.dart';
@@ -14,12 +15,12 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<CardBloc>(
-      builder: (_, bloc) => bloc ?? CardBloc(
-
-      ),
-      onDispose: (_, bloc) => bloc.dispose(),
-      child: RootApp(),
+    return BlocProvider(
+        builder: (_, bloc) {
+          return FlipFlopBloc(FlipFlopApi());
+        },
+        onDispose: (_, bloc) => bloc.dispose(),
+        child: RootApp()
     );
   }
 }
@@ -27,7 +28,6 @@ class MyApp extends StatelessWidget {
 class RootApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final cardBloc = Provider.of<CardBloc>(context);
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
