@@ -1,7 +1,0 @@
-class CardBloc {
-
-
-  void dispose() {
-
-  }
-}
