@@ -6,21 +6,21 @@ final mockCards = <WordViewModel>[
       word: '사과',
       meaning: 'Apple',
       pronunciation: 'sa-g-wa',
-      created: '27 Feb 2019',
+      created: DateTime.now(),
       category: 'fruit'
   ),
   WordViewModel(
       word: '포도',
       meaning: 'Grape',
       pronunciation: 'po-do',
-      created: '27 Feb 2019',
+      created: DateTime.now(),
       category: 'fruit'
   ),
   WordViewModel(
       word: '수박',
       meaning: 'Watermelon',
       pronunciation: 'soo-bak',
-      created: '27 Feb 2019',
+      created: DateTime.now(),
       category: 'fruit'
   )
 ];
@@ -28,6 +28,6 @@ final mockCards = <WordViewModel>[
 final categories = [
   Category(
     name: 'fruit',
-    created: '27 Feb 2019'
+    created: DateTime.now()
   )
 ];

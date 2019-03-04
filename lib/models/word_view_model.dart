@@ -3,7 +3,7 @@ class WordViewModel {
   final String meaning;
   final String pronunciation;
   final String category;
-  final String created;
+  final DateTime created;
   final String lang;
 
   WordViewModel({
@@ -18,7 +18,7 @@ class WordViewModel {
   WordViewModel.fromJson(Map json)
       : word = json['word'],
         meaning = json['meaning'],
-        pronunciation = json['pronunciation'],
+        pronunciation = json['pron'],
         category = json['catetory'],
         created = json['created'],
         lang = json['lang'];

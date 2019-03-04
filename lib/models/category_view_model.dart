@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Category {
   final String name;
-  final String created;
+  final DateTime created;
 
   Category({
     this.name,
