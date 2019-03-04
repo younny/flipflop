@@ -1,47 +1,43 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
-import 'package:http/http.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FlipFlopApi {
-  static const String _baseUrl = 'https://';
-
-  final Client _client = Client();
 
   Future<List<WordViewModel>> getCards({
-    String category = "fruit",
+    String category = "random",
     String filterBy = "popular"
   }) async {
-    List<WordViewModel> cards = [];
 
-    await Firestore.instance
+    return await Firestore.instance
         .collection('cards')
+        .where("category", isEqualTo: category)
         .snapshots()
         .first
         .then((snapshot) => snapshot.documents)
         .then((docs) {
-          docs.forEach((doc) => cards.add(WordViewModel.fromJson(doc.data)));
+          print("get Cards called");
+          return docs.map((doc) => WordViewModel.fromJson(doc.data)).toList();
+        }).catchError((error) {
+          print(error);
         });
-
-    return cards;
   }
 
   Future<List<Category>> getCategories() async {
-    List<Category> categories = [];
 
-    await Firestore.instance
+    return await Firestore.instance
           .collection('category')
           .snapshots()
           .first
           .then((snapshot) => snapshot.documents)
           .then((docs) {
-            docs.forEach((doc) => categories.add(Category.fromJson(doc.data)));
+            print("get Categories called");
+            return docs.map((doc) => Category.fromJson(doc.data)).toList();
+          }).catchError((error) {
+            print(error);
           });
 
-
-    return categories;
   }
 
 }
