@@ -1,4 +1,4 @@
-import 'package:flip/models/word_view_model.dart';
+import 'package:flipflop/models/word_view_model.dart';
 
 List<WordViewModel> applyFilter(String filter, List<WordViewModel> cards) {
 

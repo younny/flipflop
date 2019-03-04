@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 
-import 'package:flip/utils/string_formatter.dart';
+import 'package:flipflop/utils/string_formatter.dart';
 
 void main() {
   test("format word with some value", () {

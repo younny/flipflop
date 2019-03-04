@@ -1,5 +1,5 @@
-import 'package:flip/components/scroll_indicator.dart';
-import 'package:flip/pages/settings_page.dart';
+import 'package:flipflop/components/scroll_indicator.dart';
+import 'package:flipflop/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatelessWidget {

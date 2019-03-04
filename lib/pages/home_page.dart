@@ -1,5 +1,5 @@
-import 'package:flip/fixtures/mock_data.dart';
-import 'package:flip/models/category_view_model.dart';
+import 'package:flipflop/fixtures/mock_data.dart';
+import 'package:flipflop/models/category_view_model.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:flip/blocs/card_bloc.dart';
-import 'package:flip/pages/home_page.dart';
-import 'package:flip/providers/base_provider.dart';
+import 'package:flipflop/blocs/card_bloc.dart';
+import 'package:flipflop/pages/home_page.dart';
+import 'package:flipflop/providers/base_provider.dart';
 import 'package:flutter/services.dart';
 
 void main() {

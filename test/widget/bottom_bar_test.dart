@@ -1,7 +1,7 @@
-import 'package:flip/components/scroll_indicator.dart';
+import 'package:flipflop/components/scroll_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flip/components/bottom_bar.dart';
+import 'package:flipflop/components/bottom_bar.dart';
 
 import '../helper/widget_wrapper.dart';
 

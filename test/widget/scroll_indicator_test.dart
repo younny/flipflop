@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flip/components/scroll_indicator.dart';
+import 'package:flipflop/components/scroll_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

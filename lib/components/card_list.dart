@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flip/components/card_flipper.dart';
-import 'package:flip/components/wordcard_widget.dart';
-import 'package:flip/models/word_view_model.dart';
+import 'package:flipflop/components/card_flipper.dart';
+import 'package:flipflop/components/wordcard_widget.dart';
+import 'package:flipflop/models/word_view_model.dart';
 import 'package:flutter/material.dart';
 
 class CardListWidget extends StatefulWidget {

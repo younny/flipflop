@@ -1,5 +1,5 @@
-import 'package:flip/components/card_list.dart';
-import 'package:flip/models/word_view_model.dart';
+import 'package:flipflop/components/card_list.dart';
+import 'package:flipflop/models/word_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

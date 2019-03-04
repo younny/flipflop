@@ -1,6 +1,6 @@
-import 'package:flip/components/bottom_bar.dart';
-import 'package:flip/components/card_list.dart';
-import 'package:flip/fixtures/mock_data.dart';
+import 'package:flipflop/components/bottom_bar.dart';
+import 'package:flipflop/components/card_list.dart';
+import 'package:flipflop/fixtures/mock_data.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {

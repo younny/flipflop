@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:flip/models/word_view_model.dart';
-import 'package:flip/utils/string_formatter.dart';
+import 'package:flipflop/models/word_view_model.dart';
+import 'package:flipflop/utils/string_formatter.dart';
 import 'package:flutter/material.dart';
 
 class WordCardWidget extends StatelessWidget {

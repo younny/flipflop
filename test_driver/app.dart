@@ -1,5 +1,5 @@
 import 'package:flutter_driver/driver_extension.dart';
-import 'package:flip/main.dart' as app;
+import 'package:flipflop/main.dart' as app;
 
 void main() {
   enableFlutterDriverExtension();
