@@ -23,11 +23,11 @@ class FirebaseDB extends Database<List<DocumentSnapshot>> {
   }
 
   @override
-  Future<List<DocumentSnapshot>> read(String table){
+  Future<List<DocumentSnapshot>> read(String table) {
     return _firestore
             .collection(table)
             .snapshots()
-            .first
+            .elementAt(0)
             .then((QuerySnapshot snapshot) => snapshot.documents)
             .catchError((error) {
               print("Error while reading firestore db, $error");
@@ -50,7 +50,7 @@ class FirebaseDB extends Database<List<DocumentSnapshot>> {
         .collection(table)
         .where(fieldOfFilter, isEqualTo: valueOfFilter)
         .snapshots()
-        .first
+        .elementAt(0)
         .then((QuerySnapshot snapshot) => snapshot.documents)
         .catchError((error) {
           print("Error while reading firestore db, $error");
