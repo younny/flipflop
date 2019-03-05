@@ -1,4 +1,5 @@
 import 'package:flipflop/models/flipflop_api.dart';
+import 'package:flipflop/repo/fb_db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -18,7 +19,9 @@ class MyApp extends StatelessWidget {
     return BlocProvider<FlipFlopBloc>(
         builder: (_, bloc) => bloc
             ?? FlipFlopBloc(
-                FlipFlopApi()
+                FlipFlopApi(
+                    database: FirebaseDB.instance
+                )
             ),
         onDispose: (_, bloc) => bloc.dispose(),
         child: RootApp()
@@ -45,7 +48,6 @@ class RootApp extends StatelessWidget {
           body: HomePage()
       ),
       builder: (BuildContext context, Widget widget) {
-        final lang = Localizations.localeOf(context).languageCode;
         return Theme(
           data: ThemeData(
             buttonTheme: ButtonThemeData(

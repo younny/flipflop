@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/repo/fb_db.dart';
