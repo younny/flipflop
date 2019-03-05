@@ -25,22 +25,22 @@ class _GamePageState extends State<GamePage> {
 
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              width: double.infinity,
-              height: 20.0
-          ),
-          StreamBuilder(
-            stream: bloc.cards,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData)
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+      body: StreamBuilder(
+        stream: bloc.cards,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
 
-              return Expanded(
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                  width: double.infinity,
+                  height: 20.0
+              ),
+              Expanded(
                 child: CardListWidget(
                     cards: snapshot.data,
                     onScroll: (double scrollPercent) {
@@ -49,18 +49,18 @@ class _GamePageState extends State<GamePage> {
                       });
                     }
                 ),
-              );
-            }),
-          BottomBar(
-              numOfSteps: mockCards.length,
-              scrollPercent: scrollPercent
-          ),
-
-          Container(
-              width: double.infinity,
-              height: 20.0
-          )
-        ],
+              ),
+              BottomBar(
+                  numOfSteps: snapshot.data.length,
+                  scrollPercent: scrollPercent
+              ),
+              Container(
+                  width: double.infinity,
+                  height: 20.0
+              )
+            ],
+          );
+        },
       ),
     );
 
