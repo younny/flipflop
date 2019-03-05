@@ -1,41 +1,36 @@
 import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flipflop/repo/fb_db.dart';
 
 class FlipFlopApi {
+  final FirebaseDB database;
+
+  FlipFlopApi({
+    this.database
+  });
 
   Future<List<WordViewModel>> getCards({
     String category = "random",
     String filterBy = "popular"
   }) async {
 
-    return await Firestore.instance
-        .collection('cards')
-        .where("category", isEqualTo: category)
-        .snapshots()
-        .first
-        .then((snapshot) => snapshot.documents)
+    return await database
+        .readByFilter("cards", "category:$category")
         .then((docs) {
-          print("get Cards called");
+          print("get Cards called $docs");
           return docs.map((doc) => WordViewModel.fromJson(doc.data)).toList();
-        }).catchError((error) {
-          print(error);
         });
   }
 
   Future<List<Category>> getCategories() async {
-
-    return await Firestore.instance
-          .collection('categories')
-          .snapshots()
-          .first
-          .then((snapshot) => snapshot.documents)
+    return await database
+          .read('categories')
           .then((docs) {
-            print("get Categories called");
+            print("get Categories called $docs");
             return docs.map((doc) => Category.fromJson(doc.data)).toList();
-          }).catchError((error) {
-            print(error);
           });
 
   }
