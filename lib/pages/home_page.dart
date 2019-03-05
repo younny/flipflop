@@ -18,11 +18,11 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
+    final ffBloc = Provider.of<FlipFlopBloc>(context);
     Size screenSize = MediaQuery.of(context).size;
 
     return StreamBuilder(
-      stream: flipFlopBloc.categories,
+      stream: ffBloc.categories,
       builder: (context, snapshot) {
         if(!snapshot.hasData) {
           return Center(
