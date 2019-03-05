@@ -48,7 +48,7 @@ class FirebaseDB extends Database<List<DocumentSnapshot>> {
 
     return _firestore
         .collection(table)
-        .where(fieldOfFilter, isEqualTo: valueOfFilter)
+        .where(fieldOfFilter, isEqualTo: valueOfFilter.toLowerCase())
         .snapshots()
         .elementAt(0)
         .then((QuerySnapshot snapshot) => snapshot.documents)
