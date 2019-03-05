@@ -32,6 +32,6 @@ class FlipFlopBloc {
   }
 
   void dispose() {
-
+    print("Dispose of flipflop bloc.");
   }
 }
