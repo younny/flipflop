@@ -27,7 +27,7 @@ class FlipFlopApi {
   Future<List<Category>> getCategories() async {
 
     return await Firestore.instance
-          .collection('category')
+          .collection('categories')
           .snapshots()
           .first
           .then((snapshot) => snapshot.documents)
