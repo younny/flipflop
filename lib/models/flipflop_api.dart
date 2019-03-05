@@ -20,7 +20,7 @@ class FlipFlopApi {
     return await database
         .readByFilter("cards", "category:$category")
         .then((docs) {
-          print("get Cards called $docs");
+          print("get Cards called");
           return docs.map((doc) => WordViewModel.fromJson(doc.data)).toList();
         });
   }
