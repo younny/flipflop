@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context, snapshot) {
         if(!snapshot.hasData) {
           return Center(
-            child: Container()
+            child: CircularProgressIndicator()
           );
         }
         return CustomScrollView(
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                 delegate: _SliverHeaderDelegate(
                     minHeight: 40,
                     maxHeight: 40,
-                    text: "Category"
+                    text: "Categories"
                 )
             ),
 
