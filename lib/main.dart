@@ -15,10 +15,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        builder: (_, bloc) {
-          return FlipFlopBloc(FlipFlopApi());
-        },
+    return BlocProvider<FlipFlopBloc>(
+        builder: (_, bloc) => bloc
+            ?? FlipFlopBloc(
+                FlipFlopApi()
+            ),
         onDispose: (_, bloc) => bloc.dispose(),
         child: RootApp()
     );
@@ -29,7 +30,7 @@ class RootApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'FlipFlop',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
