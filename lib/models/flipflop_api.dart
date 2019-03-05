@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/repo/fb_db.dart';
+import 'package:meta/meta.dart';
 
 class FlipFlopApi {
   final FirebaseDB database;
 
   FlipFlopApi({
-    this.database
+    @required this.database
   });
 
   Future<List<WordViewModel>> getCards({
