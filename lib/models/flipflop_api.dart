@@ -18,7 +18,7 @@ class FlipFlopApi {
   }) async {
 
     return await database
-        .readByFilter("cards", "category")
+        .readByFilter("cards", "category:$category")
         .then((docs) {
           print("get Cards called $docs");
           return docs.map((doc) => WordViewModel.fromJson(doc.data)).toList();
