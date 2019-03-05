@@ -23,8 +23,8 @@ class FirebaseDB extends Database<List<DocumentSnapshot>> {
   }
 
   @override
-  Future<List<DocumentSnapshot>> read(String table) async {
-    return await _firestore
+  Future<List<DocumentSnapshot>> read(String table){
+    return _firestore
             .collection(table)
             .snapshots()
             .first
@@ -41,12 +41,12 @@ class FirebaseDB extends Database<List<DocumentSnapshot>> {
   }
 
   @override
-  Future<List<DocumentSnapshot>> readByFilter(String table, String filter) async {
+  Future<List<DocumentSnapshot>> readByFilter(String table, String filter) {
     List<String> parsedFilter = filter.split(':');
     String fieldOfFilter = parsedFilter[0];
     String valueOfFilter = parsedFilter[1];
 
-    return await _firestore
+    return _firestore
         .collection(table)
         .where(fieldOfFilter, isEqualTo: valueOfFilter)
         .snapshots()
