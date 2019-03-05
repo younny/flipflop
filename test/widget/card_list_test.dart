@@ -1,3 +1,4 @@
+import 'package:flipflop/fixtures/mock_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flipflop/components/card_flipper.dart';
@@ -7,29 +8,7 @@ import 'package:flipflop/components/card_list.dart';
 import '../helper/widget_wrapper.dart';
 
 final Key listKey = Key("card-list");
-final mockCards = <WordViewModel>[
-  WordViewModel(
-      word: '사과',
-      meaning: 'Apple',
-      pronunciation: 'sa-g-wa',
-      created: '27 Feb 2019',
-      category: 'fruit'
-  ),
-  WordViewModel(
-      word: '포도',
-      meaning: 'Grape',
-      pronunciation: 'po-do',
-      created: '27 Feb 2019',
-      category: 'fruit'
-  ),
-  WordViewModel(
-      word: '수박',
-      meaning: 'Watermelon',
-      pronunciation: 'soo-bak',
-      created: '27 Feb 2019',
-      category: 'fruit'
-  )
-];
+
 void main() {
   testWidgets("list renders correctly", (WidgetTester tester) async {
     final CardListWidget cardList = CardListWidget(
