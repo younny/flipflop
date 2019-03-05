@@ -3,6 +3,7 @@ class WordViewModel {
   final String meaning;
   final String pronunciation;
   final String category;
+  final int level;
   final DateTime created;
   final String lang;
 
@@ -11,6 +12,7 @@ class WordViewModel {
     this.meaning,
     this.pronunciation,
     this.category,
+    this.level,
     this.created,
     this.lang
   });
@@ -20,6 +22,7 @@ class WordViewModel {
         meaning = json['meaning'],
         pronunciation = json['pron'],
         category = json['catetory'],
+        level = json['level'],
         created = json['created'],
         lang = json['lang'];
 
