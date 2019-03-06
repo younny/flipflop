@@ -21,13 +21,12 @@ class FlipFlopBloc {
 
   FlipFlopBloc(this.api) {
     _cards = _category
-              .asyncMap((cat) => api.getCards(category: cat)).asBroadcastStream();
+              .asyncMap((cat) => api.getCards(category: cat))
+              .asBroadcastStream();
 
     _categories = Observable.defer(
-        () {
-          return Observable.fromFuture(api.getCategories()).asBroadcastStream();
-        },
-      reusable: true
+        () => Observable.fromFuture(api.getCategories()).asBroadcastStream(),
+        reusable: true
     );
   }
 

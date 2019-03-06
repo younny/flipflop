@@ -1,7 +1,6 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/components/bottom_bar.dart';
 import 'package:flipflop/components/card_list.dart';
-import 'package:flipflop/fixtures/mock_data.dart';
 import 'package:flipflop/providers/base_provider.dart';
 import 'package:flutter/material.dart';
 
