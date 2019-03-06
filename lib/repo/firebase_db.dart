@@ -19,9 +19,9 @@ class FirebaseDB{
     return null;
   }
 
-  Future<List<DocumentSnapshot>> read(String table) {
+  Future<List<DocumentSnapshot>> read(String collectionId) {
     return _firestore
-            .collection(table)
+            .collection(collectionId)
             .snapshots()
             .elementAt(0)
             .then((QuerySnapshot snapshot) => snapshot.documents)
@@ -35,13 +35,13 @@ class FirebaseDB{
     return null;
   }
 
-  Future<List<DocumentSnapshot>> readByFilter(String table, String filter) {
+  Future<List<DocumentSnapshot>> readByFilter(String collectionId, String filter) {
     List<String> parsedFilter = filter.split(':');
     String fieldOfFilter = parsedFilter[0];
     String valueOfFilter = parsedFilter[1];
 
     return _firestore
-        .collection(table)
+        .collection(collectionId)
         .where(fieldOfFilter, isEqualTo: valueOfFilter.toLowerCase())
         .snapshots()
         .elementAt(0)

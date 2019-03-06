@@ -1,12 +1,11 @@
-import 'package:flipflop/models/flipflop_api.dart';
-import 'package:flipflop/repo/fb_db.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'package:flipflop/blocs/flipflop_bloc.dart';
+import 'package:flipflop/models/flipflop_api.dart';
 import 'package:flipflop/pages/home_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
+import 'package:flipflop/repo/firebase_db.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);

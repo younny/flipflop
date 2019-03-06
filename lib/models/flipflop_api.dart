@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
-import 'package:flipflop/repo/fb_db.dart';
+import 'package:flipflop/repo/firebase_db.dart';
 import 'package:meta/meta.dart';
 
 class FlipFlopApi {
@@ -20,14 +20,14 @@ class FlipFlopApi {
     return await database
         .readByFilter("cards", "category:$category")
         .then((docs) {
-          print("get Cards called");
+          print("get Cards called $docs");
           return docs.map((doc) => WordViewModel.fromJson(doc.data)).toList();
         });
   }
 
   Future<List<Category>> getCategories() async {
     return await database
-          .read('categories')
+          .read("categories")
           .then((docs) {
             print("get Categories called");
             return docs.map((doc) => Category.fromJson(doc.data)).toList();
