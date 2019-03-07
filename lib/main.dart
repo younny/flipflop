@@ -1,6 +1,9 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/flipflop_api.dart';
+import 'package:flipflop/pages/card_stack_page.dart';
+import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/pages/home_page.dart';
+import 'package:flipflop/pages/settings_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
 import 'package:flipflop/repo/firebase_db.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +49,11 @@ class RootApp extends StatelessWidget {
           backgroundColor: Colors.blueGrey,
           body: HomePage()
       ),
+      routes: <String, WidgetBuilder> {
+        '/cardstack': (BuildContext context) => CardStackPage(),
+        '/game': (BuildContext context) => GamePage(),
+        '/settings': (BuildContext context) => SettingsPage()
+      },
       builder: (BuildContext context, Widget widget) {
         return Theme(
           data: ThemeData(
