@@ -27,4 +27,30 @@ void main() {
     expect(find.text("foo"), findsOneWidget);
 
   });
+
+  testWidgets("Sends callback when long pressed", (WidgetTester tester) async {
+
+    bool longPressed = false;
+    final stackCard = StackCardWidget(
+        card: WordViewModel(
+            word: "foo",
+            meaning: "Test",
+            pronunciation: "Blah",
+            created: DateTime.now(),
+            level: 0,
+            category: "test",
+            lang: "en"
+        ),
+        onLongPress: () {
+          longPressed = true;
+        },
+    );
+
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(stackCard));
+
+    await tester.longPress(find.byWidget(stackCard));
+
+    expect(longPressed, isTrue);
+
+  });
 }
