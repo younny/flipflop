@@ -31,7 +31,7 @@ class _StackCardWidgetState extends State<StackCardWidget> {
     return GestureDetector(
       onLongPress: onLongPress,
       child: RaisedButton(
-        color: selected ? Colors.amber.withOpacity(0.4) : Colors.amber,
+        color: _getColorBySelectedState(selected),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         onPressed: onPressed,
         child: Text(
@@ -43,6 +43,21 @@ class _StackCardWidgetState extends State<StackCardWidget> {
         )
       ),
     );
+  }
+
+  Color _getColorBySelectedState(bool selected) {
+    if(selected)
+      return Colors.amberAccent;
+
+    return _getColorByParentSelectionMode(widget.selectMode);
+  }
+
+  Color _getColorByParentSelectionMode(bool selectMode) {
+    if(selectMode) {
+      return Colors.amber.withOpacity(0.5);
+    }
+
+    return Colors.amber;
   }
 
   void onLongPress() {
