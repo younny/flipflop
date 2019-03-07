@@ -26,4 +26,14 @@ class WordViewModel {
         created = json['created'],
         lang = json['lang'];
 
+  @override
+  bool operator ==(other) {
+    return other.word == word
+    && other.meaning == meaning
+    && other.pronunciation == pronunciation
+    && other.category == category
+    && other.created == created
+    && other.level == level
+    && other.lang == lang;
+  }
 }
