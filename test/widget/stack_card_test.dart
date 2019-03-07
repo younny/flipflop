@@ -27,6 +27,9 @@ void main() {
 
     expect(find.text("foo"), findsOneWidget);
 
+    final RaisedButton button = tester.widget(find.byType(RaisedButton));
+    expect(button.color, equals(Colors.amber));
+
   });
 
   testWidgets("Sends callback when long pressed", (WidgetTester tester) async {
@@ -103,14 +106,13 @@ void main() {
 
     await tester.pumpWidget(wrap(stackCard));
 
-    final Element btnElement = tester.element(find.byType(RaisedButton));
-    final RaisedButton button = btnElement.widget;
+    final RaisedButton button = tester.widget(find.byType(RaisedButton));
     expect(button.color, equals(Colors.amber));
 
     await tester.longPress(find.byWidget(stackCard));
     expect(parentSelectionModeOn, isTrue);
     await tester.pump();
-    expect(button.color, equals(Colors.amber.withOpacity(0.5)));
+    expect(button.color, equals(Colors.amber.withOpacity(0.4)));
 
     await tester.tap(find.byWidget(stackCard));
     expect(parentSelectionModeOn, isTrue);
