@@ -24,14 +24,22 @@ class StackCardWidget extends StatefulWidget {
 class _StackCardWidgetState extends State<StackCardWidget> {
 
   bool selected = false;
-
+@override
+  void didUpdateWidget(StackCardWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(isSelectModeClosed(oldWidget.selectMode)) {
+      setState(() {
+        selected = false;
+      });
+    }
+}
   @override
   Widget build(BuildContext context) {
     final card = widget.card;
     return GestureDetector(
       onLongPress: onLongPress,
       child: RaisedButton(
-        color: _getColorBySelectedState(selected),
+        color: _getColorByCardSelectedState(selected),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         onPressed: onPressed,
         child: Text(
@@ -45,15 +53,19 @@ class _StackCardWidgetState extends State<StackCardWidget> {
     );
   }
 
-  Color _getColorBySelectedState(bool selected) {
-    if(selected)
+  bool isSelectModeClosed(bool oldState) => oldState && !widget.selectMode;
+
+  Color _getColorByCardSelectedState(bool isSelected) {
+    if(isSelected)
       return Colors.amberAccent;
 
-    return _getColorByParentSelectionMode(widget.selectMode);
+    return _getColorByParentSelectionMode();
   }
 
-  Color _getColorByParentSelectionMode(bool selectMode) {
-    if(selectMode) {
+  Color _getColorByParentSelectionMode() {
+    bool isParentSelectModeOn = widget.selectMode;
+
+    if(isParentSelectModeOn) {
       return Colors.amber.withOpacity(0.5);
     }
 

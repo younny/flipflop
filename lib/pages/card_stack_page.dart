@@ -10,6 +10,14 @@ class CardStackPage extends StatefulWidget {
 
 class _CardStackPageState extends State<CardStackPage> {
   bool isCardSelectMode = false;
+  List<WordViewModel> myCards;
+
+  @override
+  void initState() {
+    super.initState();
+
+    myCards = mockCards;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,17 +26,9 @@ class _CardStackPageState extends State<CardStackPage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.playlist_play),
-            iconSize: 32,
-            onPressed: () {
-              _goToGamePage();
-            },
-          )
-        ],
+        actions: _buildAppBarIconsByState(isCardSelectMode),
       ),
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: isCardSelectMode ? Colors.blueGrey.shade700 : Colors.blueGrey,
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Center(
@@ -65,6 +65,43 @@ class _CardStackPageState extends State<CardStackPage> {
     );
   }
 
+  List<Widget> _buildAppBarIconsByState(bool isCardSelectMode) {
+    if(isCardSelectMode) {
+      return _buildDeleteModeIconSet();
+    }
+
+    return _buildDefaultIconSet();
+  }
+
+  List<Widget> _buildDeleteModeIconSet() {
+    return [
+      IconButton(
+        icon: Icon(Icons.delete),
+        iconSize: 27,
+        color: Colors.amberAccent,
+        onPressed: () => _deleteSelectedCards()
+      ),
+      IconButton(
+        icon: Icon(Icons.check),
+        iconSize: 27,
+        color: Colors.amberAccent,
+        onPressed: () => _closeSelectionMode(),
+      )
+    ];
+  }
+
+  List<Widget> _buildDefaultIconSet() {
+    return [
+      IconButton(
+        icon: Icon(Icons.playlist_play),
+        iconSize: 32,
+        onPressed: () {
+          _goToGamePage();
+        },
+      )
+    ];
+  }
+
   List<StackCardWidget> _buildWordCardWidgets() {
     return mockCards.map((card) {
       return StackCardWidget(
@@ -91,5 +128,15 @@ class _CardStackPageState extends State<CardStackPage> {
 
   void _goToGamePage() {
     Navigator.pushNamed(context, "/game");
+  }
+
+  void _closeSelectionMode() {
+    setState(() {
+      isCardSelectMode = false;
+    });
+  }
+
+  void _deleteSelectedCards() {
+
   }
 }
