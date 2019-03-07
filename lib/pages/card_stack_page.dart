@@ -1,3 +1,6 @@
+import 'package:flipflop/components/stackcard_widget.dart';
+import 'package:flipflop/fixtures/mock_data.dart';
+import 'package:flipflop/models/word_view_model.dart';
 import 'package:flutter/material.dart';
 
 class CardStackPage extends StatefulWidget {
@@ -6,6 +9,8 @@ class CardStackPage extends StatefulWidget {
 }
 
 class _CardStackPageState extends State<CardStackPage> {
+  bool isCardSelectMode = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,17 +44,18 @@ class _CardStackPageState extends State<CardStackPage> {
               ),
               Container(
                 margin: const EdgeInsets.only(bottom: 16.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(
-                    color: Colors.amber,
-                    style: BorderStyle.solid
-                  )
-                ),
+
                 child: SizedBox(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.75,
-                  child: Container(),
+                  child: GridView.count(
+                    primary: false,
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                    childAspectRatio: 2,
+                    children: _buildWordCardWidgets(),
+                  ),
                 ),
               )
             ],
@@ -57,6 +63,30 @@ class _CardStackPageState extends State<CardStackPage> {
         ),
       ),
     );
+  }
+
+  List<StackCardWidget> _buildWordCardWidgets() {
+    return mockCards.map((card) {
+      return StackCardWidget(
+        card: card,
+        onPress: (card) => _onCardPress(card),
+        onLongPress: (card) => _onCardLongPress(card),
+        selectMode: isCardSelectMode,
+      );
+    }).toList();
+  }
+
+  void _onCardPress(WordViewModel card) {
+    print("Stack card onPress: ${card.word}");
+
+  }
+
+  void _onCardLongPress(WordViewModel card) {
+    print("Stack card onLongPress: ${card.word}");
+
+    setState(() {
+      isCardSelectMode = true;
+    });
   }
 
   void _goToGamePage() {
