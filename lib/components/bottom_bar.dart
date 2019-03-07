@@ -24,6 +24,7 @@ class BottomBar extends StatelessWidget {
               child: Center(
                 child: IconButton(
                   icon: Icon(Icons.settings),
+                  tooltip: "settings",
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -49,14 +50,51 @@ class BottomBar extends StatelessWidget {
 
             Expanded(
               child: Center(
-                child: Icon(
-                    Icons.add
+                child: IconButton(
+                  icon: Icon(Icons.add),
+                  tooltip: "add to my stack",
+                  onPressed: () {
+                    _showAddToMyStackAlert(context);
+                  },
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showAddToMyStackAlert(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Add to my stack"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text("Select folder."),
+              ],
+            )
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Done'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      }
     );
   }
 }

@@ -19,4 +19,33 @@ void main() {
     expect(find.byType(ScrollIndicator), findsOneWidget);
   });
 
+  testWidgets('add button shows add dialog alert', (WidgetTester tester) async {
+    final bottomBar = BottomBar(
+        numOfSteps: 10,
+        scrollPercent: 0
+    );
+    final container = Container(
+      child: bottomBar,
+    );
+
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(container));
+
+    Finder addIconButton = find.byTooltip("add to my stack");
+
+    expect(addIconButton, findsOneWidget);
+
+    await tester.tap(addIconButton);
+
+    await tester.pumpAndSettle();
+
+    Finder alert = find.byType(AlertDialog);
+
+    expect(alert, findsOneWidget);
+
+    await tester.tap(find.text("Done"));
+
+    await tester.pumpAndSettle();
+
+  });
+
 }
