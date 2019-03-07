@@ -18,7 +18,7 @@ void main() {
       cards: cards
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
+    await tester.pumpWidget(wrap(cardList));
     expect(find.text('TEST'), findsNWidgets(2));
 
   });
@@ -38,7 +38,7 @@ void main() {
       cards: cards
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
+    await tester.pumpWidget(wrap(cardList));
 
     await tester.tap(find.byKey(listKey));
 
@@ -65,7 +65,7 @@ void main() {
       cards: cards
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
+    await tester.pumpWidget(wrap(cardList));
 
     await tester.tap(find.byKey(listKey));
 

@@ -17,7 +17,7 @@ void main() {
       onScroll: (double) {},
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
+    await tester.pumpWidget(wrap(cardList));
 
     expect(find.byKey(listKey), findsOneWidget);
 
@@ -47,7 +47,7 @@ void main() {
       },
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
+    await tester.pumpWidget(wrap(cardList));
 
     await tester.fling(find.byWidget(cardList), Offset(-800.0, 0.0), 150);
 
@@ -72,7 +72,7 @@ void main() {
       },
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(cardList));
+    await tester.pumpWidget(wrap(cardList));
 
     await tester.fling(find.byWidget(cardList), Offset(-800.0, 0.0), 150);
 

@@ -12,7 +12,7 @@ void main() {
       scrollPercent: 0
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(bottomBar));
+    await tester.pumpWidget(wrap(bottomBar));
 
     expect(find.byType(Icon), findsNWidgets(2));
 

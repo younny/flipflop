@@ -21,7 +21,7 @@ void main() {
       flipped: false,
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
+    await tester.pumpWidget(wrap(wordCard));
 
     expect(wordCard.viewModel.word, equals(word));
 
@@ -43,7 +43,7 @@ void main() {
       flipped: false,
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
+    await tester.pumpWidget(wrap(wordCard));
 
     expect(wordCard.viewModel.word, equals(word));
 
@@ -67,7 +67,7 @@ void main() {
       flipped: true,
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
+    await tester.pumpWidget(wrap(wordCard));
 
     expect(wordCard.viewModel.meaning, equals(meaning));
 
@@ -94,7 +94,7 @@ void main() {
       flipped: true,
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
+    await tester.pumpWidget(wrap(wordCard));
 
     expect(wordCard.viewModel.meaning, equals(meaning));
 
@@ -118,7 +118,7 @@ void main() {
       flipped: true,
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(wordCard));
+    await tester.pumpWidget(wrap(wordCard));
 
     expect(wordCard.viewModel.meaning, equals(null));
 

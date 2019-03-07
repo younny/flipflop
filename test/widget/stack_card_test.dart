@@ -1,5 +1,6 @@
 import 'package:flipflop/components/stackcard_widget.dart';
 import 'package:flipflop/models/word_view_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helper/widget_wrapper.dart';
@@ -20,7 +21,7 @@ void main() {
         )
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(stackCard));
+    await tester.pumpWidget(wrap(stackCard));
 
     expect(find.byWidget(stackCard), findsOneWidget);
 
@@ -31,6 +32,8 @@ void main() {
   testWidgets("Sends callback when long pressed", (WidgetTester tester) async {
 
     bool longPressed = false;
+    WordViewModel wordViewModel = null;
+
     final stackCard = StackCardWidget(
         card: WordViewModel(
             word: "foo",
@@ -41,16 +44,21 @@ void main() {
             category: "test",
             lang: "en"
         ),
-        onLongPress: () {
+        onLongPress: (card) {
           longPressed = true;
+          wordViewModel = card;
         },
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(stackCard));
+    await tester.pumpWidget(wrap(stackCard));
 
     await tester.longPress(find.byWidget(stackCard));
 
     expect(longPressed, isTrue);
+
+    expect(wordViewModel, isNotNull);
+
+    expect(wordViewModel.word, equals("foo"));
 
   });
 
@@ -66,10 +74,49 @@ void main() {
           category: "test",
           lang: "en"
       ),
+      onLongPress: null
     );
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(stackCard));
+    await tester.pumpWidget(wrap(stackCard));
 
     await tester.longPress(find.byWidget(stackCard));
   });
+
+  testWidgets("select mode changed when long pressed", (WidgetTester tester) async {
+
+    bool parentSelectionModeOn = false;
+    final stackCard = StackCardWidget(
+        card: WordViewModel(
+            word: "foo",
+            meaning: "Test",
+            pronunciation: "Blah",
+            created: DateTime.now(),
+            level: 0,
+            category: "test",
+            lang: "en"
+        ),
+        onLongPress: (card) {
+          parentSelectionModeOn = true;
+        },
+        selectMode: parentSelectionModeOn
+    );
+
+    await tester.pumpWidget(wrap(stackCard));
+
+    final Element btnElement = tester.element(find.byType(RaisedButton));
+    final RaisedButton button = btnElement.widget;
+    expect(button.color, equals(Colors.amber));
+
+    await tester.longPress(find.byWidget(stackCard));
+    expect(parentSelectionModeOn, isTrue);
+    await tester.pump();
+    expect(button.color, equals(Colors.amber.withOpacity(0.5)));
+
+    await tester.tap(find.byWidget(stackCard));
+    expect(parentSelectionModeOn, isTrue);
+    await tester.pump();
+    expect(button.color, equals(Colors.amber));
+
+  });
+
 }

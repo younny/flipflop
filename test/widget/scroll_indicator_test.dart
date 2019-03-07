@@ -10,7 +10,7 @@ void main() {
       numOfSteps: 10,
       scrollPercent: 0
     );
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(scrollIndicator));
+    await tester.pumpWidget(wrap(scrollIndicator));
 
     expect(find.byType(ScrollIndicator), findsOneWidget);
 
