@@ -11,12 +11,14 @@ class CardStackPage extends StatefulWidget {
 class _CardStackPageState extends State<CardStackPage> {
   bool isCardSelectMode = false;
   List<WordViewModel> myCards;
+  Set<WordViewModel> selectedCards;
 
   @override
   void initState() {
     super.initState();
 
     myCards = mockCards;
+    selectedCards = Set.identity();
   }
 
   @override
@@ -114,15 +116,25 @@ class _CardStackPageState extends State<CardStackPage> {
   }
 
   void _onCardPress(WordViewModel card) {
-    print("Stack card onPress: ${card.word}");
+    if(isCardSelectMode) {
+      _checkAndUpdateSelectedCards(card);
+    }
+  }
 
+  void _checkAndUpdateSelectedCards(WordViewModel card) {
+    setState(() {
+      if(selectedCards.contains(card)) {
+        selectedCards.remove(card);
+      } else {
+        selectedCards.add(card);
+      }
+    });
   }
 
   void _onCardLongPress(WordViewModel card) {
-    print("Stack card onLongPress: ${card.word}");
-
     setState(() {
       isCardSelectMode = true;
+      selectedCards.add(card);
     });
   }
 
@@ -137,6 +149,20 @@ class _CardStackPageState extends State<CardStackPage> {
   }
 
   void _deleteSelectedCards() {
+    setState(() {
+      selectedCards.forEach((card) {
+        myCards.remove(card);
+      });
+    });
 
+    _emptySelectedCards();
+
+    _closeSelectionMode();
+  }
+
+  void _emptySelectedCards() {
+    setState(() {
+      selectedCards = Set.identity();
+    });
   }
 }
