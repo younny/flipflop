@@ -53,4 +53,23 @@ void main() {
     expect(longPressed, isTrue);
 
   });
+
+  testWidgets("passes null to onLongPress", (WidgetTester tester) async {
+
+    final stackCard = StackCardWidget(
+      card: WordViewModel(
+          word: "foo",
+          meaning: "Test",
+          pronunciation: "Blah",
+          created: DateTime.now(),
+          level: 0,
+          category: "test",
+          lang: "en"
+      ),
+    );
+
+    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(stackCard));
+
+    await tester.longPress(find.byWidget(stackCard));
+  });
 }
