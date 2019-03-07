@@ -34,8 +34,22 @@ class _HomePageState extends State<HomePage> {
             SliverAppBar(
               pinned: true,
               expandedHeight: screenSize.height * 0.3,
+              actions: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.assignment),
+                    tooltip: "My Stack",
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/cardstack');
+                    }),
+                IconButton(
+                    icon: Icon(Icons.settings),
+                    tooltip: "Settings",
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/settings');
+                    }),
+              ],
               flexibleSpace: FlexibleSpaceBar(
-                  title: Text('Home')
+                  title: Text('Home'),
               ),
             ),
             SliverPadding(
