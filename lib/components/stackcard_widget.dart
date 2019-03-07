@@ -7,19 +7,21 @@ class StackCardWidget extends StatefulWidget {
   final WordViewModel card;
   final OnStackCardCallback onPress;
   final OnStackCardCallback onLongPress;
+  final bool selectMode;
 
   StackCardWidget({
     Key key,
     @required this.card,
     this.onPress,
-    this.onLongPress
+    this.onLongPress,
+    this.selectMode = false
   }): super(key: key);
 
   @override
-  _StackCardState createState() => _StackCardState();
+  _StackCardWidgetState createState() => _StackCardWidgetState();
 }
 
-class _StackCardState extends State<StackCardWidget> {
+class _StackCardWidgetState extends State<StackCardWidget> {
 
   bool selected = false;
 
@@ -28,19 +30,17 @@ class _StackCardState extends State<StackCardWidget> {
     final card = widget.card;
     return GestureDetector(
       onLongPress: onLongPress,
-      child: Container(
-        child: RaisedButton(
-          color: selected ? Colors.amber.withOpacity(0.5) : Colors.amber,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          onPressed: onPressed,
-          child: Text(
-            card.word,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 16.0
-            ),
-          )
-        ),
+      child: RaisedButton(
+        color: selected ? Colors.amber.withOpacity(0.4) : Colors.amber,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        onPressed: onPressed,
+        child: Text(
+          card.word,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 16.0
+          ),
+        )
       ),
     );
   }
@@ -58,6 +58,12 @@ class _StackCardState extends State<StackCardWidget> {
   }
 
   void onPressed() {
+    if(widget.selectMode) {
+      setState(() {
+        selected = !selected;
+      });
+    }
+
     try {
       widget.onPress(widget.card);
     } catch (e) {
