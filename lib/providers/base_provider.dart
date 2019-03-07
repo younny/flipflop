@@ -9,7 +9,7 @@ class Provider<B> extends InheritedWidget {
     Key key,
     this.bloc,
     Widget child
-  }) : super(key: key, child: child);
+  }) : assert(bloc != null), super(key: key, child: child);
 
   @override
   bool updateShouldNotify(Provider<B> oldWidget) {
