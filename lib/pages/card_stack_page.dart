@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flipflop/components/stackcard_widget.dart';
 import 'package:flipflop/fixtures/mock_data.dart';
 import 'package:flipflop/models/word_view_model.dart';
@@ -50,13 +52,16 @@ class _CardStackPageState extends State<CardStackPage> {
                 child: SizedBox(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.75,
-                  child: GridView.count(
-                    primary: false,
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                    childAspectRatio: 2,
-                    children: _buildWordCardWidgets(),
+                  child: RefreshIndicator(
+                    onRefresh: _onRefresh,
+                    child: GridView.count(
+                      primary: false,
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 5,
+                      childAspectRatio: 2,
+                      children: _buildWordCardWidgets(),
+                    ),
                   ),
                 ),
               )
@@ -164,5 +169,15 @@ class _CardStackPageState extends State<CardStackPage> {
     setState(() {
       selectedCards = Set.identity();
     });
+  }
+
+  Future<void> _onRefresh() {
+    // TODO This is fake timer. Needs to be real data fetching from Firebase.
+    Completer<void> completer = Completer<void>();
+    Timer(Duration(seconds: 1), () {
+      completer.complete();
+    });
+
+    return completer.future;
   }
 }
