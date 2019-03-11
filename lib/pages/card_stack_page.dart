@@ -172,7 +172,7 @@ class _CardStackPageState extends State<CardStackPage> {
   }
 
   Future<void> _onRefresh() {
-    // TODO This is fake timer. Needs to be real data fetching from Firebase.
+    // TODO This is fake timer. Needs to be real data from local storage.
     Completer<void> completer = Completer<void>();
     Timer(Duration(seconds: 1), () {
       completer.complete();
