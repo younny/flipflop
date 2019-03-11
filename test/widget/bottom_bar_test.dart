@@ -5,14 +5,21 @@ import 'package:flipflop/components/bottom_bar.dart';
 
 import '../helper/widget_wrapper.dart';
 
-void main() {
-  testWidgets('bottom bar renders correctly', (WidgetTester tester) async {
-    final bottomBar = BottomBar(
+Future<void> _buildBottomBarWidget(WidgetTester tester) async {
+  final bottomBar = BottomBar(
       numOfSteps: 10,
       scrollPercent: 0
-    );
+  );
+  final container = Container(
+    child: bottomBar,
+  );
+  await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(container));
+}
 
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(bottomBar));
+void main() {
+
+  testWidgets('bottom bar renders correctly', (WidgetTester tester) async {
+    await _buildBottomBarWidget(tester);
 
     expect(find.byType(Icon), findsNWidgets(2));
 
@@ -20,19 +27,25 @@ void main() {
   });
 
   testWidgets('add button shows add dialog alert', (WidgetTester tester) async {
-    final bottomBar = BottomBar(
-        numOfSteps: 10,
-        scrollPercent: 0
-    );
-    final container = Container(
-      child: bottomBar,
-    );
-
-    await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(container));
+    await _buildBottomBarWidget(tester);
 
     Finder addIconButton = find.byTooltip("add to my stack");
 
     expect(addIconButton, findsOneWidget);
+
+    await tester.tap(addIconButton);
+
+    await tester.pumpAndSettle();
+
+    Finder alert = find.byType(AlertDialog);
+
+    expect(alert, findsOneWidget);
+  });
+
+  testWidgets('close dialog when done button clicked.', (WidgetTester tester) async {
+    await _buildBottomBarWidget(tester);
+
+    Finder addIconButton = find.byTooltip("add to my stack");
 
     await tester.tap(addIconButton);
 
@@ -46,6 +59,27 @@ void main() {
 
     await tester.pumpAndSettle();
 
+    expect(alert, findsNothing);
   });
 
+  testWidgets('close dialog when cancel button clicked.', (WidgetTester tester) async {
+    await _buildBottomBarWidget(tester);
+
+    Finder addIconButton = find.byTooltip("add to my stack");
+
+    await tester.tap(addIconButton);
+
+    await tester.pumpAndSettle();
+
+    Finder alert = find.byType(AlertDialog);
+
+    expect(alert, findsOneWidget);
+
+    await tester.tap(find.text("Cancel"));
+
+    await tester.pumpAndSettle();
+
+    expect(alert, findsNothing);
+
+  });
 }
