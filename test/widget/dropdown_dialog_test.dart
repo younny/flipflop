@@ -7,7 +7,7 @@ import '../helper/widget_wrapper.dart';
 final String dialogTitle = "Test Dialog";
 final String closeButtonText = "Close";
 final String doneButtonText = "Done";
-final List<String> items = ["item1", "item2", "item3"];
+final List<String> mockItems = ["item1", "item2", "item3"];
 final Type dropdownButtonType = DropdownButton<int>(
   items: const <DropdownMenuItem<int>>[],
   onChanged: (index) {},
@@ -18,20 +18,20 @@ final Type dropdownMenuItemType = DropdownMenuItem<int>(
 
 Future<Widget> _buildDialog({
   WidgetTester tester,
+  List<String> items,
   ValueChanged<int> onChange,
-  ValueChanged<String> onDone
+  ValueChanged<String> onDone,
+  VoidCallback onClose
 }) async {
   final dialog = DropdownDialog(
-    items: items,
-    onClose: () {},
+    items: items ?? mockItems,
+    onClose: onClose,
     onDone: onDone,
     onChange: onChange,
     title: dialogTitle,
     closeText: closeButtonText,
     doneText: doneButtonText,
   );
-
-
 
   await tester.pumpWidget(wrap(dialog));
   return dialog;
@@ -52,9 +52,16 @@ void main() {
           matching: find.byType(dropdownMenuItemType)
       );
 
-      expect(f, findsNWidgets(items.length));
+      expect(f, findsNWidgets(mockItems.length));
 
       expect(find.byIcon(Icons.library_add), findsOneWidget);
+  });
+
+  testWidgets('renders dropdown when items empty', (WidgetTester tester) async {
+    await _buildDialog(tester: tester, items: []);
+    State buttonState = tester.state(find.byType(dropdownButtonType));
+
+    expect((buttonState.widget as DropdownButton).value, isNull);
   });
 
   testWidgets('select dropdown menu item', (WidgetTester tester) async {
@@ -66,24 +73,24 @@ void main() {
     await _buildDialog(tester: tester, onChange: onChange);
     State buttonState = tester.state(find.byType(dropdownButtonType));
 
-    await tester.tap(find.text(items[0]));
+    await tester.tap(find.text(mockItems[0]));
     await tester.pumpAndSettle();
 
     expect(value, equals(0));
     expect((buttonState.widget as DropdownButton).value, equals(0));
 
-    await tester.tap(find.text(items[1]).last);
+    await tester.tap(find.text(mockItems[1]).last);
     await tester.pumpAndSettle();
 
     expect(value, equals(1));
     expect((buttonState.widget as DropdownButton).value, equals(1));
 
-    await tester.tap(find.text(items[1]));
+    await tester.tap(find.text(mockItems[1]));
     await tester.pumpAndSettle();
 
     expect(value, equals(1));
 
-    await tester.tap(find.text(items[2]).last);
+    await tester.tap(find.text(mockItems[2]).last);
     await tester.pumpAndSettle();
 
     expect(value, equals(2));
@@ -103,7 +110,7 @@ void main() {
     expect(find.text("New Folder 1"), findsOneWidget);
   });
 
-  testWidgets('enter new folder name in edit mode', (WidgetTester tester) async {
+  testWidgets('enter new folder name and click done', (WidgetTester tester) async {
     String result;
     void onDone(String value) {
       result = value;
@@ -122,12 +129,38 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(result, equals("New Folder 2"));
+  });
+
+  testWidgets('enter new folder name and cancel', (WidgetTester tester) async {
+    bool closed = false;
+    void onClose() {
+      closed = true;
+    }
+    await _buildDialog(tester: tester, onClose: onClose);
+
+    State buttonState = tester.state(find.byType(dropdownButtonType));
+    expect((buttonState.widget as DropdownButton).items.length, equals(mockItems.length));
+
+    Finder addIcon = find.byIcon(Icons.library_add);
+    await tester.tap(addIcon);
+    await tester.pumpAndSettle();
+
+    Finder inputField = find.byType(TextFormField);
+    expect(inputField, findsOneWidget);
+    await tester.enterText(inputField, "New Folder 2");
+
+    await tester.tap(find.byType(FlatButton).last);
+    await tester.pumpAndSettle();
+
+    expect(closed, isFalse);
+    expect(inputField, findsNothing);
+    expect((buttonState.widget as DropdownButton).items.length, equals(mockItems.length));
 
   });
 
   testWidgets('close dialog when done and close button clicked.', (WidgetTester tester) async {
     final dialog = DropdownDialog(
-      items: items,
+      items: mockItems,
       title: dialogTitle,
       closeText: closeButtonText,
       doneText: doneButtonText,
