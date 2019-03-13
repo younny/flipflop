@@ -7,3 +7,17 @@ Widget wrap(Widget child) {
     ),
   );
 }
+
+Widget wrapWithContext(Function injectChild) {
+  return MaterialApp(
+    home: Material(
+      child: Builder(
+        builder: (BuildContext context) {
+          return Container(
+            child: injectChild(context),
+          );
+        },
+      ),
+    )
+  );
+}

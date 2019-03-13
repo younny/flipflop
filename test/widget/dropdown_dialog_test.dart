@@ -133,27 +133,19 @@ void main() {
       doneText: doneButtonText,
     );
 
-    final app = MaterialApp(
-      home: Material(
-        child: Builder(
-          builder: (BuildContext context) {
-            return Container(
-              child: FlatButton(
-                  onPressed: () => showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return dialog;
-                      }
-                  ),
-                  child: Text("click-this")
-              ),
-            );
-          },
-        )
-      )
-    );
+    Widget inject (BuildContext context) {
+      return FlatButton(
+          onPressed: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) {
+                return dialog;
+              }
+          ),
+          child: Text("click-this")
+      );
+    }
 
-    await tester.pumpWidget(app);
+    await tester.pumpWidget(wrapWithContext(inject));
     await tester.tap(find.text("click-this"));
     await tester.pumpAndSettle();
 
