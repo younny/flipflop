@@ -13,7 +13,7 @@ Future<void> _buildBottomBarWidget(WidgetTester tester) async {
   final container = Container(
     child: bottomBar,
   );
-  await tester.pumpWidget(WidgetWrapper.wrapWithMaterial(container));
+  await tester.pumpWidget(wrap(container));
 }
 
 void main() {
@@ -42,44 +42,4 @@ void main() {
     expect(alert, findsOneWidget);
   });
 
-  testWidgets('close dialog when done button clicked.', (WidgetTester tester) async {
-    await _buildBottomBarWidget(tester);
-
-    Finder addIconButton = find.byTooltip("add to my stack");
-
-    await tester.tap(addIconButton);
-
-    await tester.pumpAndSettle();
-
-    Finder alert = find.byType(AlertDialog);
-
-    expect(alert, findsOneWidget);
-
-    await tester.tap(find.text("Done"));
-
-    await tester.pumpAndSettle();
-
-    expect(alert, findsNothing);
-  });
-
-  testWidgets('close dialog when cancel button clicked.', (WidgetTester tester) async {
-    await _buildBottomBarWidget(tester);
-
-    Finder addIconButton = find.byTooltip("add to my stack");
-
-    await tester.tap(addIconButton);
-
-    await tester.pumpAndSettle();
-
-    Finder alert = find.byType(AlertDialog);
-
-    expect(alert, findsOneWidget);
-
-    await tester.tap(find.text("Cancel"));
-
-    await tester.pumpAndSettle();
-
-    expect(alert, findsNothing);
-
-  });
 }
