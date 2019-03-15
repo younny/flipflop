@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 class BottomBar extends StatefulWidget {
   final int numOfSteps;
   final double scrollPercent;
+  final Function onRightActionCallback;
 
   const BottomBar({
     this.numOfSteps,
-    this.scrollPercent
+    this.scrollPercent,
+    this.onRightActionCallback
   });
 
   @override
@@ -65,7 +67,9 @@ class _BottomBarState extends State<BottomBar> {
                   onPressed: () {
                     _showAddToMyStackAlert(context)
                     .then((value) {
-                      print("Save to ${value}");
+                      if(widget.onRightActionCallback != null) {
+                        widget.onRightActionCallback(scrollPercent, value);
+                      }
                     });
                   },
                 ),

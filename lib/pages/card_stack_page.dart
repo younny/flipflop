@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flipflop/components/stackcard_widget.dart';
-import 'package:flipflop/fixtures/mock_data.dart';
 import 'package:flipflop/models/word_view_model.dart';
+import 'package:flipflop/repo/local_db.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' hide context;
 
 class CardStackPage extends StatefulWidget {
   @override
@@ -19,8 +20,10 @@ class _CardStackPageState extends State<CardStackPage> {
   void initState() {
     super.initState();
 
-    myCards = mockCards;
+    myCards = [];
     selectedCards = Set.identity();
+
+    _loadMyStack();
   }
 
   @override
@@ -72,6 +75,24 @@ class _CardStackPageState extends State<CardStackPage> {
     );
   }
 
+  void _loadMyStack() async {
+    LocalDB db = LocalDB.instance;
+
+    await db.open('test1');
+    List<Map> records = await db.retrieveAll();
+
+    print(records.length);
+
+    if(records.isNotEmpty) {
+      records.forEach((item) {
+        WordViewModel wordItem = WordViewModel.fromMap(item);
+        myCards.add(wordItem);
+      });
+
+      setState(() {});
+    }
+  }
+
   List<Widget> _buildAppBarIconsByState(bool isCardSelectMode) {
     if(isCardSelectMode) {
       return _buildDeleteModeIconSet();
@@ -110,7 +131,7 @@ class _CardStackPageState extends State<CardStackPage> {
   }
 
   List<StackCardWidget> _buildWordCardWidgets() {
-    return mockCards.map((card) {
+    return myCards.map((card) {
       return StackCardWidget(
         card: card,
         onPress: (card) => _onCardPress(card),

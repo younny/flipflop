@@ -1,7 +1,9 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/components/bottom_bar.dart';
 import 'package:flipflop/components/card_list.dart';
+import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/providers/base_provider.dart';
+import 'package:flipflop/repo/local_db.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
@@ -31,7 +33,6 @@ class _GamePageState extends State<GamePage> {
             return Center(
               child: CircularProgressIndicator(),
             );
-
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -50,8 +51,13 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
               BottomBar(
-                  numOfSteps: snapshot.data.length,
-                  scrollPercent: scrollPercent
+                numOfSteps: snapshot.data.length,
+                scrollPercent: scrollPercent,
+                onRightActionCallback: (scrollPercent, fileName) {
+                  int index = (scrollPercent * 10).toInt();
+                  print("Save $index to $fileName");
+                  onSave(snapshot.data[index], fileName);
+                }
               ),
               Container(
                   width: double.infinity,
@@ -63,6 +69,26 @@ class _GamePageState extends State<GamePage> {
       ),
     );
 
+  }
+
+  void onSave(WordViewModel word, String fileName) {
+    _openAndInsertDatabase(word, fileName);
+  }
+
+  void _openAndInsertDatabase(WordViewModel word, String fileName) async {
+    LocalDB db = LocalDB.instance;
+    await db.open(fileName);
+
+    await _insertData(word);
+
+    await db.close();
+  }
+
+  Future _insertData(WordViewModel item) async {
+    LocalDB db = LocalDB.instance;
+    int id = await db.insert(item);
+
+    print('item $id is inserted.');
   }
 }
 
