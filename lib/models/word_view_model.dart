@@ -26,7 +26,7 @@ class WordViewModel {
         word = json['word'],
         meaning = json['meaning'],
         pronunciation = json['pron'],
-        category = json['catetory'],
+        category = json['category'],
         level = json['level'],
         created = json['created'],
         lang = json['lang'];
