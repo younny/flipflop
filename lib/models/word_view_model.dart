@@ -31,6 +31,16 @@ class WordViewModel {
         created = json['created'],
         lang = json['lang'];
 
+  WordViewModel.fromMap(Map map)
+      : id = map[columnId],
+        word = map[columnWord],
+        meaning = map[columnMeaning],
+        pronunciation = map[columnPron],
+        category = map[columnCategory],
+        level = map[columnLevel],
+        created = DateTime.now(),
+        lang = map[columnLang];
+
   Map<String, dynamic> toMap() {
     var map = <String, dynamic> {
       columnWord: word,
@@ -44,7 +54,6 @@ class WordViewModel {
     if(id != null) {
       map[columnId] = id;
     }
-
     return map;
   }
 
