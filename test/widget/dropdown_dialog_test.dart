@@ -57,11 +57,31 @@ void main() {
       expect(find.byIcon(Icons.library_add), findsOneWidget);
   });
 
+  testWidgets('dropdown has default value', (WidgetTester tester) async {
+    String defaultOption;
+
+    await _buildDialog(tester: tester, onDone: (selected) {
+      defaultOption = selected;
+    });
+    await tester.tap(find.text(doneButtonText));
+    await tester.pumpAndSettle();
+
+    expect(defaultOption, equals(mockItems[0]));
+
+  });
+
   testWidgets('renders dropdown when items empty', (WidgetTester tester) async {
     await _buildDialog(tester: tester, items: []);
     State buttonState = tester.state(find.byType(dropdownButtonType));
 
     expect((buttonState.widget as DropdownButton).value, isNull);
+  });
+
+  testWidgets('renders dropdown when items is null', (WidgetTester tester) async {
+    await _buildDialog(tester: tester, items: null);
+    State buttonState = tester.state(find.byType(dropdownButtonType));
+
+    expect((buttonState.widget as DropdownButton).value, equals(0));
   });
 
   testWidgets('select dropdown menu item', (WidgetTester tester) async {
@@ -131,12 +151,15 @@ void main() {
     expect(result, equals("New Folder 2"));
   });
 
-  testWidgets('enter new folder name and cancel', (WidgetTester tester) async {
+  testWidgets('enter new folder but cancel and exit should return default', (WidgetTester tester) async {
     bool closed = false;
+    String defaultOption;
     void onClose() {
       closed = true;
     }
-    await _buildDialog(tester: tester, onClose: onClose);
+    await _buildDialog(tester: tester, onClose: onClose, onDone: (selected) {
+      defaultOption = selected;
+    });
 
     State buttonState = tester.state(find.byType(dropdownButtonType));
     expect((buttonState.widget as DropdownButton).items.length, equals(mockItems.length));
@@ -155,6 +178,11 @@ void main() {
     expect(closed, isFalse);
     expect(inputField, findsNothing);
     expect((buttonState.widget as DropdownButton).items.length, equals(mockItems.length));
+
+    await tester.tap(find.text(doneButtonText));
+    await tester.pumpAndSettle();
+
+    expect(defaultOption, equals(mockItems[0]));
 
   });
 
