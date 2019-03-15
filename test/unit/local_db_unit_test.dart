@@ -101,7 +101,6 @@ void main() {
     await localDB.open(path);
 
     var results = await localDB.insert(word);
-    Map<String, dynamic> resultsAsMap = results as Map;
 
     expect(log.last.method, equals('insert'));
 
