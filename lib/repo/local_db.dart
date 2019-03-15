@@ -15,15 +15,18 @@ class LocalDB {
     await Sqflite.setDebugModeOn();
   }
 
-  String getPath() {
-    return _db.path;
+  Future<String> getPath() async {
+    return await getDatabasesPath();
   }
 
   Future open(String path) async {
     _db = await openDatabase(
         path,
         version: 1,
-        onCreate: (db, version) => create(db, version));
+        onCreate: (db, version) async {
+          print("Create db : $path");
+          return create(db, version);
+        });
   }
 
   bool isOpened() {
@@ -35,16 +38,15 @@ class LocalDB {
   }
 
   Future create(Database db, int version) async {
-    return await db.execute('''
+    await db.execute('''
       create table $tableName (
-      $columnId integer primary key autoincrement
-      $columnWord text not null
-      $columnMeaning text not null
-      $columnPron text not null
-      $columnLang text not null
-      $columnCategory text not null
-      $columnLevel integer not null
-      )
+      $columnId integer primary key autoincrement,
+      $columnWord text not null,
+      $columnMeaning text not null,
+      $columnPron text not null,
+      $columnLang text not null,
+      $columnCategory text not null,
+      $columnLevel integer not null)
       ''');
   }
 
