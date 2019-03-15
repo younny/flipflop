@@ -10,20 +10,13 @@ import 'package:sqflite/sqflite.dart';
 import 'package:test/test.dart';
 
 class MockDatabase extends Mock implements Database {}
-class MockDatabaseExecutor extends Mock implements DatabaseExecutor {}
-class MockDatabaseFactory extends Mock implements DatabaseFactory {}
-
 void main() {
   LocalDB localDB;
-  MockDatabaseExecutor mockDatabaseExecutor;
-  MockDatabaseFactory factory;
   MockDatabase database;
+  Directory tempDir;
   const MethodChannel channel = MethodChannel('com.tekartik.sqflite');
   final List<MethodCall> log = <MethodCall>[];
-  Directory tempDir;
   setUpAll(() async {
-    mockDatabaseExecutor = MockDatabaseExecutor();
-    factory = MockDatabaseFactory();
     database = MockDatabase();
     localDB = LocalDB.instance;
     tempDir = await Directory.systemTemp.createTemp();
@@ -31,7 +24,9 @@ void main() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
       String method = methodCall.method;
       log.add(methodCall);
-
+      if(method == 'getDatabasesPath') {
+        return tempDir.path;
+      }
       if(method == 'query') {
         await database.query(tableName);
         final List<Map<String, dynamic>> results = <Map<String, dynamic>>[
@@ -44,32 +39,26 @@ void main() {
     });
   });
 
-  tearDown(() {
+  tearDown(() async {
     log.clear();
   });
 
   test("create database", () async {
-    String dbName = 'test.db';
-    String path = join(tempDir.path, dbName);
+    String dbName = 'test';
 
-    await deleteDatabase(path);
+    await localDB.open(dbName);
 
-    await localDB.open(path);
+    expect(log[0].method, equals("getDatabasesPath"));
 
-    expect(log.first.method, equals("openDatabase"));
+    expect(log[1].method, equals("openDatabase"));
 
-    expect(log.first.arguments['path'], equals(path));
-
-    expect(localDB.getPath(), equals(path));
-
-    await localDB.close();
+    expect(log.last.method, equals("execute"));
   });
 
   test("read database", () async {
-    String dbName = 'test.db';
-    String path = join(tempDir.path, dbName);
+    String dbName = 'test';
 
-    await localDB.open(path);
+    await localDB.open(dbName);
 
     List<Map> results = await localDB.retrieveAll();
 
@@ -80,8 +69,6 @@ void main() {
     expect(log.last.method, equals("query"));
 
     expect(log.last.arguments['sql'], equals('SELECT * FROM $tableName'));
-
-    await localDB.close();
   });
 
   test("insert data", () async {
@@ -95,19 +82,27 @@ void main() {
         pronunciation: 'blah'
     );
 
-    String dbName = 'test.db';
-    String path = join(tempDir.path, dbName);
+    String dbName = 'test';
 
-    await localDB.open(path);
+    await localDB.open(dbName);
 
-    var results = await localDB.insert(word);
+    await localDB.insert(word);
 
     expect(log.last.method, equals('insert'));
 
     expect(log.last.arguments['sql'].toString().startsWith('INSERT INTO $tableName'), isTrue);
   });
 
+  test("set database path correctly", () async {
+    String path = await localDB.getPath();
 
+    expect(path, equals(tempDir.path));
+
+    String name = 'test1';
+    String fullPath = await localDB.getFullPath(name);
+
+    expect(fullPath, equals(join(tempDir.path, name)));
+  });
 //  test("delete database", () async {
 //
 //  });

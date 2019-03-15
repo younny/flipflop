@@ -1,5 +1,7 @@
 import 'package:flipflop/models/db_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
+import 'package:flipflop/utils/db_name_provider.dart';
+import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LocalDB {
@@ -19,12 +21,22 @@ class LocalDB {
     return await getDatabasesPath();
   }
 
-  Future open(String path) async {
+  Future<String> getFullPath(String name) async {
+    return join(await getPath(), name);
+  }
+
+  Future open(String name) async {
+    String fullName = makeFileName(name);
+    String path = "";
+    try {
+      path = await getFullPath(fullName);
+    } catch (e) {
+      print(e);
+    }
     _db = await openDatabase(
         path,
         version: 1,
         onCreate: (db, version) async {
-          print("Create db : $path");
           return create(db, version);
         });
   }
@@ -69,6 +81,7 @@ class LocalDB {
 
   Future<List<Map>> retrieveAll() async {
     List<Map> maps = await _db.query(tableName) ?? [];
+
     return maps;
   }
 
