@@ -1,7 +1,7 @@
 import 'package:flipflop/models/db_model.dart';
 
 class WordViewModel {
-  final int id;
+  final String id;
   final String word;
   final String meaning;
   final String pronunciation;
@@ -21,8 +21,8 @@ class WordViewModel {
     this.lang
   });
 
-  WordViewModel.fromJson(Map json)
-      : id = json['id'],
+  WordViewModel.fromJson(String id, Map json)
+      : id = id,
         word = json['word'],
         meaning = json['meaning'],
         pronunciation = json['pron'],

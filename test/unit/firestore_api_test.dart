@@ -56,7 +56,7 @@ void main() {
     snapshot.listen((QuerySnapshot snapshot) {
       expect(snapshot.documents.length, 1);
 
-      WordViewModel word = WordViewModel.fromJson(snapshot.documents[0].data);
+      WordViewModel word = WordViewModel.fromJson("test", snapshot.documents[0].data);
       expect(word, equals("TEST"));
     });
 

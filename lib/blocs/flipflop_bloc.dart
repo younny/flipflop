@@ -31,7 +31,7 @@ class FlipFlopBloc {
              .elementAt(0)
              .then((QuerySnapshot snapshot) {
             return snapshot
-            .documents.map((doc) => WordViewModel.fromJson(doc.data)).toList();
+            .documents.map((doc) => WordViewModel.fromJson(doc.documentID, doc.data)).toList();
          });
        });
 
