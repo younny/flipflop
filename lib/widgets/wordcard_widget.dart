@@ -62,37 +62,32 @@ class WordCardWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  StringFormatter.formatWord(viewModel.word),
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    letterSpacing: 1,
-                    fontWeight: FontWeight.bold
-                  )
-                ),
-                Text(
-                  StringFormatter.formatPronunciation(viewModel.pronunciation),
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    letterSpacing: 1,
-                    fontWeight: FontWeight.normal
-                  )
-                )
-              ],
-            ),
-          ),
           Text(
-            StringFormatter.formatMeaning(viewModel.meaning),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 3,
+            StringFormatter.formatWord(viewModel.word),
             style: TextStyle(
               fontSize: 24.0,
+              letterSpacing: 1,
               fontWeight: FontWeight.bold
+            )
+          ),
+          Text(
+              StringFormatter.formatPronunciation(viewModel.pronunciation),
+              style: TextStyle(
+                  fontSize: 23.0,
+                  letterSpacing: 1,
+                  fontWeight: FontWeight.normal
+              )
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              StringFormatter.formatMeaning(viewModel.meaning),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 3,
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold
+              ),
             ),
           )
         ],
