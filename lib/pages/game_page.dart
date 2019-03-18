@@ -1,8 +1,10 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/word_view_model.dart';
+import 'package:flipflop/pages/settings_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
 import 'package:flipflop/widgets/bottom_bar.dart';
 import 'package:flipflop/widgets/card_list.dart';
+import 'package:flipflop/widgets/dropdown_dialog.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
@@ -52,8 +54,10 @@ class _GamePageState extends State<GamePage> {
                   ),
                 ),
                 BottomBar(
-                    numOfSteps: length,
-                    scrollPercent: scrollPercent
+                  numOfSteps: length,
+                  scrollPercent: scrollPercent,
+                  onLeftIconPress: () => _navigateToSettingsPage(),
+                  onRightIconPress: () => _showAddToMyStackAlert()
                 ),
                 Container(
                     width: double.infinity,
@@ -64,7 +68,28 @@ class _GamePageState extends State<GamePage> {
         },
       ),
     );
+  }
 
+  void _navigateToSettingsPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SettingsPage())
+    );
+  }
+
+  Future<String> _showAddToMyStackAlert() {
+    List<String> folders = ["test1", "test2"];
+    return showDialog<String>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return DropdownDialog(
+              title: "Add to my stack",
+              items: folders,
+              onChange: (index) {}
+          );
+        }
+    );
   }
 }
 

@@ -1,15 +1,16 @@
-import 'package:flipflop/pages/settings_page.dart';
-import 'package:flipflop/widgets/dropdown_dialog.dart';
 import 'package:flipflop/widgets/scroll_indicator.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
   final int numOfSteps;
   final double scrollPercent;
-
+  final VoidCallback onLeftIconPress;
+  final VoidCallback onRightIconPress;
   const BottomBar({
     this.numOfSteps,
-    this.scrollPercent
+    this.scrollPercent,
+    this.onLeftIconPress,
+    this.onRightIconPress
   });
 
   @override
@@ -34,12 +35,7 @@ class _BottomBarState extends State<BottomBar> {
                 child: IconButton(
                   icon: Icon(Icons.settings),
                   tooltip: "settings",
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsPage())
-                    );
-                  },
+                  onPressed: widget.onLeftIconPress ?? () {},
                 ),
               ),
             ),
@@ -62,33 +58,13 @@ class _BottomBarState extends State<BottomBar> {
                 child: IconButton(
                   icon: Icon(Icons.add),
                   tooltip: "add to my stack",
-                  onPressed: () {
-                    _showAddToMyStackAlert(context)
-                    .then((value) {
-                      print("Save to ${value}");
-                    });
-                  },
+                  onPressed: widget.onRightIconPress ?? () {},
                 ),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Future<String> _showAddToMyStackAlert(BuildContext context) {
-    List<String> folders = ["test1", "test2"];
-    return showDialog<String>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return DropdownDialog(
-          title: "Add to my stack",
-          items: folders,
-          onChange: (index) {}
-        );
-      }
     );
   }
 }

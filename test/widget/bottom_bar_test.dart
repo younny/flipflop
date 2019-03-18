@@ -7,8 +7,10 @@ import '../helper/widget_wrapper.dart';
 
 Future<void> _buildBottomBarWidget(WidgetTester tester) async {
   final bottomBar = BottomBar(
-      numOfSteps: 10,
-      scrollPercent: 0
+    numOfSteps: 10,
+    scrollPercent: 0,
+    onLeftIconPress: () {},
+    onRightIconPress: () {},
   );
   final container = Container(
     child: bottomBar,
@@ -26,20 +28,36 @@ void main() {
     expect(find.byType(ScrollIndicator), findsOneWidget);
   });
 
-  testWidgets('add button shows add dialog alert', (WidgetTester tester) async {
-    await _buildBottomBarWidget(tester);
+  testWidgets('click left button, right button', (WidgetTester tester) async {
+    bool leftPressed = false;
+    bool rightPressed = false;
+    final bottomBar = BottomBar(
+      numOfSteps: 10,
+      scrollPercent: 0,
+      onLeftIconPress: () {
+        rightPressed = true;
+      },
+      onRightIconPress: () {
+        leftPressed = true;
+      },
+    );
+    final container = Container(
+      child: bottomBar,
+    );
+    await tester.pumpWidget(wrap(container));
 
     Finder addIconButton = find.byTooltip("add to my stack");
-
     expect(addIconButton, findsOneWidget);
 
     await tester.tap(addIconButton);
+    expect(leftPressed, isTrue);
 
-    await tester.pumpAndSettle();
+    Finder settingsButton = find.byIcon(Icons.settings);
+    expect(addIconButton, findsOneWidget);
 
-    Finder alert = find.byType(AlertDialog);
+    await tester.tap(settingsButton);
+    expect(rightPressed, isTrue);
 
-    expect(alert, findsOneWidget);
   });
 
 }
