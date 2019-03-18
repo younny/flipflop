@@ -37,6 +37,7 @@ class _GamePageState extends State<GamePage> {
             );
 
             final length = snapshot.data.length;
+            final index = (scrollPercent * length).round();
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -58,7 +59,8 @@ class _GamePageState extends State<GamePage> {
                   numOfSteps: length,
                   scrollPercent: scrollPercent,
                   onLeftIconPress: () => _navigateToSettingsPage(),
-                  onRightIconPress: () => _showAddToMyStackAlert()
+                  onRightIconPress: () =>
+                      _showAddToMyStackAlert(snapshot.data[index])
                 ),
                 Container(
                     width: double.infinity,
@@ -78,7 +80,7 @@ class _GamePageState extends State<GamePage> {
     );
   }
 
-  Future<String> _showAddToMyStackAlert() {
+  Future<String> _showAddToMyStackAlert(WordViewModel word) {
     List<String> folders = ["test1", "test2"];
     return showDialog<String>(
         context: context,
@@ -87,6 +89,11 @@ class _GamePageState extends State<GamePage> {
           return DropdownDialog(
               title: "Add to my stack",
               items: folders,
+              onDone: (path) {
+                onSave(word, path);
+
+                Navigator.pop(context);
+              },
               onChange: (index) {}
           );
         }
