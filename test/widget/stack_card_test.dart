@@ -115,7 +115,6 @@ void main() {
 
     await tester.longPress(find.byWidget(stackCard));
     expect(parentSelectionModeOn, isTrue);
-    var stackCardState = tester.state(find.byWidget(stackCard).first);
 
    // expect(buttonAfter.color, equals(Colors.amber.withOpacity(0.5)));
 
