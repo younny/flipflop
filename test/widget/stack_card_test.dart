@@ -35,7 +35,7 @@ void main() {
   testWidgets("Sends callback when long pressed", (WidgetTester tester) async {
 
     bool longPressed = false;
-    WordViewModel wordViewModel = null;
+    WordViewModel wordViewModel;
 
     final stackCard = StackCardWidget(
         card: WordViewModel(
