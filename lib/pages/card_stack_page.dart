@@ -177,12 +177,30 @@ class _CardStackPageState extends State<CardStackPage> {
     setState(() {
       selectedCards.forEach((card) {
         myCards.remove(card);
+      
+        _openAndDeleteData(card, 'test1');
       });
     });
 
     _emptySelectedCards();
 
     _closeSelectionMode();
+  }
+
+  void _openAndDeleteData(WordViewModel word, String fileName) async {
+    LocalDB db = LocalDB.instance;
+    await db.open(fileName);
+
+    await _deleteData(word);
+
+    await db.close();
+  }
+
+  Future _deleteData(WordViewModel item) async {
+    LocalDB db = LocalDB.instance;
+    int id = await db.delete(item.id);
+
+    print('item $id is deleted.');
   }
 
   void _emptySelectedCards() {

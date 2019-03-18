@@ -52,7 +52,7 @@ class LocalDB {
   Future create(Database db, int version) async {
     await db.execute('''
       create table $tableName (
-      $columnId integer primary key autoincrement,
+      $columnId text primary key,
       $columnWord text not null,
       $columnMeaning text not null,
       $columnPron text not null,
@@ -67,14 +67,14 @@ class LocalDB {
     return result;
   }
   
-  Future<WordViewModel> retrieve(int id) async {
+  Future<WordViewModel> retrieve(String id) async {
     List<Map> maps = await _db.query(tableName,
     columns: [columnId, columnWord],
     where: '$columnId = ?',
     whereArgs: [id]) ?? List<Map<String, dynamic>>();
 
     if(maps.length > 0)
-      return WordViewModel.fromJson(maps.first);
+      return WordViewModel.fromJson(id, maps.first);
 
     return null;
   }
@@ -85,7 +85,7 @@ class LocalDB {
     return maps;
   }
 
-  Future<int> delete(int id) async {
+  Future<int> delete(String id) async {
     return await _db.delete(tableName,
         where: '$columnId = ?', whereArgs: [id]);
   }

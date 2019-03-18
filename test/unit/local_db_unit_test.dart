@@ -36,6 +36,10 @@ void main() {
         return results;
       }
 
+      if(method == 'update') {
+        return 0;
+      }
+
     });
   });
 
@@ -73,7 +77,7 @@ void main() {
 
   test("insert data", () async {
     WordViewModel word = WordViewModel(
-        id: 0,
+        id: "1234567",
         word: 'Test',
         meaning: 'This is test',
         lang: 'en',
@@ -103,7 +107,18 @@ void main() {
 
     expect(fullPath, equals(join(tempDir.path, name)));
   });
-//  test("delete database", () async {
-//
-//  });
+
+  test("delete database", () async {
+    String id = 'test';
+
+    await localDB.open('test');
+
+    int row = await localDB.delete(id);
+
+    expect(row, equals(0));
+
+    expect(log.last.method, equals('update'));
+
+    expect(log.last.arguments['sql'].toString().startsWith('DELETE FROM'), isTrue);
+  });
 }
