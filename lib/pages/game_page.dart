@@ -1,4 +1,5 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
+import 'package:flipflop/models/db_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/pages/settings_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
@@ -59,8 +60,12 @@ class _GamePageState extends State<GamePage> {
                   numOfSteps: length,
                   scrollPercent: scrollPercent,
                   onLeftIconPress: () => _navigateToSettingsPage(),
-                  onRightIconPress: () =>
-                      _showAddToMyStackAlert(snapshot.data[index])
+                  onRightIconPress: () {
+                    //_showAddToMyStackAlert(snapshot.data[index])
+                    onSave(snapshot.data[index], dbName);
+
+                    _showSnackBar(context);
+                  }
                 ),
                 Container(
                     width: double.infinity,
@@ -80,8 +85,37 @@ class _GamePageState extends State<GamePage> {
     );
   }
 
+  void onSave(WordViewModel word, String fileName) {
+    _openAndInsertDatabase(word, fileName);
+  }
+
+  void _openAndInsertDatabase(WordViewModel word, String fileName) async {
+    LocalDB db = LocalDB.instance;
+    await db.open();
+
+    await _insertData(word);
+
+    await db.close();
+  }
+
+  Future _insertData(WordViewModel item) async {
+    LocalDB db = LocalDB.instance;
+    int id = await db.insert(item);
+
+    print('item $id is inserted.');
+  }
+
+  void _showSnackBar(BuildContext context) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Add to my stack!"),
+        duration: Duration(seconds: 3)
+      )
+    );
+  }
+
   Future<String> _showAddToMyStackAlert(WordViewModel word) {
-    List<String> folders = ["test1", "test2"];
+    List<String> folders = [];
     return showDialog<String>(
         context: context,
         barrierDismissible: true,
@@ -98,26 +132,6 @@ class _GamePageState extends State<GamePage> {
           );
         }
     );
-  }
-
-  void onSave(WordViewModel word, String fileName) {
-    _openAndInsertDatabase(word, fileName);
-  }
-
-  void _openAndInsertDatabase(WordViewModel word, String fileName) async {
-    LocalDB db = LocalDB.instance;
-    await db.open(fileName);
-
-    await _insertData(word);
-
-    await db.close();
-  }
-
-  Future _insertData(WordViewModel item) async {
-    LocalDB db = LocalDB.instance;
-    int id = await db.insert(item);
-
-    print('item $id is inserted.');
   }
 }
 
