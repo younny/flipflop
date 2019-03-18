@@ -1,5 +1,5 @@
-import 'package:flipflop/components/bottom_bar.dart';
-import 'package:flipflop/components/scroll_indicator.dart';
+import 'package:flipflop/widgets/bottom_bar.dart';
+import 'package:flipflop/widgets/scroll_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

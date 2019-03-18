@@ -1,6 +1,6 @@
-import 'package:flipflop/components/dropdown_dialog.dart';
-import 'package:flipflop/components/scroll_indicator.dart';
 import 'package:flipflop/pages/settings_page.dart';
+import 'package:flipflop/widgets/dropdown_dialog.dart';
+import 'package:flipflop/widgets/scroll_indicator.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {

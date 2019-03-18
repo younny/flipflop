@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flipflop/components/wordcard_widget.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/utils/string_formatter.dart';
+import 'package:flipflop/widgets/wordcard_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import '../helper/widget_wrapper.dart';
 

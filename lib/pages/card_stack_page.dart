@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flipflop/components/stackcard_widget.dart';
 import 'package:flipflop/fixtures/mock_data.dart';
 import 'package:flipflop/models/word_view_model.dart';
+import 'package:flipflop/widgets/stackcard_widget.dart';
 import 'package:flutter/material.dart';
 
 class CardStackPage extends StatefulWidget {

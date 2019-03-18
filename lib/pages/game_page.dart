@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flipflop/blocs/flipflop_bloc.dart';
-import 'package:flipflop/components/bottom_bar.dart';
-import 'package:flipflop/components/card_list.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/providers/base_provider.dart';
+import 'package:flipflop/widgets/bottom_bar.dart';
+import 'package:flipflop/widgets/card_list.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
