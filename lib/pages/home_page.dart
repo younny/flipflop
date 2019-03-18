@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
 
     return StreamBuilder(
       stream: ffBloc.categories,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
         switch(snapshot.connectionState) {
           case ConnectionState.waiting:
             return _buildLoadingView();
@@ -40,9 +40,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCategoriesView(AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget _buildCategoriesView(AsyncSnapshot<List<Category>> snapshot) {
     final Size screenSize = MediaQuery.of(context).size;
-    final int length = snapshot.data.documents.length;
+    final int length = snapshot.data.length;
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           ),
           delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                Category category = Category.fromJson(snapshot.data.documents[index].data);
+                Category category = snapshot.data[index];
                 return _buildListItem(category, index);
               },
               childCount: length

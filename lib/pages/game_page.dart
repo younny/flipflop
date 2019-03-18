@@ -28,13 +28,13 @@ class _GamePageState extends State<GamePage> {
       backgroundColor: Colors.blueGrey,
       body: StreamBuilder(
         stream: bloc.cards,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<WordViewModel>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting)
             return Center(
               child: CircularProgressIndicator(),
             );
 
-            final length = snapshot.data.documents.length;
+            final length = snapshot.data.length;
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -44,9 +44,7 @@ class _GamePageState extends State<GamePage> {
                 ),
                 Expanded(
                   child: CardListWidget(
-                      cards: snapshot.data.documents.map((doc) {
-                        return WordViewModel.fromJson(doc.data);
-                      }).toList(),
+                      cards: snapshot.data,
                       onScroll: (double scrollPercent) {
                         setState(() {
                           this.scrollPercent = scrollPercent;
