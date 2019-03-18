@@ -25,8 +25,8 @@ class LocalDB {
     return join(await getPath(), name);
   }
 
-  Future open(String name) async {
-    String fullName = makeFileName(name);
+  Future open() async {
+    String fullName = makeFileName(dbName);
     String path = "";
     try {
       path = await getFullPath(fullName);

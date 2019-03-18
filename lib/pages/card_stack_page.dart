@@ -77,7 +77,7 @@ class _CardStackPageState extends State<CardStackPage> {
   void _loadMyStack() async {
     LocalDB db = LocalDB.instance;
 
-    await db.open('test1');
+    await db.open();
     List<Map> records = await db.retrieveAll();
 
     print(records.length);
@@ -178,7 +178,7 @@ class _CardStackPageState extends State<CardStackPage> {
       selectedCards.forEach((card) {
         myCards.remove(card);
       
-        _openAndDeleteData(card, 'test1');
+        _openAndDeleteData(card);
       });
     });
 
@@ -187,9 +187,9 @@ class _CardStackPageState extends State<CardStackPage> {
     _closeSelectionMode();
   }
 
-  void _openAndDeleteData(WordViewModel word, String fileName) async {
+  void _openAndDeleteData(WordViewModel word) async {
     LocalDB db = LocalDB.instance;
-    await db.open(fileName);
+    await db.open();
 
     await _deleteData(word);
 

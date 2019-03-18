@@ -48,9 +48,7 @@ void main() {
   });
 
   test("create database", () async {
-    String dbName = 'test';
-
-    await localDB.open(dbName);
+    await localDB.open();
 
     expect(log[0].method, equals("getDatabasesPath"));
 
@@ -60,9 +58,7 @@ void main() {
   });
 
   test("read database", () async {
-    String dbName = 'test';
-
-    await localDB.open(dbName);
+    await localDB.open();
 
     List<Map> results = await localDB.retrieveAll();
 
@@ -88,7 +84,7 @@ void main() {
 
     String dbName = 'test';
 
-    await localDB.open(dbName);
+    await localDB.open();
 
     await localDB.insert(word);
 
@@ -111,7 +107,7 @@ void main() {
   test("delete database", () async {
     String id = 'test';
 
-    await localDB.open('test');
+    await localDB.open();
 
     int row = await localDB.delete(id);
 
