@@ -88,6 +88,7 @@ void main() {
   testWidgets("select mode changed when long pressed", (WidgetTester tester) async {
 
     bool parentSelectionModeOn = false;
+    WordViewModel selectedWord;
     final stackCard = StackCardWidget(
         card: WordViewModel(
             word: "foo",
@@ -101,6 +102,9 @@ void main() {
         onLongPress: (card) {
           parentSelectionModeOn = true;
         },
+        onPress: (word) {
+          selectedWord = word;
+        },
         selectMode: parentSelectionModeOn
     );
 
@@ -111,11 +115,13 @@ void main() {
 
     await tester.longPress(find.byWidget(stackCard));
     expect(parentSelectionModeOn, isTrue);
-    await tester.pump();
-    expect(button.color, equals(Colors.amber.withOpacity(0.4)));
+    var stackCardState = tester.state(find.byWidget(stackCard).first);
+
+   // expect(buttonAfter.color, equals(Colors.amber.withOpacity(0.5)));
 
     await tester.tap(find.byWidget(stackCard));
     expect(parentSelectionModeOn, isTrue);
+    expect(selectedWord.word, equals("foo"));
     await tester.pump();
     expect(button.color, equals(Colors.amber));
 
