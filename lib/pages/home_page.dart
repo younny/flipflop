@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/pages/game_page.dart';
@@ -19,81 +20,81 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final ffBloc = Provider.of<FlipFlopBloc>(context);
-    Size screenSize = MediaQuery.of(context).size;
 
     return StreamBuilder(
       stream: ffBloc.categories,
-      builder: (context, snapshot) {
-        if(!snapshot.hasData) {
-          return Center(
-            child: CircularProgressIndicator()
-          );
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        switch(snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return _buildLoadingView();
+          default:
+            return _buildCategoriesView(snapshot);
         }
-        return CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: screenSize.height * 0.3,
-              actions: <Widget>[
-                IconButton(
-                    icon: Icon(Icons.assignment),
-                    tooltip: "My Stack",
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/cardstack');
-                    }),
-                IconButton(
-                    icon: Icon(Icons.settings),
-                    tooltip: "Settings",
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/settings');
-                    }),
-              ],
-              flexibleSpace: FlexibleSpaceBar(
-                  title: Text('Home'),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-            ),
-
-            SliverPersistentHeader(
-                delegate: _SliverHeaderDelegate(
-                    minHeight: 40,
-                    maxHeight: 40,
-                    text: "Categories"
-                )
-            ),
-
-            SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  childAspectRatio: 1.5
-              ),
-              delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                    final category = snapshot.data[index];
-                    return _buildListItem(category, index);
-                  },
-                  childCount: snapshot.data.length
-              ),
-            ),
-//        SliverFixedExtentList(
-//          delegate: SliverChildBuilderDelegate(
-//              (BuildContext context, int index) {
-//                return _buildListItem(index);
-//              },
-//            childCount: mockCategories.length
-//          ),
-//          itemExtent: 70.0
-//        )
-          ],
-        );
       },
     );
+  }
 
+  Widget _buildLoadingView() {
+    return Center(
+        child: CircularProgressIndicator()
+    );
+  }
 
+  Widget _buildCategoriesView(AsyncSnapshot<QuerySnapshot> snapshot) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final int length = snapshot.data.documents.length;
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          pinned: true,
+          expandedHeight: screenSize.height * 0.3,
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.assignment),
+                tooltip: "My Stack",
+                onPressed: () {
+                  Navigator.pushNamed(context, '/cardstack');
+                }),
+            IconButton(
+                icon: Icon(Icons.settings),
+                tooltip: "Settings",
+                onPressed: () {
+                  Navigator.pushNamed(context, '/settings');
+                }),
+          ],
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text('Home'),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+        ),
+
+        SliverPersistentHeader(
+            delegate: _SliverHeaderDelegate(
+                minHeight: 40,
+                maxHeight: 40,
+                text: "Categories"
+            )
+        ),
+
+        SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
+              childAspectRatio: 1.5
+          ),
+          delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                Category category = Category.fromJson(snapshot.data.documents[index].data);
+                return _buildListItem(category, index);
+              },
+              childCount: length
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildListItem(Category category, int index) {
