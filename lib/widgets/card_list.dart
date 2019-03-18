@@ -49,7 +49,11 @@ class _CardListWidgetState extends State<CardListWidget> with TickerProviderStat
           .clamp(0.0, 1.0 - (1/numOfCards));
 
       final cardScrollPercent = scrollPercent * numOfCards;
-      scrollController.jumpTo(360 * cardScrollPercent);
+      scrollController.animateTo(
+          context.size.width * cardScrollPercent,
+          duration: Duration(milliseconds: 100),
+          curve: Curves.ease);
+      //scrollController.jumpTo(360 * cardScrollPercent);
 
       if(widget.onScroll != null) {
         widget.onScroll(scrollPercent);
