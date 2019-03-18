@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flipflop/models/word_view_model.dart';
+import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/repo/local_db.dart';
 import 'package:flipflop/widgets/stackcard_widget.dart';
 import 'package:flutter/material.dart';
@@ -164,7 +165,11 @@ class _CardStackPageState extends State<CardStackPage> {
   }
 
   void _goToGamePage() {
-    Navigator.pushNamed(context, "/game");
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) =>
+            GamePage(stackCards: myCards))
+    );
   }
 
   void _closeSelectionMode() {

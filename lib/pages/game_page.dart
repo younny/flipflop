@@ -1,19 +1,19 @@
-import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/db_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/pages/settings_page.dart';
-import 'package:flipflop/providers/base_provider.dart';
+import 'package:flipflop/repo/local_db.dart';
 import 'package:flipflop/widgets/bottom_bar.dart';
 import 'package:flipflop/widgets/card_list.dart';
 import 'package:flipflop/widgets/dropdown_dialog.dart';
-import 'package:flipflop/repo/local_db.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
-  final FlipFlopBloc bloc;
+  final Stream<List<WordViewModel>> cards;
+  final List<WordViewModel> stackCards;
 
   GamePage({
-    this.bloc
+    this.cards,
+    this.stackCards
   });
 
   @override
@@ -24,57 +24,89 @@ class _GamePageState extends State<GamePage> {
   double scrollPercent = 0.0;
 
   @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<FlipFlopBloc>(context);
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      body: StreamBuilder(
-        stream: bloc.cards,
-        builder: (BuildContext context, AsyncSnapshot<List<WordViewModel>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+      body: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: isPracticeView()
+            ? _buildPracticeView()
+            : _buildGameView(),
+      )
+    );
+  }
 
-            final length = snapshot.data.length;
-            final index = (scrollPercent * length).round();
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                    width: double.infinity,
-                    height: 20.0
-                ),
-                Expanded(
-                  child: CardListWidget(
-                      cards: snapshot.data,
-                      onScroll: (double scrollPercent) {
-                        setState(() {
-                          this.scrollPercent = scrollPercent;
-                        });
-                      }
-                  ),
-                ),
-                BottomBar(
-                  numOfSteps: length,
-                  scrollPercent: scrollPercent,
-                  onLeftIconPress: () => _navigateToSettingsPage(),
-                  onRightIconPress: () {
-                    //_showAddToMyStackAlert(snapshot.data[index])
-                    onSave(snapshot.data[index], dbName);
+  bool isPracticeView() => widget.stackCards != null;
 
-                    _showSnackBar(context);
+  Widget _buildPracticeView() {
+    final length = widget.stackCards.length;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: CardListWidget(
+              cards: widget.stackCards,
+              onScroll: (double scrollPercent) {
+                setState(() {
+                  this.scrollPercent = scrollPercent;
+                });
+              }
+          ),
+        ),
+        BottomBar(
+            numOfSteps: length,
+            scrollPercent: scrollPercent,
+            onLeftIconPress: () => _navigateToSettingsPage()
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGameView() {
+    return StreamBuilder(
+      stream: widget.cards,
+      builder: (BuildContext context, AsyncSnapshot<List<WordViewModel>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+
+        final length = snapshot.data.length;
+        final index = (scrollPercent * length).round();
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: CardListWidget(
+                  cards: snapshot.data,
+                  onScroll: (double scrollPercent) {
+                    setState(() {
+                      this.scrollPercent = scrollPercent;
+                    });
                   }
-                ),
-                Container(
-                    width: double.infinity,
-                    height: 20.0
-                )
-              ],
-            );
-        },
-      ),
+              ),
+            ),
+            BottomBar(
+                numOfSteps: length,
+                scrollPercent: scrollPercent,
+                onLeftIconPress: () => _navigateToSettingsPage(),
+                onRightIconPress: () {
+                  //_showAddToMyStackAlert(snapshot.data[index])
+                  onSave(snapshot.data[index], dbName);
+
+                  _showSnackBar(context);
+                }
+            )
+          ],
+        );
+      },
     );
   }
 

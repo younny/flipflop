@@ -37,7 +37,8 @@ class FlipFlopBloc {
 
     _categories = _firestoreRepository
         .read("categories")
-        .distinct().asyncMap((QuerySnapshot snapshot) {
+        .distinct()
+        .asyncMap((QuerySnapshot snapshot) {
           return snapshot
               .documents.map((doc) => Category.fromJson(doc.data))
               .toList();

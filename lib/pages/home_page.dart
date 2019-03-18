@@ -127,7 +127,8 @@ class _HomePageState extends State<HomePage> {
 
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => GamePage(bloc: flipFlopBloc))
+        MaterialPageRoute(builder: (context) =>
+            GamePage(cards: flipFlopBloc.cards))
     );
   }
 }
