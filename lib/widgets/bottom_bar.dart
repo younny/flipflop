@@ -55,11 +55,12 @@ class _BottomBarState extends State<BottomBar> {
 
             Expanded(
               child: Center(
-                child: IconButton(
-                  icon: Icon(Icons.add),
-                  tooltip: "add to my stack",
-                  onPressed: widget.onRightIconPress ?? () {},
-                ),
+                child: widget.onRightIconPress != null
+                    ? IconButton(
+                    icon: Icon(Icons.add),
+                    tooltip: "add to my stack",
+                    onPressed: widget.onRightIconPress,
+                ): Container()
               ),
             ),
           ],
