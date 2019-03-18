@@ -19,15 +19,15 @@ class FirestoreRepository {
     return null;
   }
 
+  Future<List<DocumentSnapshot>> update() {
+    // TODO: implement update
+    return null;
+  }
+
   Stream<QuerySnapshot> read(String collectionId) {
     return _firestore
         .collection(collectionId)
         .snapshots();
-  }
-
-  Future<List<DocumentSnapshot>> update() {
-    // TODO: implement update
-    return null;
   }
 
   Stream<QuerySnapshot> readByFilter(String collectionId, String filter) {
