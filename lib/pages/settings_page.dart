@@ -14,48 +14,68 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       backgroundColor: Colors.white,
       body: Container(
-        padding: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Change language",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700
-                  ),
-                ),
-                Text(
-                  "Korean",
-                  style: TextStyle(
+            SettingItemRow(
+              title: "Change Language",
+              description: "Korean",
+            ),
+            Divider(),
+            SettingItemRow(
+                title: "Set Level",
+                description: "0"
+            ),
+            Divider(),
+            SettingItemRow(
+              title: "Send Feedback",
+              description: ""
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SettingItemRow extends StatelessWidget {
+  final String title;
+  final String description;
+
+  const SettingItemRow({
+    Key key,
+    this.title,
+    this.description,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      padding: const EdgeInsets.all(0.0),
+      onPressed: () {},
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              title,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, top: 4.0),
+              child: Text(
+                description,
+                style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w300
-                  ),
-                )
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "Setting 1",
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700
-                  ),
                 ),
-                Text(
-                  "Blah Blah Blah",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w300
-                  ),
-                )
-              ],
+              ),
             )
           ],
         ),
