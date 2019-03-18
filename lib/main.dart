@@ -1,11 +1,10 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
-import 'package:flipflop/models/flipflop_api.dart';
 import 'package:flipflop/pages/card_stack_page.dart';
 import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/pages/home_page.dart';
 import 'package:flipflop/pages/settings_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
-import 'package:flipflop/repo/firebase_db.dart';
+import 'package:flipflop/repo/firestore_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,11 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<FlipFlopBloc>(
         builder: (_, bloc) => bloc
-            ?? FlipFlopBloc(
-                FlipFlopApi(
-                    database: FirebaseDB.instance
-                )
-            ),
+            ?? FlipFlopBloc(FirestoreRepository.instance),
         onDispose: (_, bloc) => bloc.dispose(),
         child: RootApp()
     );
