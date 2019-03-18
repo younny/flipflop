@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DropdownDialog extends StatefulWidget {
   DropdownDialog({
     this.title,
-    @required this.items,
+    this.items = const [],
     this.onChange,
     this.onClose,
     this.onDone,
@@ -33,6 +33,13 @@ class _DropdownDialogState extends State<DropdownDialog> {
   final Function _validate = (text) => text.isEmpty ? "Must not be empty." : null;
 
   @override
+  void initState() {
+    if(widget.items.length > 0) {
+      selectedFolder = widget.items[0];
+    }
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
 
     return AlertDialog(
@@ -45,7 +52,7 @@ class _DropdownDialogState extends State<DropdownDialog> {
           child: Text(widget.doneText),
           onPressed: () {
             setState(() {
-              selectedFolder = _controller.text;
+              selectedFolder = editMode ? _controller.text : selectedFolder;
               try {
                 widget.onDone(selectedFolder);
               } catch (e) {

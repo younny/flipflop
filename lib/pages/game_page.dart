@@ -5,6 +5,7 @@ import 'package:flipflop/providers/base_provider.dart';
 import 'package:flipflop/widgets/bottom_bar.dart';
 import 'package:flipflop/widgets/card_list.dart';
 import 'package:flipflop/widgets/dropdown_dialog.dart';
+import 'package:flipflop/repo/local_db.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
@@ -90,6 +91,26 @@ class _GamePageState extends State<GamePage> {
           );
         }
     );
+  }
+
+  void onSave(WordViewModel word, String fileName) {
+    _openAndInsertDatabase(word, fileName);
+  }
+
+  void _openAndInsertDatabase(WordViewModel word, String fileName) async {
+    LocalDB db = LocalDB.instance;
+    await db.open(fileName);
+
+    await _insertData(word);
+
+    await db.close();
+  }
+
+  Future _insertData(WordViewModel item) async {
+    LocalDB db = LocalDB.instance;
+    int id = await db.insert(item);
+
+    print('item $id is inserted.');
   }
 }
 

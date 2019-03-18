@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/pages/game_page.dart';
