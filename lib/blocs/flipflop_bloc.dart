@@ -10,6 +10,18 @@ class FlipFlopBloc {
 
   final FirestoreRepository _firestoreRepository;
 
+  String _level = "0";
+
+  String get level => _level;
+
+  set setLevel(String level) => _level = level;
+
+  String _lang = "ko";
+
+  String get lang => _lang;
+
+  set setLang(String lang) => _lang = lang;
+
   BehaviorSubject<String> _category = BehaviorSubject<String>(seedValue: 'animal');
 
   Sink<String> get category => _category;
@@ -26,21 +38,25 @@ class FlipFlopBloc {
    _cards = _category
        .distinct()
        .asyncMap((category) {
-         return _firestoreRepository
-             .readByFilter("cards", "category:$category")
-             .elementAt(0)
-             .then((QuerySnapshot snapshot) {
-            return snapshot
-            .documents.map((doc) => WordViewModel.fromJson(doc.documentID, doc.data)).toList();
+     return _firestoreRepository
+         .readByFilter("cards", "category:$category:$level:$lang")
+         .elementAt(0)
+         .then((QuerySnapshot snapshot) {
+           return snapshot
+               .documents.map((doc) {
+             return WordViewModel.fromJson(doc.documentID, doc.data);
+           }
+           ).toList();
          });
-       });
+     });
 
     _categories = _firestoreRepository
         .read("categories")
         .distinct()
         .asyncMap((QuerySnapshot snapshot) {
           return snapshot
-              .documents.map((doc) => Category.fromJson(doc.data))
+              .documents.map((doc) =>
+              Category.fromJson(doc.data))
               .toList();
     });
   }

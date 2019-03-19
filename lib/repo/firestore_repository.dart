@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirestoreRepository {
   final Firestore _firestore;
@@ -34,9 +35,13 @@ class FirestoreRepository {
     List<String> parsedFilter = filter.split(':');
     String fieldOfFilter = parsedFilter[0];
     String valueOfFilter = parsedFilter[1].toLowerCase();
+    int level = int.parse(parsedFilter[2]);
+    String lang = parsedFilter[3];
     return _firestore
         .collection(collectionId)
         .where(fieldOfFilter, isEqualTo: valueOfFilter.toLowerCase())
+        .where("level", isEqualTo: level)
+        .where("lang", isEqualTo: lang)
         .snapshots();
   }
 
