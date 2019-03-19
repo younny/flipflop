@@ -4,6 +4,7 @@ class DropdownDialog extends StatefulWidget {
   DropdownDialog({
     this.title,
     this.items = const [],
+    this.hint = "",
     this.onChange,
     this.onClose,
     this.onDone,
@@ -12,7 +13,8 @@ class DropdownDialog extends StatefulWidget {
   });
 
   final String title;
-  final List<String> items;
+  final List<dynamic> items;
+  final String hint;
   final ValueChanged<int> onChange;
   final ValueChanged<String> onDone;
   final VoidCallback onClose;
@@ -106,14 +108,14 @@ class _DropdownDialogState extends State<DropdownDialog> {
     return Row(
       children: <Widget>[
         DropdownButton<int>(
-          value: items.length == 0 ? null : selectedIndex,
+          value: items.isEmpty ? null : selectedIndex,
           items: items.map((folderName) {
             return DropdownMenuItem(
               value: index++,
               child: Text(folderName),
             );
           }).toList(),
-          hint: Text("Select folder"),
+          hint: Text(widget.hint),
           onChanged: (index) {
             setState(() {
               selectedIndex = index;
