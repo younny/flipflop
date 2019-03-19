@@ -6,10 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
 
-  final List<Map<String, Object>> settingItems = [
+  final List<Map<String, dynamic>> settingItems = [
     {
       "title": "Change Language",
-      "items": ["ko"]
+      "items": ["ko", "ge"]
     },
     {
       "title": "Set Level",
@@ -42,7 +42,6 @@ class _SettingsPageState extends State<SettingsPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String lang = await prefs.get('lang');
     String level = await prefs.get('level');
-    print("Shared preferences : level ${level} / lang ${lang}");
     setState(() {
       selectedLevel = level ?? '0';
       langToLearn = lang ?? 'ko';
@@ -91,7 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (BuildContext context) {
           return DropdownDialog(
               title: item['title'],
-              initialIndex: 0,
+              initialIndex: (item['items'] as List).indexOf(langToLearn),
               items: item['items'],
               supportEditMode: false,
               onDone: (language) {
@@ -137,7 +136,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _updateLanguage(String item) async {
-    print("Selected item : $item");
     setState(() {
       langToLearn = item;
       fetching = true;
