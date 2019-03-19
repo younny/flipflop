@@ -16,7 +16,7 @@ class DropdownDialog extends StatefulWidget {
   final List<dynamic> items;
   final String hint;
   final ValueChanged<int> onChange;
-  final ValueChanged<String> onDone;
+  final ValueChanged<dynamic> onDone;
   final VoidCallback onClose;
   final String doneText;
   final String closeText;
@@ -27,7 +27,7 @@ class DropdownDialog extends StatefulWidget {
 
 class _DropdownDialogState extends State<DropdownDialog> {
 
-  String selectedFolder;
+  String selectedItem;
   int selectedIndex = 0;
   bool editMode = false;
 
@@ -37,7 +37,7 @@ class _DropdownDialogState extends State<DropdownDialog> {
   @override
   void initState() {
     if(widget.items.length > 0) {
-      selectedFolder = widget.items[0];
+      selectedItem = widget.items[0];
     }
     super.initState();
   }
@@ -54,12 +54,12 @@ class _DropdownDialogState extends State<DropdownDialog> {
           child: Text(widget.doneText),
           onPressed: () {
             setState(() {
-              selectedFolder = editMode ? _controller.text : selectedFolder;
+              selectedItem = editMode ? _controller.text : selectedItem;
               try {
-                widget.onDone(selectedFolder);
+                widget.onDone(selectedItem);
               } catch (e) {
                 print(e);
-                Navigator.of(context).pop(selectedFolder);
+                Navigator.of(context).pop(selectedItem);
               }
             });
           },
@@ -70,7 +70,7 @@ class _DropdownDialogState extends State<DropdownDialog> {
             if(editMode) {
               setState(() {
                 editMode = false;
-                selectedFolder = widget.items[selectedIndex];
+                selectedItem = widget.items[selectedIndex];
               });
               return;
             }
@@ -119,22 +119,22 @@ class _DropdownDialogState extends State<DropdownDialog> {
           onChanged: (index) {
             setState(() {
               selectedIndex = index;
-              selectedFolder = items[selectedIndex];
+              selectedItem = items[selectedIndex];
               widget.onChange(selectedIndex);
             });
           },
         ),
-        IconButton(
-          icon: Icon(
-              Icons.library_add,
-              color: Colors.amber
-          ),
-          onPressed: () {
-            setState(() {
-              editMode = true;
-            });
-          },
-        )
+//        IconButton(
+//          icon: Icon(
+//              Icons.library_add,
+//              color: Colors.amber
+//          ),
+//          onPressed: () {
+//            setState(() {
+//              editMode = true;
+//            });
+//          },
+//        )
       ],
     );
   }
