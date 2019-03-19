@@ -4,22 +4,26 @@ class DropdownDialog extends StatefulWidget {
   DropdownDialog({
     this.title,
     this.items = const [],
+    this.initialIndex = 0,
     this.hint = "",
     this.onChange,
     this.onClose,
     this.onDone,
     this.doneText = "Done",
-    this.closeText = "Close"
+    this.closeText = "Close",
+    this.supportEditMode = true
   });
 
   final String title;
-  final List<dynamic> items;
+  final List<String> items;
+  final int initialIndex;
   final String hint;
   final ValueChanged<int> onChange;
-  final ValueChanged<dynamic> onDone;
+  final ValueChanged<String> onDone;
   final VoidCallback onClose;
   final String doneText;
   final String closeText;
+  final bool supportEditMode;
 
   @override
   _DropdownDialogState createState() => _DropdownDialogState();
@@ -28,7 +32,7 @@ class DropdownDialog extends StatefulWidget {
 class _DropdownDialogState extends State<DropdownDialog> {
 
   String selectedItem;
-  int selectedIndex = 0;
+  int selectedIndex;
   bool editMode = false;
 
   final TextEditingController _controller = TextEditingController();
@@ -39,6 +43,9 @@ class _DropdownDialogState extends State<DropdownDialog> {
     if(widget.items.length > 0) {
       selectedItem = widget.items[0];
     }
+
+    selectedIndex = widget.initialIndex;
+
     super.initState();
   }
   @override
@@ -106,13 +113,14 @@ class _DropdownDialogState extends State<DropdownDialog> {
     int index = 0;
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         DropdownButton<int>(
           value: items.isEmpty ? null : selectedIndex,
-          items: items.map((folderName) {
+          items: items.map((itemName) {
             return DropdownMenuItem(
               value: index++,
-              child: Text(folderName),
+              child: Text(itemName),
             );
           }).toList(),
           hint: Text(widget.hint),
@@ -124,17 +132,19 @@ class _DropdownDialogState extends State<DropdownDialog> {
             });
           },
         ),
-//        IconButton(
-//          icon: Icon(
-//              Icons.library_add,
-//              color: Colors.amber
-//          ),
-//          onPressed: () {
-//            setState(() {
-//              editMode = true;
-//            });
-//          },
-//        )
+        widget.supportEditMode
+        ? IconButton(
+          icon: Icon(
+              Icons.library_add,
+              color: Colors.amber
+          ),
+          onPressed: () {
+            setState(() {
+              editMode = true;
+            });
+          },
+        )
+        : Container(width: 0, height: 0)
       ],
     );
   }
