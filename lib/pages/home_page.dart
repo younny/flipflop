@@ -3,6 +3,7 @@ import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,10 +13,27 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   @override
+  void initState() {
+    loadSharedPreferences();
+    super.initState();
+  }
+
+  void loadSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String lang = await prefs.get('lang');
+    String level = await prefs.get('level');
+
+    final ffBloc = Provider.of<FlipFlopBloc>(context);
+    ffBloc.setLang = lang;
+    ffBloc.setLevel = level;
+  }
+
+  @override
   void dispose() {
     Provider.of<FlipFlopBloc>(context).dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final ffBloc = Provider.of<FlipFlopBloc>(context);
