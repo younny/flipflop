@@ -10,17 +10,20 @@ class FlipFlopBloc {
 
   final FirestoreRepository _firestoreRepository;
 
-  String _level = "0";
+  String _selectedLevel;
+  String _selectedLang;
 
-  String get level => _level;
+  BehaviorSubject<String> _level = BehaviorSubject<String>(seedValue: '0');
 
-  set setLevel(String level) => _level = level;
+  Sink<String> get level => _level;
 
-  String _lang = "ko";
+  set setLevel(String lv) => level.add(lv);
 
-  String get lang => _lang;
+  BehaviorSubject<String> _lang = BehaviorSubject<String>(seedValue: 'ko');
 
-  set setLang(String lang) => _lang = lang;
+  Sink<String> get lang => _lang;
+
+  set setLang(String lng) => lang.add(lng);
 
   BehaviorSubject<String> _category = BehaviorSubject<String>(seedValue: 'animal');
 
@@ -35,12 +38,22 @@ class FlipFlopBloc {
   Stream<List<Category>> get categories => _categories;
 
   FlipFlopBloc(this._firestoreRepository) {
+    _level.listen((level) {
+      print("Selected level: $level");
+      _selectedLevel = level;
+    });
+
+    _lang.listen((lang) {
+      print("Selected language: $lang");
+      _selectedLang = lang;
+    });
+
    _cards = _category
              .distinct()
              .asyncMap((category) {
                List<WordViewModel> results = [];
                 return _firestoreRepository
-                   .readByFilter("cards", "category:$category:$level:$lang")
+                   .readByFilter("cards", "category:$category:$_selectedLevel:$_selectedLang")
                    .first
                    .then((QuerySnapshot snapshot) {
                      results = convert(snapshot.documents);
@@ -66,5 +79,7 @@ class FlipFlopBloc {
   void dispose() {
     print("Dispose of flipflop bloc.");
     _category.close();
+    _level.close();
+    _lang.close();
   }
 }
