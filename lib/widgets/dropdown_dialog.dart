@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class DropdownDialog extends StatefulWidget {
+class DropdownDialog<T> extends StatefulWidget {
   DropdownDialog({
     this.title,
+    this.value,
     this.items = const [],
-    this.initialIndex = 0,
     this.hint = "",
     this.onChange,
     this.onClose,
@@ -15,24 +15,23 @@ class DropdownDialog extends StatefulWidget {
   });
 
   final String title;
-  final List<String> items;
-  final int initialIndex;
+  final T value;
+  final List<T> items;
   final String hint;
-  final ValueChanged<int> onChange;
-  final ValueChanged<String> onDone;
+  final ValueChanged onChange;
+  final ValueChanged onDone;
   final VoidCallback onClose;
   final String doneText;
   final String closeText;
   final bool supportEditMode;
 
   @override
-  _DropdownDialogState createState() => _DropdownDialogState();
+  _DropdownDialogState createState() => _DropdownDialogState<T>();
 }
 
-class _DropdownDialogState extends State<DropdownDialog> {
+class _DropdownDialogState<T> extends State<DropdownDialog> {
 
-  String selectedItem;
-  int selectedIndex;
+  T selectedItem;
   bool editMode = false;
 
   final TextEditingController _controller = TextEditingController();
@@ -40,12 +39,7 @@ class _DropdownDialogState extends State<DropdownDialog> {
 
   @override
   void initState() {
-    if(widget.items.length > 0) {
-      selectedItem = widget.items[0];
-    }
-
-    selectedIndex = widget.initialIndex;
-
+    selectedItem = widget.value;
     super.initState();
   }
   @override
@@ -66,7 +60,7 @@ class _DropdownDialogState extends State<DropdownDialog> {
                 widget.onDone(selectedItem);
               } catch (e) {
                 print(e);
-                Navigator.of(context).pop(selectedItem);
+                Navigator.of(context).pop();
               }
             });
           },
@@ -77,7 +71,6 @@ class _DropdownDialogState extends State<DropdownDialog> {
             if(editMode) {
               setState(() {
                 editMode = false;
-                selectedItem = widget.items[selectedIndex];
               });
               return;
             }
@@ -110,25 +103,22 @@ class _DropdownDialogState extends State<DropdownDialog> {
 
   Widget _buildDropdownView() {
     var items = widget.items;
-    int index = 0;
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        DropdownButton<int>(
-          value: items.isEmpty ? null : selectedIndex,
-          items: items.map((itemName) {
-            return DropdownMenuItem(
-              value: index++,
-              child: Text(itemName),
+        DropdownButton<T>(
+          value: selectedItem,
+          items: items.map((dynamic item) {
+            return DropdownMenuItem<T>(
+              value: item,
+              child: Text(item.toString()),
             );
           }).toList(),
           hint: Text(widget.hint),
-          onChanged: (index) {
+          onChanged: (T item) {
             setState(() {
-              selectedIndex = index;
-              selectedItem = items[selectedIndex];
-              widget.onChange(selectedIndex);
+              selectedItem = item;
+              widget.onChange(selectedItem);
             });
           },
         ),

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flipflop/models/category_view_model.dart';
+import 'package:flipflop/models/language_view_model.dart';
+import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/repo/firestore_repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -10,8 +12,8 @@ class FlipFlopBloc {
 
   final FirestoreRepository _firestoreRepository;
 
-  String _selectedLevel;
-  String _selectedLang;
+  String _selectedLevel = '0';
+  String _selectedLang = 'ko';
 
   BehaviorSubject<String> _level = BehaviorSubject<String>(seedValue: '0');
 
@@ -37,7 +39,31 @@ class FlipFlopBloc {
 
   Stream<List<Category>> get categories => _categories;
 
+  Stream<List<Language>> _languages = Stream.empty();
+
+  Stream<List<Language>> get languages => _languages;
+
+  Stream<List<Level>> _levels = Stream.empty();
+
+  Stream<List<Level>> get levels => _levels;
+
   FlipFlopBloc(this._firestoreRepository) {
+    _levels = _firestoreRepository
+        .read("levels")
+        .distinct()
+        .asyncMap((QuerySnapshot snapshot) {
+          return snapshot
+            .documents.map((doc) => Level.fromJson(doc.data)).toList();
+    });
+
+    _languages = _firestoreRepository
+        .read("languages")
+        .distinct()
+        .asyncMap((QuerySnapshot snapshot) {
+          return snapshot
+              .documents.map((doc) => Language.fromJson(doc.data)).toList();
+        });
+
     _level.listen((level) {
       print("Selected level: $level");
       _selectedLevel = level;

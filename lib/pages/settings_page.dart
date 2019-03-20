@@ -1,37 +1,32 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
+import 'package:flipflop/models/language_view_model.dart';
+import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/providers/base_provider.dart';
 import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flipflop/widgets/dropdown_dialog.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
-
-  final List<Map<String, dynamic>> settingItems = [
-    {
-      "title": "Change Language",
-      "items": ["ko", "ge"]
-    },
-    {
-      "title": "Set Level",
-      "items": ["0", "1", "2"]
-    }
-  ];
-
-  final Map<String, String> languages = {
-    "ko" : "Korean",
-    "ge" : "German"
-  };
-
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
 
-  String selectedLevel = '0';
-  String langToLearn = 'ko';
+  Level _selectedLevel = Level(level: '0');
+  Language _selectedLang = Language(code: 'ko', label: 'Korean');
   bool fetching = false;
 
+  String selectLabelByCode(String code) {
+    switch(code) {
+      case 'ko':
+        return 'Korean';
+      case 'ge':
+        return 'German';
+      default:
+        return '';
+    }
+  }
   @override
   void initState() {
     loadSharedPreferences();
@@ -41,14 +36,17 @@ class _SettingsPageState extends State<SettingsPage> {
   void loadSharedPreferences() async {
     String lang = await getPrefs('lang');
     String level = await getPrefs('level');
+
     setState(() {
-      selectedLevel = level ?? '0';
-      langToLearn = lang ?? 'ko';
+      _selectedLevel = level != null ? Level(level: level) : _selectedLevel;
+      _selectedLang = lang != null ? Language(code: lang, label: selectLabelByCode(lang)) : _selectedLang;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final ffBloc = Provider.of<FlipFlopBloc>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -59,16 +57,26 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SettingItemRow(
-              title: "Change Language to learn",
-              description: widget.languages[langToLearn],
-              onRowPress: () => _showSetLanguageDialog(widget.settingItems[0]),
+            StreamBuilder<Object>(
+              stream: ffBloc.languages,
+              builder: (context, snapshot) {
+                return SettingItemRow(
+                  title: "Change Language to learn",
+                  description: _selectedLang.label,
+                  onRowPress: () => _showSetLanguageDialog(snapshot.data),
+                );
+              }
             ),
             Divider(),
-            SettingItemRow(
-                title: "Set Level",
-                description: selectedLevel.toString(),
-                onRowPress: () => _showSetLevelDialog(widget.settingItems[1])
+            StreamBuilder<Object>(
+              stream: ffBloc.levels,
+              builder: (context, snapshot) {
+                return SettingItemRow(
+                    title: "Set Level",
+                    description: _selectedLevel.level,
+                    onRowPress: () => _showSetLevelDialog(snapshot.data)
+                );
+              }
             ),
             Divider(),
             SettingItemRow(
@@ -82,15 +90,15 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Future<String> _showSetLanguageDialog(Map<String, Object> item) {
+  Future<String> _showSetLanguageDialog(List<Language> languages) {
     return showDialog<String>(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
-          return DropdownDialog(
-              title: item['title'],
-              initialIndex: (item['items'] as List).indexOf(langToLearn),
-              items: item['items'],
+          return DropdownDialog<Language>(
+              title: "Select Language",
+              value: _selectedLang,
+              items: languages,
               supportEditMode: false,
               onDone: (language) {
                 _updateLanguage(language);
@@ -98,23 +106,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 Navigator.pop(context);
               },
               onClose: () => Navigator.pop(context),
-              onChange: (index) {
-
+              onChange: (item) {
               }
           );
         }
     );
   }
 
-  Future<String> _showSetLevelDialog(Map<String, Object> item) {
+  Future<String> _showSetLevelDialog(List<Level> levels) {
     return showDialog<String>(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
-          return DropdownDialog(
-              title: item['title'],
-              initialIndex: int.parse(selectedLevel),
-              items: item['items'],
+          return DropdownDialog<Level>(
+              title: "Select Level",
+              value: _selectedLevel,
+              items: levels,
               supportEditMode: false,
               onDone: (level) {
                 _updateLevel(level);
@@ -122,8 +129,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 Navigator.pop(context);
               },
               onClose: () => Navigator.pop(context),
-              onChange: (index) {
-
+              onChange: (item) {
               }
           );
         }
@@ -134,30 +140,29 @@ class _SettingsPageState extends State<SettingsPage> {
 
   }
 
-  void _updateLanguage(String item) async {
+  void _updateLanguage(Language item) async {
+    final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
     setState(() {
-      langToLearn = item;
+      _selectedLang = item;
       fetching = true;
     });
 
-    await setPrefs('lang', langToLearn);
-    final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
-    flipFlopBloc.setLang = langToLearn;
+    await setPrefs('lang', _selectedLang.code);
+    flipFlopBloc.setLang = _selectedLang.code;
     setState(() {
       fetching = false;
     });
   }
 
-  void _updateLevel(String item) async {
-    print("Selected item : $item");
+  void _updateLevel(Level item) async {
     setState(() {
-      selectedLevel = item;
+      _selectedLevel = item;
       fetching = true;
     });
 
-    await setPrefs('level', selectedLevel);
+    await setPrefs('level', _selectedLevel.level);
     final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
-    flipFlopBloc.setLevel = selectedLevel;
+    flipFlopBloc.setLevel = _selectedLevel.level;
     setState(() {
       fetching = false;
     });
