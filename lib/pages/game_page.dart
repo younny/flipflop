@@ -7,6 +7,8 @@ import 'package:flipflop/widgets/card_list.dart';
 import 'package:flipflop/widgets/dropdown_dialog.dart';
 import 'package:flutter/material.dart';
 
+final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
 class GamePage extends StatefulWidget {
   final Stream<List<WordViewModel>> cards;
   final List<WordViewModel> stackCards;
@@ -25,13 +27,13 @@ class _GamePageState extends State<GamePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.blueGrey,
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -148,7 +150,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _showSnackBar() {
-    Scaffold.of(context).showSnackBar(
+    _scaffoldKey.currentState.showSnackBar(
       SnackBar(
         content: Text("Add to my stack!"),
         duration: Duration(seconds: 3)
