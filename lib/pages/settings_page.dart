@@ -1,5 +1,6 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/providers/base_provider.dart';
+import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flipflop/widgets/dropdown_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -141,8 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
       fetching = true;
     });
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('lang', langToLearn);
+    await setPrefs('lang', langToLearn);
     final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
     flipFlopBloc.setLang = langToLearn;
     setState(() {
@@ -154,10 +154,10 @@ class _SettingsPageState extends State<SettingsPage> {
     print("Selected item : $item");
     setState(() {
       selectedLevel = item;
+      fetching = true;
     });
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('level', selectedLevel);
+    await setPrefs('level', selectedLevel);
     final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
     flipFlopBloc.setLevel = selectedLevel;
     setState(() {

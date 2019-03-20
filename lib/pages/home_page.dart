@@ -2,8 +2,8 @@ import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
+import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,9 +19,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void loadSharedPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lang = await prefs.get('lang');
-    String level = await prefs.get('level');
+    String lang = await getPrefs<String>('lang');
+    String level = await getPrefs<String>('level');
 
     final ffBloc = Provider.of<FlipFlopBloc>(context);
     ffBloc.setLang = lang;
