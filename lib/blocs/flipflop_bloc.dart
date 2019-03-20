@@ -36,19 +36,17 @@ class FlipFlopBloc {
 
   FlipFlopBloc(this._firestoreRepository) {
    _cards = _category
-       .distinct()
-       .asyncMap((category) {
-     return _firestoreRepository
-         .readByFilter("cards", "category:$category:$level:$lang")
-         .elementAt(0)
-         .then((QuerySnapshot snapshot) {
-           return snapshot
-               .documents.map((doc) {
-             return WordViewModel.fromJson(doc.documentID, doc.data);
-           }
-           ).toList();
-         });
-     });
+             .distinct()
+             .asyncMap((category) {
+               List<WordViewModel> results = [];
+                return _firestoreRepository
+                   .readByFilter("cards", "category:$category:$level:$lang")
+                   .first
+                   .then((QuerySnapshot snapshot) {
+                     results = convert(snapshot.documents);
+                     return results;
+                  });
+              });
 
     _categories = _firestoreRepository
         .read("categories")
@@ -56,9 +54,13 @@ class FlipFlopBloc {
         .asyncMap((QuerySnapshot snapshot) {
           return snapshot
               .documents.map((doc) =>
-              Category.fromJson(doc.data))
-              .toList();
+                Category.fromJson(doc.data)).toList();
     });
+  }
+
+  List<WordViewModel> convert(List<DocumentSnapshot> data) {
+    return data.map((doc) =>
+        WordViewModel.fromJson(doc.documentID, doc.data)).toList();
   }
 
   void dispose() {
