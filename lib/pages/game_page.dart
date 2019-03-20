@@ -35,16 +35,16 @@ class _GamePageState extends State<GamePage> {
       backgroundColor: Colors.blueGrey,
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: isPracticeView()
-            ? _buildPracticeView()
-            : _buildGameView(),
+        child: isFromMyStackCards()
+            ? _buildMyStackCardsView()
+            : _buildRemoteCardsView(),
       )
     );
   }
 
-  bool isPracticeView() => widget.stackCards != null;
+  bool isFromMyStackCards() => widget.stackCards != null;
 
-  Widget _buildPracticeView() {
+  Widget _buildMyStackCardsView() {
     final length = widget.stackCards.length;
 
     return Column(
@@ -69,44 +69,54 @@ class _GamePageState extends State<GamePage> {
     );
   }
 
-  Widget _buildGameView() {
+  Widget _buildRemoteCardsView() {
     return StreamBuilder(
       stream: widget.cards,
       builder: (BuildContext context, AsyncSnapshot<List<WordViewModel>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-
-        final length = snapshot.data.length;
-        final index = (scrollPercent * length).round();
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: CardListWidget(
-                  cards: snapshot.data,
-                  onScroll: (double scrollPercent) {
-                    setState(() {
-                      this.scrollPercent = scrollPercent;
-                    });
-                  }
-              ),
-            ),
-            BottomBar(
-                numOfSteps: length,
-                scrollPercent: scrollPercent,
-                onLeftIconPress: () => _navigateToSettingsPage(),
-                onRightIconPress: () {
-                  //_showAddToMyStackAlert(snapshot.data[index])
-                  onSave(snapshot.data[index], dbName);
-
-                  _showSnackBar(context);
-                }
-            )
-          ],
-        );
+        switch(snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return _buildLoadingView();
+          default:
+            return _buildGameView(snapshot);
+        }
       },
+    );
+  }
+
+  Widget _buildLoadingView() {
+    return Center(
+        child: CircularProgressIndicator()
+    );
+  }
+
+  Widget _buildGameView(AsyncSnapshot<List<WordViewModel>> snapshot) {
+    final length = snapshot.data.length;
+    final index = (scrollPercent * length).round();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
+          child: CardListWidget(
+              cards: snapshot.data,
+              onScroll: (double scrollPercent) {
+                setState(() {
+                  this.scrollPercent = scrollPercent;
+                });
+              }
+          ),
+        ),
+        BottomBar(
+            numOfSteps: length,
+            scrollPercent: scrollPercent,
+            onLeftIconPress: () => _navigateToSettingsPage(),
+            onRightIconPress: () {
+              //_showAddToMyStackAlert(snapshot.data[index])
+              onSave(snapshot.data[index], dbName);
+
+              _showSnackBar();
+            }
+        )
+      ],
     );
   }
 
@@ -137,7 +147,7 @@ class _GamePageState extends State<GamePage> {
     print('item $id is inserted.');
   }
 
-  void _showSnackBar(BuildContext context) {
+  void _showSnackBar() {
     Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text("Add to my stack!"),
