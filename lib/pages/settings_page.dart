@@ -3,7 +3,6 @@ import 'package:flipflop/providers/base_provider.dart';
 import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flipflop/widgets/dropdown_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
 
@@ -40,9 +39,8 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void loadSharedPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lang = await prefs.get('lang');
-    String level = await prefs.get('level');
+    String lang = await getPrefs('lang');
+    String level = await getPrefs('level');
     setState(() {
       selectedLevel = level ?? '0';
       langToLearn = lang ?? 'ko';
