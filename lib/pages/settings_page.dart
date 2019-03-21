@@ -1,7 +1,7 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
-import 'package:flipflop/providers/base_provider.dart';
+import 'package:flipflop/pages/FlipFlopBlocState.dart';
 import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flipflop/widgets/dropdown_dialog.dart';
 import 'package:flutter/material.dart';
@@ -11,42 +11,37 @@ class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends FlipFlopBlocState {
+  SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
 
-  Level _selectedLevel = Level(level: '0');
-  Language _selectedLang = Language(code: 'ko', label: 'Korean');
   bool fetching = false;
+  FlipFlopBloc ffBloc;
+  Language _selectedLang;
+  Level _selectedLevel;
 
-  String selectLabelByCode(String code) {
-    switch(code) {
-      case 'ko':
-        return 'Korean';
-      case 'ge':
-        return 'German';
-      default:
-        return '';
-    }
-  }
   @override
   void initState() {
-    loadSharedPreferences();
     super.initState();
+
   }
 
-  void loadSharedPreferences() async {
-    String lang = await getPrefs('lang');
-    String level = await getPrefs('level');
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _setBloc();
+  }
 
+  void _setBloc() {
     setState(() {
-      _selectedLevel = level != null ? Level(level: level) : _selectedLevel;
-      _selectedLang = lang != null ? Language(code: lang, label: selectLabelByCode(lang)) : _selectedLang;
+      ffBloc = bloc(context);
+      _selectedLevel = ffBloc.selectedLevel;
+      _selectedLang = ffBloc.selectedLang;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final ffBloc = Provider.of<FlipFlopBloc>(context);
-
+    print(ffBloc.selectedLevel);
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -97,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (BuildContext context) {
           return DropdownDialog<Language>(
               title: "Select Language",
-              value: _selectedLang,
+              value: bloc(context).selectedLang,
               items: languages,
               supportEditMode: false,
               onDone: (language) {
@@ -120,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
         builder: (BuildContext context) {
           return DropdownDialog<Level>(
               title: "Select Level",
-              value: _selectedLevel,
+              value: bloc(context).selectedLevel,
               items: levels,
               supportEditMode: false,
               onDone: (level) {
@@ -141,31 +136,21 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _updateLanguage(Language item) async {
-    final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
+    ffBloc.lang.add(item);
     setState(() {
       _selectedLang = item;
-      fetching = true;
     });
 
-    await setPrefs('lang', _selectedLang.code);
-    flipFlopBloc.setLang = _selectedLang.code;
-    setState(() {
-      fetching = false;
-    });
+    await sharedPrefHelper.set('lang', item.toPrefs());
   }
 
   void _updateLevel(Level item) async {
+    ffBloc.level.add(item);
     setState(() {
       _selectedLevel = item;
-      fetching = true;
     });
 
-    await setPrefs('level', _selectedLevel.level);
-    final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
-    flipFlopBloc.setLevel = _selectedLevel.level;
-    setState(() {
-      fetching = false;
-    });
+    await sharedPrefHelper.set('level', item.toPrefs());
   }
 }
 

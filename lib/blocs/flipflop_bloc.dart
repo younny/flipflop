@@ -6,26 +6,32 @@ import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/repo/firestore_repository.dart';
+import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FlipFlopBloc {
+  static final defaultLevel = Level(level: '0');
+  static final defaultLanguage = Language(code: 'ko', label: 'Korean');
 
   final FirestoreRepository _firestoreRepository;
 
-  String _selectedLevel = '0';
-  String _selectedLang = 'ko';
+  final SharedPrefHelper _sharedPrefHelper = SharedPrefHelper();
 
-  BehaviorSubject<String> _level = BehaviorSubject<String>(seedValue: '0');
+  Level selectedLevel = defaultLevel;
 
-  Sink<String> get level => _level;
+  Language selectedLang = defaultLanguage;
 
-  set setLevel(String lv) => level.add(lv);
+  BehaviorSubject<Level> _level = BehaviorSubject<Level>(seedValue: defaultLevel);
 
-  BehaviorSubject<String> _lang = BehaviorSubject<String>(seedValue: 'ko');
+  Sink<Level> get level => _level;
 
-  Sink<String> get lang => _lang;
+  set setLevel(Level lv) => level.add(lv);
 
-  set setLang(String lng) => lang.add(lng);
+  Sink<Language> get lang => _lang;
+
+  BehaviorSubject<Language> _lang = BehaviorSubject<Language>(seedValue: defaultLanguage);
+
+  set setLang(Language lng) => lang.add(lng);
 
   BehaviorSubject<String> _category = BehaviorSubject<String>(seedValue: 'animal');
 
@@ -48,6 +54,15 @@ class FlipFlopBloc {
   Stream<List<Level>> get levels => _levels;
 
   FlipFlopBloc(this._firestoreRepository) {
+    _sharedPrefHelper.pref()
+      .then((pref) async {
+        String lang = await _sharedPrefHelper.get('lang') ?? "ko-korean";
+        String level = await _sharedPrefHelper.get('level') ?? "0";
+
+        selectedLang = Language.fromPrefs(lang.split('-'));
+        selectedLevel = Level.fromPrefs(level);
+    });
+
     _levels = _firestoreRepository
         .read("levels")
         .distinct()
@@ -65,21 +80,25 @@ class FlipFlopBloc {
         });
 
     _level.listen((level) {
-      print("Selected level: $level");
-      _selectedLevel = level;
+      selectedLevel = level;
+      print("Selected level: $selectedLevel");
+      _sharedPrefHelper.set("level", level.level);
     });
 
     _lang.listen((lang) {
-      print("Selected language: $lang");
-      _selectedLang = lang;
+      selectedLang = lang;
+      print("Selected language: $selectedLang");
+      _sharedPrefHelper.set("lang", "${lang.code}-${lang.label}");
     });
 
    _cards = _category
              .distinct()
              .asyncMap((category) {
                List<WordViewModel> results = [];
+               final String level = selectedLevel.level;
+               final String lang = selectedLang.code;
                 return _firestoreRepository
-                   .readByFilter("cards", "category:$category:$_selectedLevel:$_selectedLang")
+                   .readByFilter("cards", "category:$category:$level:$lang")
                    .first
                    .then((QuerySnapshot snapshot) {
                      results = convert(snapshot.documents);

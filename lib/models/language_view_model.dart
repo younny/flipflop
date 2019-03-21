@@ -7,6 +7,12 @@ class Language {
     this.label
   });
 
+  Language.fromPrefs(List<String> source)
+  : code = source[0],
+    label = source[1];
+
+  String toPrefs() => "$code-$label";
+
   Language.fromJson(Map json)
       : code = json['code'],
         label = json['label'];

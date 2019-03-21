@@ -5,6 +5,11 @@ class Level {
     this.level
   });
 
+  Level.fromPrefs(String level)
+      : level = level;
+
+  String toPrefs() => level;
+
   Level.fromJson(Map json)
       : level = json['level'];
 

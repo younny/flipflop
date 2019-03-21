@@ -1,8 +1,8 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/category_view_model.dart';
+import 'package:flipflop/pages/FlipFlopBlocState.dart';
 import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
-import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,32 +10,22 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends FlipFlopBlocState {
 
   @override
   void initState() {
-    loadSharedPreferences();
     super.initState();
-  }
-
-  void loadSharedPreferences() async {
-    String lang = await getPrefs<String>('lang');
-    String level = await getPrefs<String>('level');
-
-    final ffBloc = Provider.of<FlipFlopBloc>(context);
-    ffBloc.setLang = lang;
-    ffBloc.setLevel = level;
   }
 
   @override
   void dispose() {
-    Provider.of<FlipFlopBloc>(context).dispose();
+    bloc(context).dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final ffBloc = Provider.of<FlipFlopBloc>(context);
+    final ffBloc = bloc(context);
 
     return StreamBuilder(
       stream: ffBloc.categories,
