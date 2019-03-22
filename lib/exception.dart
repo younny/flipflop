@@ -39,4 +39,9 @@ class FirestoreException extends FlipFlopException {
   String get message => _message;
 }
 
+class LocalDatabaseException extends FlipFlopException {
+  LocalDatabaseException(String message) : super(message);
+
+  String get message => _message;
+}
 

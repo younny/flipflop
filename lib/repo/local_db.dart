@@ -1,3 +1,5 @@
+import 'package:flipflop/constant/error.dart';
+import 'package:flipflop/exception.dart';
 import 'package:flipflop/models/db_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/utils/db_name_provider.dart';
@@ -18,7 +20,10 @@ class LocalDB {
   }
 
   Future<String> getPath() async {
-    return await getDatabasesPath();
+    return await getDatabasesPath()
+    .catchError((error) {
+      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+    });
   }
 
   Future<String> getFullPath(String name) async {
@@ -28,17 +33,17 @@ class LocalDB {
   Future open() async {
     String fullName = makeFileName(dbName);
     String path = "";
-    try {
-      path = await getFullPath(fullName);
-    } catch (e) {
-      print(e);
-    }
+
+    path = await getFullPath(fullName);
+
     _db = await openDatabase(
         path,
         version: 1,
         onCreate: (db, version) async {
           return create(db, version);
-        });
+        }).catchError((error) {
+      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+    });
   }
 
   bool isOpened() {
@@ -46,7 +51,10 @@ class LocalDB {
   }
 
   Future<int> getVersion() async {
-    return await _db.getVersion();
+    return await _db.getVersion()
+        .catchError((error) {
+          throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+        });
   }
 
   Future create(Database db, int version) async {
@@ -63,7 +71,11 @@ class LocalDB {
   }
 
   Future<int> insert(WordViewModel item) async {
-    int result = await _db.insert(tableName, item.toMap());
+    int result = await _db
+        .insert(tableName, item.toMap())
+        .catchError((error) {
+          throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+    });
     return result;
   }
   
@@ -71,7 +83,9 @@ class LocalDB {
     List<Map> maps = await _db.query(tableName,
     columns: [columnId, columnWord],
     where: '$columnId = ?',
-    whereArgs: [id]) ?? List<Map<String, dynamic>>();
+    whereArgs: [id]).catchError((error) {
+      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+    }) ?? List<Map<String, dynamic>>();
 
     if(maps.length > 0)
       return WordViewModel.fromJson(id, maps.first);
@@ -80,22 +94,33 @@ class LocalDB {
   }
 
   Future<List<Map>> retrieveAll() async {
-    List<Map> maps = await _db.query(tableName) ?? [];
+    List<Map> maps = await _db.query(tableName)
+        .catchError((error) {
+          throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+        })?? [];
 
     return maps;
   }
 
   Future<int> delete(String id) async {
     return await _db.delete(tableName,
-        where: '$columnId = ?', whereArgs: [id]);
+        where: '$columnId = ?', whereArgs: [id])
+        .catchError((error) {
+          throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+        });
   }
 
   Future<int> update(WordViewModel item) async {
     return await _db.update(tableName, item.toMap(),
-        where: '$columnId = ?', whereArgs: [item.id]);
+        where: '$columnId = ?', whereArgs: [item.id])
+    .catchError((error) {
+      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+    });
   }
 
   Future close() async {
-    await _db.close();
+    await _db.close().catchError((error) {
+      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+    });
   }
 }
