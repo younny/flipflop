@@ -1,4 +1,4 @@
-import 'package:flipflop/const/keys.dart';
+import 'package:flipflop/constant/keys.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future<bool> launchURL(String type, String url) async {

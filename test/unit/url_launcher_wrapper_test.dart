@@ -1,7 +1,7 @@
+import 'package:flipflop/constant/keys.dart';
+import 'package:flipflop/utils/url_launcher_wrapper.dart';
 import 'package:flutter/services.dart';
 import 'package:test/test.dart';
-import 'package:flipflop/utils/url_launcher_wrapper.dart';
-import 'package:flipflop/const/keys.dart';
 
 void main() {
   final List<MethodCall> log = [];

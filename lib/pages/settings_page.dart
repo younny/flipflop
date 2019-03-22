@@ -1,5 +1,5 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
-import 'package:flipflop/const/keys.dart';
+import 'package:flipflop/constant/keys.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/pages/FlipFlopBlocState.dart';
