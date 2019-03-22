@@ -14,30 +14,26 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends FlipFlopBlocState {
-  SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
+  final SharedPrefHelper sharedPrefHelper = SharedPrefHelper.instance;
 
   bool fetching = false;
   FlipFlopBloc ffBloc;
-  Language _selectedLang;
-  Level _selectedLevel;
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     _setBloc();
   }
 
   void _setBloc() {
     setState(() {
       ffBloc = bloc(context);
-      //_selectedLevel = ffBloc.selectedLevel;
-      //_selectedLang = ffBloc.selectedLang;
     });
   }
 
@@ -55,7 +51,7 @@ class _SettingsPageState extends FlipFlopBlocState {
           children: <Widget>[
             StreamBuilder<Object>(
               stream: ffBloc.languages,
-              builder: (context, snapshot) {
+              builder: (context, langListSnapshot) {
                 return StreamBuilder<Object>(
                   stream: ffBloc.selectedLang,
                   builder: (context, langSnapshot) {
@@ -64,7 +60,8 @@ class _SettingsPageState extends FlipFlopBlocState {
                       description: langSnapshot.hasData
                             ? (langSnapshot.data as Language).label
                             : 'Korean',
-                      onRowPress: () => _showSetLanguageDialog(snapshot.data),
+                      onRowPress: () =>
+                          _showSetLanguageDialog(langListSnapshot.data, langSnapshot.data),
                     );
                   }
                 );
@@ -73,7 +70,7 @@ class _SettingsPageState extends FlipFlopBlocState {
             Divider(),
             StreamBuilder<Object>(
               stream: ffBloc.levels,
-              builder: (context, snapshot) {
+              builder: (context, levelListSnapshot) {
                 return StreamBuilder<Object>(
                   stream: ffBloc.selectedLevel,
                   builder: (context, levelSnapshot) {
@@ -82,7 +79,8 @@ class _SettingsPageState extends FlipFlopBlocState {
                         description: levelSnapshot.hasData
                             ? (levelSnapshot.data as Level).level
                             : '0',
-                        onRowPress: () => _showSetLevelDialog(levelSnapshot.data)
+                        onRowPress: () =>
+                            _showSetLevelDialog(levelListSnapshot.data, levelSnapshot.data)
                     );
                   }
                 );
@@ -100,18 +98,18 @@ class _SettingsPageState extends FlipFlopBlocState {
     );
   }
 
-  Future<String> _showSetLanguageDialog(List<Language> languages) {
+  Future<String> _showSetLanguageDialog(List<Language> languages, Language lang) {
     return showDialog<String>(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
           return DropdownDialog<Language>(
               title: "Select Language",
-              value: _selectedLang,
+              value: lang,
               items: languages,
               supportEditMode: false,
               onDone: (language) {
-                _updateLanguage(language);
+                _updateLanguageToBloc(language);
 
                 Navigator.pop(context);
               },
@@ -123,18 +121,18 @@ class _SettingsPageState extends FlipFlopBlocState {
     );
   }
 
-  Future<String> _showSetLevelDialog(List<Level> levels) {
+  Future<String> _showSetLevelDialog(List<Level> levels, Level level) {
     return showDialog<String>(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
           return DropdownDialog<Level>(
               title: "Select Level",
-              value: _selectedLevel,
+              value: level,
               items: levels,
               supportEditMode: false,
               onDone: (level) {
-                _updateLevel(level);
+                _updateLevelToBloc(level);
 
                 Navigator.pop(context);
               },
@@ -154,22 +152,14 @@ class _SettingsPageState extends FlipFlopBlocState {
     }
   }
 
-  void _updateLanguage(Language item) async {
+  void _updateLanguageToBloc(Language item) async {
     ffBloc.lang.add(item);
-    setState(() {
-      _selectedLang = item;
-    });
-
-    await sharedPrefHelper.set('lang', item.toPrefs());
+    await sharedPrefHelper.set<String>('lang', item.toPrefs());
   }
 
-  void _updateLevel(Level item) async {
+  void _updateLevelToBloc(Level item) async {
     ffBloc.level.add(item);
-    setState(() {
-      _selectedLevel = item;
-    });
-
-    await sharedPrefHelper.set('level', item.toPrefs());
+    await sharedPrefHelper.set<String>('level', item.toPrefs());
   }
 }
 

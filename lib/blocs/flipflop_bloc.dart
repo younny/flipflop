@@ -6,7 +6,6 @@ import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/repo/firestore_repository.dart';
-import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FlipFlopBloc {
@@ -14,8 +13,6 @@ class FlipFlopBloc {
   static final defaultLanguage = Language(code: 'ko', label: 'Korean');
 
   final FirestoreRepository _firestoreRepository;
-
-  SharedPrefHelper _sharedPrefHelper = SharedPrefHelper();
 
   Observable<Level> selectedLevel = Observable.just(defaultLevel);
 
@@ -54,19 +51,6 @@ class FlipFlopBloc {
   Stream<List<Level>> get levels => _levels;
 
   FlipFlopBloc(this._firestoreRepository) {
-    _sharedPrefHelper.pref()
-      .then((pref) async {
-        String storedLang = await _sharedPrefHelper.get('lang');
-        String storedLevel = await _sharedPrefHelper.get('level');
-        print("Stored language : $storedLang");
-        print("Stored level : $storedLevel");
-        String lang = storedLang ?? "ko-Korean";
-        String level = storedLevel ?? "0";
-
-        selectedLang = Observable.just(Language.fromPrefs(lang.split('-')));
-        selectedLevel = Observable.just(Level.fromPrefs(level));
-    });
-
     _levels = _firestoreRepository
         .read("levels")
         .distinct()
@@ -91,32 +75,19 @@ class FlipFlopBloc {
 
     selectedLevel = _level
         .distinct()
-        .asyncMap((level) {
-          _sharedPrefHelper.set<String>("level", level.level)
-              .then((success) =>
-                      success
-                      ? print("Updated level: $selectedLevel")
-                      : print("Failed to update."));
-          return level;
-        })
+        .asyncMap((level) => level)
         .handleError((e) {
           print(e.toString());
         });
 
     selectedLang = _lang
         .distinct()
-        .asyncMap((lang) {
-          _sharedPrefHelper.set<String>("lang", "${lang.code}-${lang.label}")
-              .then((success) =>
-                        success
-                        ? print("Updated Language: $selectedLang")
-                        : print("Failed to update."));
-          return lang;
-        }).handleError((e) {
+        .asyncMap((lang) => lang)
+        .handleError((e) {
           print(e.toString());
         });
 
-   _cards = _category
+    _cards = _category
              .distinct()
              .asyncMap((category) {
                List<WordViewModel> results = [];

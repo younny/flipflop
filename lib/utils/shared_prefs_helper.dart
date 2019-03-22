@@ -11,16 +11,16 @@ class SharedPrefHelper {
 
   static final SharedPrefHelper _instance = SharedPrefHelper._();
 
-  factory SharedPrefHelper() => _instance;
+  static SharedPrefHelper get instance => _instance;
 
   SharedPrefHelper._();
 
-  Future<SharedPreferences> pref() async {
-    if(_sharedPreferences == null) {
+  static Future<SharedPrefHelper> init() async {
+    if (_sharedPreferences == null) {
       _sharedPreferences = await SharedPreferences.getInstance();
-      return _sharedPreferences;
     }
-    return _sharedPreferences;
+
+    return _instance;
   }
 
   Future<T> get<T>(String key) async {

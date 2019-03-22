@@ -1,8 +1,11 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/models/category_view_model.dart';
+import 'package:flipflop/models/language_view_model.dart';
+import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/pages/FlipFlopBlocState.dart';
 import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/providers/base_provider.dart';
+import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,9 +15,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends FlipFlopBlocState {
 
+  SharedPrefHelper _sharedPrefHelper;
+
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    SharedPrefHelper.init()
+        .then((instance) {
+      _sharedPrefHelper = instance;
+
+      _loadSavedLanguageAndLevelSet();
+    });
   }
 
   @override
@@ -137,6 +153,21 @@ class _HomePageState extends FlipFlopBlocState {
         MaterialPageRoute(builder: (context) =>
             GamePage(cards: flipFlopBloc.cards))
     );
+  }
+
+  void _loadSavedLanguageAndLevelSet() async {
+    String lang = await _sharedPrefHelper.get("lang");
+    String level = await _sharedPrefHelper.get("level");
+    print("Stored language : $lang");
+    print("Stored level : $level");
+    _updateLanguageAndLevelToBloc(lang ?? "ko-Korean", level ?? "0");
+  }
+
+  void _updateLanguageAndLevelToBloc(String lang, String level) {
+    final ffBloc = bloc(context);
+
+    ffBloc.lang.add(Language.fromPrefs(lang.split('-')));
+    ffBloc.level.add(Level.fromPrefs(level));
   }
 }
 

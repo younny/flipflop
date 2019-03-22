@@ -2,10 +2,10 @@ import 'package:flipflop/constant/error.dart';
 import 'package:flipflop/exception.dart';
 import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart' show isMethodCall;
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
-import 'package:flutter_test/flutter_test.dart' show isMethodCall;
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 class MockSharePrefHelper extends Mock implements SharedPrefHelper {}
@@ -34,19 +34,18 @@ void main() {
             }
             return null;
         });
-      sharedPrefHelper = SharedPrefHelper();
+      sharedPrefHelper = await SharedPrefHelper.init();
       log.clear();
     });
 
-    test("read", () async {
-      await sharedPrefHelper.pref();
+    tearDown(() {
+    });
 
+    test("read", () async {
       expect(await sharedPrefHelper.get<String>("String"), testValues['flutter.String']);
       expect(await sharedPrefHelper.get<bool>("bool"), testValues['flutter.bool']);
       expect(await sharedPrefHelper.get<List>("List"), testValues['flutter.List']);
-      expect(log, <Matcher>[
-        isMethodCall('getAll', arguments: null)
-      ]);
+      expect(log, <Matcher>[]);
     });
 
     test("read with no data type", () async {
@@ -82,8 +81,8 @@ void main() {
     });
 
     test("make sure instance is singleton", () async {
-      final SharedPrefHelper newPrefHelper = SharedPrefHelper();
-      await newPrefHelper.pref();
+      final SharedPrefHelper newPrefHelper = await SharedPrefHelper.init();
+
       expect(sharedPrefHelper, newPrefHelper);
     });
   });
@@ -97,13 +96,11 @@ void main() {
               return testValues;
             return null;
       });
-      sharedPrefHelper = SharedPrefHelper();
+      sharedPrefHelper = await SharedPrefHelper.init();
     });
 
     tearDown(() {
-      sharedPrefHelper
-          .pref()
-          .then((pref) => sharedPrefHelper.withMock(pref));
+
     });
 
     test("sharedPreferences instance is null", () async {
