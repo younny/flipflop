@@ -34,14 +34,13 @@ class _SettingsPageState extends FlipFlopBlocState {
   void _setBloc() {
     setState(() {
       ffBloc = bloc(context);
-      _selectedLevel = ffBloc.selectedLevel;
-      _selectedLang = ffBloc.selectedLang;
+      //_selectedLevel = ffBloc.selectedLevel;
+      //_selectedLang = ffBloc.selectedLang;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(ffBloc.selectedLevel);
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -55,10 +54,17 @@ class _SettingsPageState extends FlipFlopBlocState {
             StreamBuilder<Object>(
               stream: ffBloc.languages,
               builder: (context, snapshot) {
-                return SettingItemRow(
-                  title: "Change Language to learn",
-                  description: _selectedLang.label,
-                  onRowPress: () => _showSetLanguageDialog(snapshot.data),
+                return StreamBuilder<Object>(
+                  stream: ffBloc.selectedLang,
+                  builder: (context, langSnapshot) {
+                    return SettingItemRow(
+                      title: "Change Language to learn",
+                      description: langSnapshot.hasData
+                            ? (langSnapshot.data as Language).label
+                            : 'Korean',
+                      onRowPress: () => _showSetLanguageDialog(snapshot.data),
+                    );
+                  }
                 );
               }
             ),
@@ -66,10 +72,17 @@ class _SettingsPageState extends FlipFlopBlocState {
             StreamBuilder<Object>(
               stream: ffBloc.levels,
               builder: (context, snapshot) {
-                return SettingItemRow(
-                    title: "Set Level",
-                    description: _selectedLevel.level,
-                    onRowPress: () => _showSetLevelDialog(snapshot.data)
+                return StreamBuilder<Object>(
+                  stream: ffBloc.selectedLevel,
+                  builder: (context, levelSnapshot) {
+                    return SettingItemRow(
+                        title: "Set Level",
+                        description: levelSnapshot.hasData
+                            ? (levelSnapshot.data as Level).level
+                            : '0',
+                        onRowPress: () => _showSetLevelDialog(levelSnapshot.data)
+                    );
+                  }
                 );
               }
             ),
@@ -92,7 +105,7 @@ class _SettingsPageState extends FlipFlopBlocState {
         builder: (BuildContext context) {
           return DropdownDialog<Language>(
               title: "Select Language",
-              value: bloc(context).selectedLang,
+              value: _selectedLang,
               items: languages,
               supportEditMode: false,
               onDone: (language) {
@@ -115,7 +128,7 @@ class _SettingsPageState extends FlipFlopBlocState {
         builder: (BuildContext context) {
           return DropdownDialog<Level>(
               title: "Select Level",
-              value: bloc(context).selectedLevel,
+              value: _selectedLevel,
               items: levels,
               supportEditMode: false,
               onDone: (level) {

@@ -17,9 +17,9 @@ class FlipFlopBloc {
 
   final SharedPrefHelper _sharedPrefHelper = SharedPrefHelper();
 
-  Level selectedLevel = defaultLevel;
+  Observable<Level> selectedLevel = Observable.just(defaultLevel);
 
-  Language selectedLang = defaultLanguage;
+  Observable<Language> selectedLang = Observable.just(defaultLanguage);
 
   BehaviorSubject<Level> _level = BehaviorSubject<Level>(seedValue: defaultLevel);
 
@@ -56,11 +56,15 @@ class FlipFlopBloc {
   FlipFlopBloc(this._firestoreRepository) {
     _sharedPrefHelper.pref()
       .then((pref) async {
-        String lang = await _sharedPrefHelper.get('lang') ?? "ko-korean";
-        String level = await _sharedPrefHelper.get('level') ?? "0";
+        String storedLang = await _sharedPrefHelper.get('lang');
+        String storedLevel = await _sharedPrefHelper.get('level');
+        print("Stored language : $storedLang");
+        print("Stored level : $storedLevel");
+        String lang = storedLang ?? "ko-Korean";
+        String level = storedLevel ?? "0";
 
-        selectedLang = Language.fromPrefs(lang.split('-'));
-        selectedLevel = Level.fromPrefs(level);
+        selectedLang = Observable.just(Language.fromPrefs(lang.split('-')));
+        selectedLevel = Observable.just(Level.fromPrefs(level));
     });
 
     _levels = _firestoreRepository
@@ -79,24 +83,35 @@ class FlipFlopBloc {
               .documents.map((doc) => Language.fromJson(doc.data)).toList();
         });
 
-    _level.listen((level) {
-      selectedLevel = level;
-      print("Selected level: $selectedLevel");
-      _sharedPrefHelper.set("level", level.level);
-    });
+    selectedLevel = _level
+        .distinct()
+        .asyncMap((level) {
+          _sharedPrefHelper.set<String>("level", level.level)
+              .then((success) =>
+                      success
+                      ? print("Updated level: $selectedLevel")
+                      : print("Failed to update."));
+          return level;
+        });
 
-    _lang.listen((lang) {
-      selectedLang = lang;
-      print("Selected language: $selectedLang");
-      _sharedPrefHelper.set("lang", "${lang.code}-${lang.label}");
+    selectedLang = _lang
+        .distinct()
+        .asyncMap((lang) {
+          _sharedPrefHelper.set<String>("lang", "${lang.code}-${lang.label}")
+              .then((success) =>
+                        success
+                        ? print("Updated Language: $selectedLang")
+                        : print("Failed to update."));
+          return lang;
     });
 
    _cards = _category
              .distinct()
              .asyncMap((category) {
                List<WordViewModel> results = [];
-               final String level = selectedLevel.level;
-               final String lang = selectedLang.code;
+               final String level = _level.value.level;
+               final String lang = _lang.value.label;
+               print("Get cards: (level:$level/lang:$lang)");
                 return _firestoreRepository
                    .readByFilter("cards", "category:$category:$level:$lang")
                    .first
