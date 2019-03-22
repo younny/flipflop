@@ -1,8 +1,10 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
+import 'package:flipflop/const/keys.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/pages/FlipFlopBlocState.dart';
 import 'package:flipflop/utils/shared_prefs_helper.dart';
+import 'package:flipflop/utils/url_launcher_wrapper.dart';
 import 'package:flipflop/widgets/dropdown_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -90,7 +92,7 @@ class _SettingsPageState extends FlipFlopBlocState {
             SettingItemRow(
               title: "Send Feedback",
               description: "",
-              onRowPress: () => _popUpEmailEditor(),
+              onRowPress: () => _openEmailEditor(),
             ),
           ],
         ),
@@ -144,8 +146,12 @@ class _SettingsPageState extends FlipFlopBlocState {
     );
   }
 
-  void _popUpEmailEditor() {
-
+  void _openEmailEditor() {
+    try {
+      launchURL(Keys.URL_EMAIL_TYPE, "flipflop@gmail.com");
+    } catch(e) {
+      print(e);
+    }
   }
 
   void _updateLanguage(Language item) async {
