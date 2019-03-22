@@ -1,3 +1,4 @@
+import 'package:flipflop/exception.dart';
 import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:mockito/mockito.dart';
@@ -88,36 +89,43 @@ void main() {
     });
   });
 
-  group("throws exception case", () {
+  group("throws exception", () {
     SharedPrefHelper sharedPrefHelper;
-    Map<String, dynamic> errorResult = {
-    };
     setUp(() async {
       const MethodChannel('plugins.flutter.io/shared_preferences')
           .setMockMethodCallHandler((MethodCall methodCall) async {
             if(methodCall.method == 'getAll')
-              return errorResult;
+              return testValues;
             return null;
       });
       sharedPrefHelper = SharedPrefHelper();
-      sharedPrefHelper.withMock(null);
-      log.clear();
     });
 
     tearDown(() {
       sharedPrefHelper
           .pref()
-          .then((pref) => sharedPrefHelper.clear());
+          .then((pref) => sharedPrefHelper.withMock(pref));
     });
 
-    test("try get when sharedPreferences instance is null", () async {
+    test("sharedPreferences instance is null", () async {
       sharedPrefHelper.withMock(null);
 
-      dynamic result = await sharedPrefHelper.get("String");
+      expect(() async => await sharedPrefHelper.get<String>("String"),
+          throwsA(TypeMatcher<SharedPreferencesException>()));
 
-      expect(result, '');
+      expect(() => sharedPrefHelper.clear(),
+          throwsA(TypeMatcher<SharedPreferencesException>()));
     });
 
+    test("cast with wrong data type", () async {
+      expect(() async => await sharedPrefHelper.get("String") as int,
+          throwsA(TypeMatcher<SharedPreferencesException>()));
+    });
+
+    test("set unavailble data type", () async {
+      expect(() async => await sharedPrefHelper.set<Object>("Object", { "test": "foo" }),
+          throwsA(TypeMatcher<SharedPreferencesException>()));
+    });
 
   });
 

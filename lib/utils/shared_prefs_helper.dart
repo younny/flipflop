@@ -1,3 +1,5 @@
+import 'package:flipflop/constant/error.dart';
+import 'package:flipflop/exception.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,42 +23,43 @@ class SharedPrefHelper {
   }
 
   Future<T> get<T>(String key) async {
-    try {
-      dynamic result = await _sharedPreferences.get(key);
-      return result;
-    } catch(e) {
-      return "" as T;
+    if(_sharedPreferences == null) {
+      throw SharedPreferencesException("${FFError.SHARED_PREFERENCES} Instance is null.");
     }
+    dynamic result = await _sharedPreferences.get(key);
+    if(result.runtimeType != T)
+      throw SharedPreferencesException("${FFError.SHARED_PREFERENCES} Return type is wrong.(Expected: ${result.runtimeType})");
+
+    return result;
   }
 
   Future<bool> set<T>(String key, dynamic value) async {
-    try {
-      switch (T) {
-        case String:
-          return _sharedPreferences.setString(key, value);
-        case bool:
-          return _sharedPreferences.setBool(key, value);
-        case List:
-          return _sharedPreferences.setStringList(key, value);
-        case int:
-          return _sharedPreferences.setInt(key, value);
-        case double:
-          return _sharedPreferences.setDouble(key, value);
-        default:
-          return false;
-      }
-    } catch (e) {
-      print(e);
-      return false;
+    if(_sharedPreferences == null) {
+      throw SharedPreferencesException("${FFError.SHARED_PREFERENCES} Instance is null.");
+    }
+
+    switch (T) {
+      case String:
+        return _sharedPreferences.setString(key, value);
+      case bool:
+        return _sharedPreferences.setBool(key, value);
+      case List:
+        return _sharedPreferences.setStringList(key, value);
+      case int:
+        return _sharedPreferences.setInt(key, value);
+      case double:
+        return _sharedPreferences.setDouble(key, value);
+      default:
+        throw SharedPreferencesException("${FFError.SHARED_PREFERENCES} Incorrect type");
     }
   }
 
   void clear() async {
-    try {
-      _sharedPreferences.clear();
-    } catch (e) {
-      print(e);
+    if(_sharedPreferences == null) {
+      throw SharedPreferencesException("${FFError.SHARED_PREFERENCES} Instance is null.");
     }
+
+    _sharedPreferences.clear();
   }
 
   @visibleForTesting
