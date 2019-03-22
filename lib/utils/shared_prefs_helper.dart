@@ -29,7 +29,7 @@ class SharedPrefHelper {
     }
   }
 
-  Future set<T>(String key, dynamic value) async {
+  Future<bool> set<T>(String key, dynamic value) async {
     try {
       switch (T) {
         case String:
