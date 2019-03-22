@@ -1,4 +1,5 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
+import 'package:flipflop/constant/keys.dart';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
@@ -156,8 +157,8 @@ class _HomePageState extends FlipFlopBlocState {
   }
 
   void _loadSavedLanguageAndLevelSet() async {
-    String lang = await _sharedPrefHelper.get("lang");
-    String level = await _sharedPrefHelper.get("level");
+    String lang = await _sharedPrefHelper.get(Keys.SHARED_PREFS_LANG);
+    String level = await _sharedPrefHelper.get(Keys.SHARED_PREFS_LEVEL);
     print("Stored language : $lang");
     print("Stored level : $level");
     _updateLanguageAndLevelToBloc(lang ?? "ko-Korean", level ?? "0");

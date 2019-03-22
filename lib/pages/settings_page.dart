@@ -126,7 +126,7 @@ class _SettingsPageState extends FlipFlopBlocState {
     Type type = item.runtimeType;
     String key = "$type".toLowerCase();
 
-    ffBloc.getItem(type).add(item);
+    ffBloc.either(type).add(item);
     sharedPrefHelper.set<String>(key, item.toPrefs());
   }
 
