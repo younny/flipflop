@@ -15,7 +15,7 @@ class FlipFlopBloc {
 
   final FirestoreRepository _firestoreRepository;
 
-  final SharedPrefHelper _sharedPrefHelper = SharedPrefHelper();
+  SharedPrefHelper _sharedPrefHelper = SharedPrefHelper();
 
   Observable<Level> selectedLevel = Observable.just(defaultLevel);
 
@@ -73,7 +73,10 @@ class FlipFlopBloc {
         .asyncMap((QuerySnapshot snapshot) {
           return snapshot
             .documents.map((doc) => Level.fromJson(doc.data)).toList();
-    });
+        })
+        .handleError((e) {
+          print(e.toString());
+        });
 
     _languages = _firestoreRepository
         .read("languages")
@@ -81,6 +84,9 @@ class FlipFlopBloc {
         .asyncMap((QuerySnapshot snapshot) {
           return snapshot
               .documents.map((doc) => Language.fromJson(doc.data)).toList();
+        })
+        .handleError((e) {
+          print(e.toString());
         });
 
     selectedLevel = _level
@@ -92,6 +98,9 @@ class FlipFlopBloc {
                       ? print("Updated level: $selectedLevel")
                       : print("Failed to update."));
           return level;
+        })
+        .handleError((e) {
+          print(e.toString());
         });
 
     selectedLang = _lang
@@ -103,7 +112,9 @@ class FlipFlopBloc {
                         ? print("Updated Language: $selectedLang")
                         : print("Failed to update."));
           return lang;
-    });
+        }).handleError((e) {
+          print(e.toString());
+        });
 
    _cards = _category
              .distinct()
@@ -119,6 +130,8 @@ class FlipFlopBloc {
                      results = convert(snapshot.documents);
                      return results;
                   });
+              }).handleError((e) {
+                e.toString();
               });
 
     _categories = _firestoreRepository
@@ -128,7 +141,9 @@ class FlipFlopBloc {
           return snapshot
               .documents.map((doc) =>
                 Category.fromJson(doc.data)).toList();
-    });
+        }).handleError((e) {
+            e.toString();
+          });
   }
 
   List<WordViewModel> convert(List<DocumentSnapshot> data) {
