@@ -21,17 +21,13 @@ class FlipFlopBloc {
 
   BehaviorSubject<Level> _level = BehaviorSubject<Level>(seedValue: defaultLevel);
 
-  Sink<SharedPrefItem> getItem(Type T) => T == Level ? _level : _lang;
-
   Sink<Level> get level => _level;
-
-  set setLevel(Level lv) => level.add(lv);
-
-  Sink<Language> get lang => _lang;
 
   BehaviorSubject<Language> _lang = BehaviorSubject<Language>(seedValue: defaultLanguage);
 
-  set setLang(Language lng) => lang.add(lng);
+  Sink<Language> get lang => _lang;
+
+  Sink<SharedPrefItem> either(Type T) => T == Level ? _level : _lang;
 
   BehaviorSubject<String> _category = BehaviorSubject<String>(seedValue: 'animal');
 
