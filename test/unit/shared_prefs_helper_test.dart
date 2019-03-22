@@ -1,3 +1,4 @@
+import 'package:flipflop/constant/error.dart';
 import 'package:flipflop/exception.dart';
 import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flutter/services.dart';
@@ -37,21 +38,19 @@ void main() {
       log.clear();
     });
 
-    tearDown(() {
-      sharedPrefHelper
-          .pref()
-          .then((pref) => sharedPrefHelper.clear());
-    });
-
     test("read", () async {
       await sharedPrefHelper.pref();
 
-      expect(await sharedPrefHelper.get("String"), testValues['flutter.String']);
-      expect(await sharedPrefHelper.get("bool"), testValues['flutter.bool']);
-      expect(await sharedPrefHelper.get("List"), testValues['flutter.List']);
+      expect(await sharedPrefHelper.get<String>("String"), testValues['flutter.String']);
+      expect(await sharedPrefHelper.get<bool>("bool"), testValues['flutter.bool']);
+      expect(await sharedPrefHelper.get<List>("List"), testValues['flutter.List']);
       expect(log, <Matcher>[
         isMethodCall('getAll', arguments: null)
       ]);
+    });
+
+    test("read with no data type", () async {
+      expect(await sharedPrefHelper.get("String"), testValues['flutter.String']);
     });
 
     test("write", () async {
@@ -76,9 +75,9 @@ void main() {
         })
       ]);
 
-      expect(await sharedPrefHelper.get("String"), testValues2['flutter.String']);
-      expect(await sharedPrefHelper.get("bool"), testValues2['flutter.bool']);
-      expect(await sharedPrefHelper.get("List"), testValues2['flutter.List']);
+      expect(await sharedPrefHelper.get<String>("String"), testValues2['flutter.String']);
+      expect(await sharedPrefHelper.get<bool>("bool"), testValues2['flutter.bool']);
+      expect(await sharedPrefHelper.get<List<String>>("List"), testValues2['flutter.List']);
 
     });
 
@@ -111,20 +110,24 @@ void main() {
       sharedPrefHelper.withMock(null);
 
       expect(() async => await sharedPrefHelper.get<String>("String"),
-          throwsA(TypeMatcher<SharedPreferencesException>()));
+          throwsA(TypeMatcher<SharedPreferencesException>()
+              .having((e) => e.message, "message", contains(FFError.SHARED_PREFERENCES))));
 
       expect(() => sharedPrefHelper.clear(),
-          throwsA(TypeMatcher<SharedPreferencesException>()));
+          throwsA(TypeMatcher<SharedPreferencesException>()
+              .having((e) => e.message, "message", contains(FFError.SHARED_PREFERENCES))));
     });
 
     test("cast with wrong data type", () async {
-      expect(() async => await sharedPrefHelper.get("String") as int,
-          throwsA(TypeMatcher<SharedPreferencesException>()));
+      expect(() async => await sharedPrefHelper.get<int>("String"),
+          throwsA(TypeMatcher<SharedPreferencesException>()
+              .having((e) => e.message, "message", contains(FFError.SHARED_PREFERENCES))));
     });
 
     test("set unavailble data type", () async {
       expect(() async => await sharedPrefHelper.set<Object>("Object", { "test": "foo" }),
-          throwsA(TypeMatcher<SharedPreferencesException>()));
+          throwsA(TypeMatcher<SharedPreferencesException>()
+          .having((e) => e.message, "message", contains(FFError.SHARED_PREFERENCES))));
     });
 
   });

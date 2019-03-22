@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flipflop/constant/error.dart';
 import 'package:flipflop/exception.dart';
 import 'package:meta/meta.dart';
@@ -26,10 +27,12 @@ class SharedPrefHelper {
     if(_sharedPreferences == null) {
       throw SharedPreferencesException("${FFError.SHARED_PREFERENCES} Instance is null.");
     }
-    dynamic result = await _sharedPreferences.get(key);
-    if(result.runtimeType != T)
-      throw SharedPreferencesException("${FFError.SHARED_PREFERENCES} Return type is wrong.(Expected: ${result.runtimeType})");
-
+    T result;
+    try {
+      result = _sharedPreferences.get(key);
+    } catch (e) {
+      throw SharedPreferencesException("${FFError.SHARED_PREFERENCES} ${e.toString()}");
+    }
     return result;
   }
 
