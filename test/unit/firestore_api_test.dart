@@ -1,9 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flipflop/blocs/flipflop_bloc.dart';
+import 'package:flipflop/constant/error.dart';
+import 'package:flipflop/exception.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/repo/firestore_repository.dart';
+import 'package:flipflop/utils/shared_prefs_helper.dart';
 import 'package:flutter/services.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+class MockFireStore extends Mock implements Firestore {}
+class MockSharedPrefHelper extends Mock implements SharedPrefHelper {}
 void main() {
   const MethodChannel channel = MethodChannel('plugins.flutter.io/cloud_firestore');
   final List<MethodCall> log = <MethodCall>[];
@@ -47,68 +54,39 @@ void main() {
     });
   });
 
-  test("load card list succssfully", () async {
-
-    Stream<QuerySnapshot> snapshot;
-    FirestoreRepository repository = FirestoreRepository.instance;
-    snapshot = repository.readByFilter("cards", "category:test");
-
-    snapshot.listen((QuerySnapshot snapshot) {
-      expect(snapshot.documents.length, 1);
-
-      WordViewModel word = WordViewModel.fromJson("test", snapshot.documents[0].data);
-      expect(word, equals("TEST"));
-    });
+  //TODO Complete normal test case.
+  group("normal", () {
 
   });
-//
-//  test("load all cards list failed", () async {
-//    List<WordViewModel> cards;
-//
-//    cards = await FlipApi().getCards();
-//
-//    expect(cards, isNotNull);
-//
-//    expect(cards, isEmpty);
-//  });
-//
-//  test("load cards list with certain category only", () async {
-//    List<WordViewModel> cards;
-//
-//    cards = await FlipApi().getCards(category: 'fruit');
-//
-//    expect(cards, isNotNull);
-//
-//
-//  });
-//
-//  test("load cards list with certain category only failed", () async {
-//    List<WordViewModel> cards;
-//
-//    cards = await FlipApi().getCards(category: 'fruit');
-//
-//    expect(cards, isNotNull);
-//
-//    expect(cards, isEmpty);
-//
-//  });
-//
-//  test("load all categories successfully", () async {
-//    List<Category> categories;
-//
-//    categories = await FlipApi().getCategories();
-//
-//    expect(categories, isNotNull);
-//
-//  });
-//
-//  test("load all categories failed", () async {
-//    List<Category> categories;
-//
-//    categories = await FlipApi().getCategories();
-//
-//    expect(categories, isNotNull);
-//
-//    expect(categories, isEmpty);
-//  });
+
+  group("exception", () {
+    FirestoreRepository repository;
+    MockFireStore mockFireStore;
+
+    setUp(() {
+      mockFireStore = MockFireStore();
+      repository = FirestoreRepository.instance;
+      repository.withMock(mockFireStore);
+    });
+
+    test("incorrect filter format", () async {
+      when(mockFireStore.collection("cards"))
+          .thenThrow(Error());
+
+      expect(() => repository.readByFilter("cards", "category:test"),
+          throwsA(TypeMatcher<FirestoreException>()
+              .having((e) => e.message, "message", contains(FFError.FIRESTORE))));
+
+    });
+
+    test("when query collection", () async {
+      when(mockFireStore.collection("cards"))
+          .thenThrow(Error());
+
+      expect(() => repository.readByFilter("cards", "category:test:0:ko"),
+          throwsA(TypeMatcher<FirestoreException>()
+          .having((e) => e.message, "message", contains(FFError.FIRESTORE))));
+
+    });
+  });
 }
