@@ -1,4 +1,6 @@
-class Level {
+import 'package:flipflop/models/SharedPrefItem.dart';
+
+class Level extends SharedPrefItem {
   final String level;
 
   Level({

@@ -1,5 +1,6 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/constant/keys.dart';
+import 'package:flipflop/models/SharedPrefItem.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/pages/FlipFlopBlocState.dart';
@@ -61,7 +62,7 @@ class _SettingsPageState extends FlipFlopBlocState {
                             ? (langSnapshot.data as Language).label
                             : 'Korean',
                       onRowPress: () =>
-                          _showSetLanguageDialog(langListSnapshot.data, langSnapshot.data),
+                          _showDropdownDialog(langListSnapshot.data, langSnapshot.data),
                     );
                   }
                 );
@@ -80,7 +81,7 @@ class _SettingsPageState extends FlipFlopBlocState {
                             ? (levelSnapshot.data as Level).level
                             : '0',
                         onRowPress: () =>
-                            _showSetLevelDialog(levelListSnapshot.data, levelSnapshot.data)
+                            _showDropdownDialog(levelListSnapshot.data, levelSnapshot.data)
                     );
                   }
                 );
@@ -98,18 +99,18 @@ class _SettingsPageState extends FlipFlopBlocState {
     );
   }
 
-  Future<String> _showSetLanguageDialog(List<Language> languages, Language lang) {
+  Future<String> _showDropdownDialog<T>(List<T> items, T currentItem) {
     return showDialog<String>(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
-          return DropdownDialog<Language>(
-              title: "Select Language",
-              value: lang,
-              items: languages,
+          return DropdownDialog<T>(
+              title: "Select ${currentItem.runtimeType}",
+              value: currentItem,
+              items: items,
               supportEditMode: false,
-              onDone: (language) {
-                _updateLanguageToBloc(language);
+              onDone: (newItem) {
+                _updateLanguageToBloc(newItem);
 
                 Navigator.pop(context);
               },
@@ -121,27 +122,12 @@ class _SettingsPageState extends FlipFlopBlocState {
     );
   }
 
-  Future<String> _showSetLevelDialog(List<Level> levels, Level level) {
-    return showDialog<String>(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return DropdownDialog<Level>(
-              title: "Select Level",
-              value: level,
-              items: levels,
-              supportEditMode: false,
-              onDone: (level) {
-                _updateLevelToBloc(level);
+  void _updateLanguageToBloc(SharedPrefItem item) async {
+    Type type = item.runtimeType;
+    String key = "$type".toLowerCase();
 
-                Navigator.pop(context);
-              },
-              onClose: () => Navigator.pop(context),
-              onChange: (item) {
-              }
-          );
-        }
-    );
+    ffBloc.getItem(type).add(item);
+    sharedPrefHelper.set<String>(key, item.toPrefs());
   }
 
   void _openEmailEditor() {
@@ -150,16 +136,6 @@ class _SettingsPageState extends FlipFlopBlocState {
     } catch(e) {
       print(e);
     }
-  }
-
-  void _updateLanguageToBloc(Language item) async {
-    ffBloc.lang.add(item);
-    await sharedPrefHelper.set<String>('lang', item.toPrefs());
-  }
-
-  void _updateLevelToBloc(Level item) async {
-    ffBloc.level.add(item);
-    await sharedPrefHelper.set<String>('level', item.toPrefs());
   }
 }
 

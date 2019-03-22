@@ -1,4 +1,6 @@
-class Language {
+import 'package:flipflop/models/SharedPrefItem.dart';
+
+class Language extends SharedPrefItem {
   final String code;
   final String label;
 

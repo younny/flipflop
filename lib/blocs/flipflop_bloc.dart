@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flipflop/models/SharedPrefItem.dart';
 import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
@@ -19,6 +20,8 @@ class FlipFlopBloc {
   Observable<Language> selectedLang = Observable.just(defaultLanguage);
 
   BehaviorSubject<Level> _level = BehaviorSubject<Level>(seedValue: defaultLevel);
+
+  Sink<SharedPrefItem> getItem(Type T) => T == Level ? _level : _lang;
 
   Sink<Level> get level => _level;
 
