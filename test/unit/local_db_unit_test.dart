@@ -15,14 +15,14 @@ class MockDatabase extends Mock implements Database {}
 
 void main() {
   LocalDB localDB;
-  MockDatabase database;
+  MockDatabase mockDatabase;
   Directory tempDir;
   const MethodChannel channel = MethodChannel('com.tekartik.sqflite');
   final List<MethodCall> log = <MethodCall>[];
 
   group("success", () {
     setUp(() async {
-      database = MockDatabase();
+      mockDatabase = MockDatabase();
       localDB = LocalDB.instance;
       tempDir = await Directory.systemTemp.createTemp();
 
@@ -33,7 +33,7 @@ void main() {
           return tempDir.path;
         }
         if(method == 'query') {
-          await database.query(tableName);
+          await mockDatabase.query(tableName);
           final List<Map<String, dynamic>> results = <Map<String, dynamic>>[
             <String, dynamic>{columnId: 1, columnWord: 'test 1'},
             <String, dynamic>{columnId: 2, columnWord: 'test 2'}
@@ -124,7 +124,7 @@ void main() {
 
   group("exception", () {
     setUp(() async {
-      database = MockDatabase();
+      mockDatabase = MockDatabase();
       localDB = LocalDB.instance;
       tempDir = await Directory.systemTemp.createTemp();
     });
@@ -152,14 +152,14 @@ void main() {
           return tempDir.path;
         }
         if(method == 'query') {
-          await database.query(tableName);
+          await mockDatabase.query(tableName);
           return null;
         }
 
       });
       await localDB.open();
 
-      when(database.query(tableName)).thenThrow(Error());
+      when(mockDatabase.query(tableName)).thenThrow(Error());
 
       expect(() async => await localDB.retrieveAll(),
         throwsA(TypeMatcher<LocalDatabaseException>()
@@ -183,17 +183,20 @@ void main() {
           return tempDir.path;
         }
         if(method == 'insert') {
-          await database.insert(tableName, { "test": "foo" });
+          await mockDatabase.insert(tableName, word.toMap());
         }
 
       });
       await localDB.open();
 
-      when(database.insert(tableName, { "test": "foo" })).thenThrow(Error());
+      when(mockDatabase.insert(tableName, word.toMap())).thenThrow(Error());
 
       expect(() async => await localDB.insert(word),
           throwsA(TypeMatcher<LocalDatabaseException>()
               .having((e) => e.message, 'message', contains(FFError.LOCAL_DATABASE))));
+    });
+
+    test("insert data when same data is already exists", () async {
     });
 
     test("delete database", () async {
@@ -205,14 +208,14 @@ void main() {
           return tempDir.path;
         }
         if(method == 'update') {
-          await database.delete(id);
+          await mockDatabase.delete(id);
           return null;
         }
 
       });
       await localDB.open();
 
-      when(database.delete(id)).thenThrow(Error());
+      when(mockDatabase.delete(id)).thenThrow(Error());
 
       expect(() async => await localDB.delete(id),
           throwsA(TypeMatcher<LocalDatabaseException>()
