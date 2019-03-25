@@ -42,6 +42,12 @@ class FirestoreException extends FlipFlopException {
 class LocalDatabaseException extends FlipFlopException {
   LocalDatabaseException(String message) : super(message);
 
+  bool isDataAlreadyExistsError() {
+    if(_message != null) {
+      return _message.contains("UNIQUE constraint failed");
+    }
+    return false;
+  }
   String get message => _message;
 }
 
