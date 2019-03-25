@@ -91,7 +91,7 @@ class FlipFlopBloc {
              .asyncMap((category) {
                List<WordViewModel> results = [];
                final String level = _level.value.level;
-               final String lang = _lang.value.label;
+               final String lang = _lang.value.code;
                print("Get cards: (level:$level/lang:$lang)");
                 return _firestoreRepository
                    .readByFilter("cards", "category:$category:$level:$lang")
