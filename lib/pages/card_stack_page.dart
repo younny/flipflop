@@ -178,34 +178,42 @@ class _CardStackPageState extends State<CardStackPage> {
     });
   }
 
-  void _deleteSelectedCards() {
-    setState(() {
-      selectedCards.forEach((card) {
-        myCards.remove(card);
-      
-        _openAndDeleteData(card);
-      });
-    });
+  void _deleteSelectedCards() async {
+
+    await _openAndDeleteFromLocalDB();
 
     _emptySelectedCards();
 
     _closeSelectionMode();
   }
 
-  void _openAndDeleteData(WordViewModel word) async {
+  Future _openAndDeleteFromLocalDB() async {
     LocalDB db = LocalDB.instance;
     await db.open();
 
-    await _deleteData(word);
+    await _deleteItems(selectedCards);
+    setState(() {
+
+    });
 
     await db.close();
   }
 
-  Future _deleteData(WordViewModel item) async {
-    LocalDB db = LocalDB.instance;
-    int id = await db.delete(item.id);
+  Future _deleteItems(Set<WordViewModel> items) async {
+    for(WordViewModel card in items) {
+      await _deleteItem(card);
+      myCards.remove(card);
+    }
+  }
 
-    print('item $id is deleted.');
+  Future _deleteItem(WordViewModel item) async {
+    LocalDB db = LocalDB.instance;
+    try {
+      int id = await db.delete(item.id);
+      return id;
+    } catch(LocalDatabaseException) {
+      print(LocalDatabaseException);
+    }
   }
 
   void _emptySelectedCards() {

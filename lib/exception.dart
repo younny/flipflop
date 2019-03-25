@@ -48,6 +48,13 @@ class LocalDatabaseException extends FlipFlopException {
     }
     return false;
   }
+
+  bool isAttemptReopenAlreadyClosedError() {
+    if(_message != null) {
+      return _message.contains("attempt to re-open an already-closed object");
+    }
+    return false;
+  }
   String get message => _message;
 }
 

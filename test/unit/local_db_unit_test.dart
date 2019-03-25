@@ -60,7 +60,8 @@ void main() {
         }
 
         if(method == 'update') {
-          return 0;
+          if(localDB.isOpened()) return 0;
+          throw Exception("attempt to re-open an already-closed object");
         }
 
       });
@@ -137,6 +138,17 @@ void main() {
       expect(log.last.method, equals('update'));
 
       expect(log.last.arguments['sql'].toString().startsWith('DELETE FROM'), isTrue);
+    });
+
+    test("access database after closed", () async {
+      await localDB.close();
+
+      print(localDB.isOpened());
+      String id = 'test';
+
+      expect(() async => await localDB.delete(id),
+          throwsA(TypeMatcher<LocalDatabaseException>()
+              .having((e) => e.message, "message", contains("attempt to re-open an already-closed object"))));
     });
   });
 
@@ -245,6 +257,7 @@ void main() {
           throwsA(TypeMatcher<LocalDatabaseException>()
               .having((e) => e.message, 'message', contains(FFError.LOCAL_DATABASE))));
     });
+
   });
 
 }
