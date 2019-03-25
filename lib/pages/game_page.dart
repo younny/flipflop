@@ -33,6 +33,11 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0
+      ),
       key: _scaffoldKey,
       backgroundColor: Colors.blueGrey,
       body: Container(
