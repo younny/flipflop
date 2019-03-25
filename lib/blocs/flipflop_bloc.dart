@@ -92,7 +92,7 @@ class FlipFlopBloc {
                List<WordViewModel> results = [];
                final String level = _level.value.level;
                final String lang = _lang.value.code;
-               print("Get cards: (level:$level/lang:$lang)");
+               //print("Get cards: (level:$level/lang:$lang)");
                 return _firestoreRepository
                    .readByFilter("cards", "category:$category:$level:$lang")
                    .first

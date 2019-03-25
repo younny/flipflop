@@ -56,6 +56,7 @@ class _CardStackPageState extends State<CardStackPage> {
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.75,
                   child: RefreshIndicator(
+                    semanticsLabel: "Refresh my stack",
                     onRefresh: _onRefresh,
                     child: GridView.count(
                       primary: false,
@@ -80,8 +81,6 @@ class _CardStackPageState extends State<CardStackPage> {
 
     await db.open();
     List<Map> records = await db.retrieveAll();
-
-    print(records.length);
 
     if(records.isNotEmpty) {
       records.forEach((item) {
