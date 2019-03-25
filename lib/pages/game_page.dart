@@ -163,7 +163,7 @@ class _GamePageState extends State<GamePage> {
     _scaffoldKey.currentState.showSnackBar(
       SnackBar(
         content: Text(message ?? "Added to my stack!"),
-        duration: Duration(seconds: 3)
+        duration: Duration(milliseconds: 1500)
       )
     );
   }
