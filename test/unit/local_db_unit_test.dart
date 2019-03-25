@@ -20,16 +20,34 @@ void main() {
   const MethodChannel channel = MethodChannel('com.tekartik.sqflite');
   final List<MethodCall> log = <MethodCall>[];
 
-  group("success", () {
+  group("database path exception", () {
     setUp(() async {
       mockDatabase = MockDatabase();
       localDB = LocalDB.instance;
-      tempDir = await Directory.systemTemp.createTemp();
+      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+        String method = methodCall.method;
+        if(method == 'getDatabasesPath') {
+          throw Error();
+        }
+      });
+    });
 
+    test("get path", () async {
+      expect(() async => await localDB.getPath(),
+          throwsA(TypeMatcher<LocalDatabaseException>()
+              .having((e) => e.message, "message", contains(FFError.LOCAL_DATABASE))));
+    });
+  });
+
+  group("normal test", () {
+    setUp(() async {
+      mockDatabase = MockDatabase();
+      localDB = LocalDB.instance;
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         String method = methodCall.method;
         log.add(methodCall);
         if(method == 'getDatabasesPath') {
+          tempDir = await Directory.systemTemp.createTemp();
           return tempDir.path;
         }
         if(method == 'query') {
@@ -122,33 +140,25 @@ void main() {
     });
   });
 
-  group("exception", () {
+  group("other exceptions", () {
+    WordViewModel word = WordViewModel(
+        id: "1234567",
+        word: 'Test',
+        meaning: 'This is test',
+        lang: 'en',
+        level: 0,
+        category: 'foo',
+        pronunciation: 'blah'
+    );
+    String id = 'test';
+
     setUp(() async {
       mockDatabase = MockDatabase();
       localDB = LocalDB.instance;
-      tempDir = await Directory.systemTemp.createTemp();
-    });
-
-    tearDown(() async {
-    });
-
-    test("open database", () async {
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         String method = methodCall.method;
         if(method == 'getDatabasesPath') {
-          return null;
-        }
-      });
-
-      expect(() async => await localDB.open(),
-        throwsA(TypeMatcher<LocalDatabaseException>()
-          .having((e) => e.message, "message", contains(FFError.LOCAL_DATABASE))));
-    });
-
-    test("read database", () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        String method = methodCall.method;
-        if(method == 'getDatabasesPath') {
+          tempDir = await Directory.systemTemp.createTemp();
           return tempDir.path;
         }
         if(method == 'query') {
@@ -156,7 +166,21 @@ void main() {
           return null;
         }
 
+        if(method == 'insert') {
+          await mockDatabase.insert(tableName, word.toMap());
+        }
+
+        if(method == 'update') {
+          await mockDatabase.delete(id);
+          return null;
+        }
       });
+    });
+
+    tearDown(() async {
+    });
+
+    test("read database", () async {
       await localDB.open();
 
       when(mockDatabase.query(tableName)).thenThrow(Error());
@@ -177,16 +201,6 @@ void main() {
           pronunciation: 'blah'
       );
 
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        String method = methodCall.method;
-        if(method == 'getDatabasesPath') {
-          return tempDir.path;
-        }
-        if(method == 'insert') {
-          await mockDatabase.insert(tableName, word.toMap());
-        }
-
-      });
       await localDB.open();
 
       when(mockDatabase.insert(tableName, word.toMap())).thenThrow(Error());
@@ -196,23 +210,33 @@ void main() {
               .having((e) => e.message, 'message', contains(FFError.LOCAL_DATABASE))));
     });
 
-    test("insert data when same data is already exists", () async {
+    test("insert data which is already exsists", () async {
+      WordViewModel word = WordViewModel(
+          id: "1234567",
+          word: 'Test',
+          meaning: 'This is test',
+          lang: 'en',
+          level: 0,
+          category: 'foo',
+          pronunciation: 'blah'
+      );
+
+      await localDB.open();
+
+      await localDB.insert(word);
+
+      when(mockDatabase.insert(tableName, word.toMap()))
+          .thenThrow(Exception("UNIQUE constraint failed"));
+
+      expect(() async => await localDB.insert(word),
+          throwsA(TypeMatcher<LocalDatabaseException>()
+              .having((e) => e.message, 'message', contains("UNIQUE constraint failed"))));
+
     });
 
     test("delete database", () async {
       String id = 'test';
 
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
-        String method = methodCall.method;
-        if(method == 'getDatabasesPath') {
-          return tempDir.path;
-        }
-        if(method == 'update') {
-          await mockDatabase.delete(id);
-          return null;
-        }
-
-      });
       await localDB.open();
 
       when(mockDatabase.delete(id)).thenThrow(Error());

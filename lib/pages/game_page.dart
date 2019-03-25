@@ -1,3 +1,4 @@
+import 'package:flipflop/exception.dart';
 import 'package:flipflop/models/db_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/pages/settings_page.dart';
@@ -119,8 +120,6 @@ class _GamePageState extends State<GamePage> {
             onRightIconPress: () {
               //_showAddToMyStackAlert(snapshot.data[index])
               onSave(snapshot.data[index], dbName);
-
-              _showSnackBar();
             }
         )
       ],
@@ -149,15 +148,21 @@ class _GamePageState extends State<GamePage> {
 
   Future _insertData(WordViewModel item) async {
     LocalDB db = LocalDB.instance;
-    int id = await db.insert(item);
+    try {
+      await db.insert(item);
+      _showSnackBar();
+    } catch (LocalDatabaseException) {
+      if(LocalDatabaseException.isDataAlreadyExistsError()) {
+        _showSnackBar(message: "Already exists in my stack!");
+      }
+    }
 
-    print('item $id is inserted.');
   }
 
-  void _showSnackBar() {
+  void _showSnackBar({ String message }) {
     _scaffoldKey.currentState.showSnackBar(
       SnackBar(
-        content: Text("Add to my stack!"),
+        content: Text(message ?? "Added to my stack!"),
         duration: Duration(seconds: 3)
       )
     );
