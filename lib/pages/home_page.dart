@@ -122,6 +122,7 @@ class _HomePageState extends FlipFlopBlocState {
 
   Widget _buildListItem(Category category, int index) {
     return GestureDetector(
+      key: Key("cat-$index"),
       onTap: () => _getCardsByCategory(category.name),
       child: Container(
         alignment: Alignment.center,
