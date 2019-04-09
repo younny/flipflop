@@ -1,4 +1,3 @@
-import 'package:flipflop/exception.dart';
 import 'package:flipflop/models/db_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/pages/settings_page.dart';
