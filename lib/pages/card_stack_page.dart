@@ -120,6 +120,7 @@ class _CardStackPageState extends State<CardStackPage> {
   List<Widget> _buildDefaultIconSet() {
     return [
       IconButton(
+        tooltip: 'Play',
         icon: Icon(Icons.playlist_play),
         iconSize: 32,
         onPressed: () {
