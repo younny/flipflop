@@ -102,7 +102,7 @@ class _DropdownDialogState<T> extends State<DropdownDialog> {
   }
 
   Widget _buildDropdownView() {
-    var items = widget.items;
+    var items = widget.items ?? [];
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
