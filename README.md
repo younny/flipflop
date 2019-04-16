@@ -12,4 +12,4 @@ The basic functions provided by this application are,
 - Store card in your stack to practice later.
 - Upgrade your level for more difficult ones.
 
-## Made by [DY.G](https://www.linkedin.com/in/dooyoung-gi-067b90110/)
+### Made by [DY.G](https://www.linkedin.com/in/dooyoung-gi-067b90110/)
