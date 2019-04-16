@@ -47,6 +47,7 @@ class _HomePageState extends FlipFlopBlocState {
     return StreamBuilder(
       stream: ffBloc.categories,
       builder: (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
+        print('Connection State: ${snapshot.connectionState}');
         switch(snapshot.connectionState) {
           case ConnectionState.waiting:
             return _buildLoadingView();
