@@ -101,7 +101,7 @@ class FlipFlopBloc {
                      return results;
                   });
               }).handleError((e) {
-                e.toString();
+                print(e.toString());
               });
 
     _categories = _firestoreRepository
@@ -112,7 +112,7 @@ class FlipFlopBloc {
               .documents.map((doc) =>
                 Category.fromJson(doc.data)).toList();
         }).handleError((e) {
-            e.toString();
+            print(e.toString());
           });
   }
 
