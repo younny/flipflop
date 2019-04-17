@@ -14,7 +14,7 @@ The basic functions provided by this application are,
 
 ## Installation
 
-*To install this app from repository, you're required to have google-services.json file in ./android/app/ directory.
+**To install this app from repository, you're required to have google-services.json file in ./android/app/ directory.**
 
 1. Check Flutter environment using this commend line,
 ```
