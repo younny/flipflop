@@ -12,6 +12,17 @@ The basic functions provided by this application are,
 - Store card in your stack to practice later.
 - Upgrade your level for more difficult ones.
 
+## Dependencies
+This application depends on these packages below.
+
+- flutter_localizations
+- http
+- rxdart
+- cloud_firestore
+- sqflite
+- shared_preferences
+- url_launcher
+
 ## Installation
 
 **To install this app from repository, you're required to have google-services.json file in ./android/app/ directory.**
