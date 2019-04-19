@@ -1,3 +1,4 @@
+import 'package:flipflop/models/korean.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/widgets/card_list.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import '../helper/widget_wrapper.dart';
 void main() {
   testWidgets('card list renders a card', (WidgetTester tester) async {
     final List<WordViewModel> cards = [
-      WordViewModel(
+      Korean(
         word: 'TEST',
         meaning: 'This is test'
       )
@@ -27,7 +28,7 @@ void main() {
     final Key listKey = Key('card-list');
     final String firstCardMeaning = 'This is test';
     final List<WordViewModel> cards = [
-      WordViewModel(
+      Korean(
         word: 'TEST',
         meaning: firstCardMeaning
       )
@@ -50,11 +51,11 @@ void main() {
     final String firstCardMeaning = 'This is test';
     final String secondCardMeaning = 'This is test2';
     final List<WordViewModel> cards = [
-      WordViewModel(
+      Korean(
         word: 'TEST',
         meaning: firstCardMeaning
       ),
-      WordViewModel(
+      Korean(
         word: 'TEST2',
         meaning: secondCardMeaning
       )

@@ -80,17 +80,17 @@ class LocalDB {
   }
   
   Future<WordViewModel> retrieve(String id) async {
-    List<Map> maps = await _db.query(tableName,
-    columns: [columnId, columnWord],
-    where: '$columnId = ?',
-    whereArgs: [id]).catchError((error) {
-      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
-    }) ?? List<Map<String, dynamic>>();
-
-    if(maps.length > 0)
-      return WordViewModel.fromJson(id, maps.first);
-
-    return null;
+//    List<Map> maps = await _db.query(tableName,
+//    columns: [columnId, columnWord],
+//    where: '$columnId = ?',
+//    whereArgs: [id]).catchError((error) {
+//      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+//    }) ?? List<Map<String, dynamic>>();
+//
+//    if(maps.length > 0)
+//      return WordViewModel.fromJson(id, maps.first);
+//
+     return null;
   }
 
   Future<List<Map>> retrieveAll() async {
@@ -111,11 +111,12 @@ class LocalDB {
   }
 
   Future<int> update(WordViewModel item) async {
-    return await _db.update(tableName, item.toMap(),
-        where: '$columnId = ?', whereArgs: [item.id])
-    .catchError((error) {
-      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
-    });
+//    return await _db.update(tableName, item.toMap(),
+//        where: '$columnId = ?', whereArgs: [item.id])
+//    .catchError((error) {
+//      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+//    });
+    return null;
   }
 
   Future close() async {

@@ -2,44 +2,45 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flipflop/models/SharedPrefItem.dart';
-import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/repo/firestore_repository.dart';
+import 'package:flipflop/utils/view_model_converter.dart';
 import 'package:rxdart/rxdart.dart';
 
 class FlipFlopBloc {
   static final defaultLevel = Level(level: '0');
-  static final defaultLanguage = Language(code: 'ko', label: 'Korean');
+
+  static final defaultLanguage = Language(code: 'de', label: 'German');
 
   final FirestoreRepository _firestoreRepository;
 
-  Observable<Level> selectedLevel = Observable.just(defaultLevel);
-
-  Observable<Language> selectedLang = Observable.just(defaultLanguage);
-
   BehaviorSubject<Level> _level = BehaviorSubject<Level>(seedValue: defaultLevel);
 
-  Sink<Level> get level => _level;
+  Sink<Level> get inLevel => _level;
+
+  Stream<Level> get outLevel => _level.stream;
 
   BehaviorSubject<Language> _lang = BehaviorSubject<Language>(seedValue: defaultLanguage);
 
-  Sink<Language> get lang => _lang;
+  Sink<Language> get inLang => _lang;
+
+  Stream<Language> get outLang => _lang.stream;
 
   Sink<SharedPrefItem> either(Type T) => T == Level ? _level : _lang;
 
-  BehaviorSubject<String> _category = BehaviorSubject<String>(seedValue: 'animal');
+  BehaviorSubject<String> _category = BehaviorSubject<String>(seedValue: 'expression');
 
-  Sink<String> get category => _category;
+  Sink<String> get inCategory => _category;
 
   Stream<List<WordViewModel>> _cards = Stream.empty();
 
   Stream<List<WordViewModel>> get cards => _cards;
 
-  Stream<List<Category>> _categories = Stream.empty();
+  Stream<List<String>> _categories = Stream.empty();
 
-  Stream<List<Category>> get categories => _categories;
+  Stream<List<String>> get categories => _categories;
 
   Stream<List<Language>> _languages = Stream.empty();
 
@@ -52,73 +53,55 @@ class FlipFlopBloc {
   FlipFlopBloc(this._firestoreRepository) {
     _levels = _firestoreRepository
         .read("levels")
-        .distinct()
-        .asyncMap((QuerySnapshot snapshot) {
+        .then((QuerySnapshot snapshot) {
           return snapshot
-            .documents.map((doc) => Level.fromJson(doc.data)).toList();
+              .documents.map((doc) => Level.fromJson(doc.data))
+              .toList();
         })
-        .handleError((e) {
+        .catchError((e) {
           print(e.toString());
-        });
+        }).asStream();
 
     _languages = _firestoreRepository
         .read("languages")
-        .distinct()
-        .asyncMap((QuerySnapshot snapshot) {
+        .then((QuerySnapshot snapshot) {
           return snapshot
-              .documents.map((doc) => Language.fromJson(doc.data)).toList();
+              .documents.map((doc) => Language.fromJson(doc.data))
+              .toList();
         })
-        .handleError((e) {
+        .catchError((e) {
           print(e.toString());
-        });
-
-    selectedLevel = _level
-        .distinct()
-        .asyncMap((level) => level)
-        .handleError((e) {
-          print(e.toString());
-        });
-
-    selectedLang = _lang
-        .distinct()
-        .asyncMap((lang) => lang)
-        .handleError((e) {
-          print(e.toString());
-        });
+        }).asStream();
 
     _cards = _category
-             .distinct()
-             .asyncMap((category) {
-               List<WordViewModel> results = [];
-               final String level = _level.value.level;
-               final String lang = _lang.value.code;
-               //print("Get cards: (level:$level/lang:$lang)");
-                return _firestoreRepository
-                   .readByFilter("cards", "category:$category:$level:$lang")
-                   .first
-                   .then((QuerySnapshot snapshot) {
-                     results = convert(snapshot.documents);
-                     return results;
-                  });
-              }).handleError((e) {
-                print(e.toString());
+        .asyncMap((category) {
+          String langCode = _lang.value.code;
+          return _firestoreRepository
+            .readDeep([langCode, category], ['categories'])
+            .then((QuerySnapshot snapshot) {
+              return snapshot
+                  .documents
+                  .map((doc) => convertMapToViewModel(langCode, doc.data))
+                  .toList();
+            })
+            .catchError((e) {
+              print(e);
+            });
+        });
+
+    _categories = _lang
+        .asyncMap((lang) {
+          return _firestoreRepository
+              .read(lang.code)
+              .then((QuerySnapshot snapshot) {
+                return List.of(snapshot.documents[0].data['names'])
+                    .map((cat) => cat.toString())
+                    .toList();
+              })
+              .catchError((e) {
+                print(e);
               });
-
-    _categories = _firestoreRepository
-        .read("categories")
-        .distinct()
-        .asyncMap((QuerySnapshot snapshot) {
-          return snapshot
-              .documents.map((doc) =>
-                Category.fromJson(doc.data)).toList();
-        }).handleError((e) {
-            print(e.toString());
-          });
-  }
-
-  List<WordViewModel> convert(List<DocumentSnapshot> data) {
-    return data.map((doc) =>
-        WordViewModel.fromJson(doc.documentID, doc.data)).toList();
+        });
   }
 
   void dispose() {

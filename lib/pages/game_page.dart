@@ -97,14 +97,14 @@ class _GamePageState extends State<GamePage> {
   }
 
   Widget _buildGameView(AsyncSnapshot<List<WordViewModel>> snapshot) {
-    final length = snapshot.data.length;
+    final length = snapshot.data == null ? 0 : snapshot.data.length;
     final index = (scrollPercent * length).round();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
           child: CardListWidget(
-              cards: snapshot.data,
+              cards: snapshot.data ?? [],
               onScroll: (double scrollPercent) {
                 setState(() {
                   this.scrollPercent = scrollPercent;

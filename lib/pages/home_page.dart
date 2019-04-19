@@ -1,6 +1,5 @@
 import 'package:flipflop/blocs/flipflop_bloc.dart';
 import 'package:flipflop/constant/keys.dart';
-import 'package:flipflop/models/category_view_model.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
 import 'package:flipflop/pages/FlipFlopBlocState.dart';
@@ -46,7 +45,7 @@ class _HomePageState extends FlipFlopBlocState {
 
     return StreamBuilder(
       stream: ffBloc.categories,
-      builder: (BuildContext context, AsyncSnapshot<List<Category>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
         switch(snapshot.connectionState) {
           case ConnectionState.waiting:
             return _buildLoadingView();
@@ -63,7 +62,7 @@ class _HomePageState extends FlipFlopBlocState {
     );
   }
 
-  Widget _buildCategoriesView(AsyncSnapshot<List<Category>> snapshot) {
+  Widget _buildCategoriesView(AsyncSnapshot<List<String>> snapshot) {
     final Size screenSize = MediaQuery.of(context).size;
     final int length = snapshot.data.length;
     return CustomScrollView(
@@ -110,7 +109,7 @@ class _HomePageState extends FlipFlopBlocState {
           ),
           delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                Category category = snapshot.data[index];
+                String category = snapshot.data[index];
                 return _buildListItem(category, index);
               },
               childCount: length
@@ -120,10 +119,10 @@ class _HomePageState extends FlipFlopBlocState {
     );
   }
 
-  Widget _buildListItem(Category category, int index) {
+  Widget _buildListItem(String category, int index) {
     return GestureDetector(
       key: Key("cat-$index"),
-      onTap: () => _getCardsByCategory(category.name),
+      onTap: () => _getCardsByCategory(category),
       child: Container(
         alignment: Alignment.center,
         margin: EdgeInsets.only(left: 10.0 * ((index+1)%2), right: 10.0 * (index%2)),
@@ -134,7 +133,7 @@ class _HomePageState extends FlipFlopBlocState {
           borderRadius: BorderRadius.circular(10.0)
         ),
         child: Text(
-          category.name,
+          category,
           style: TextStyle(
             fontSize: 15,
             color: Colors.white,
@@ -148,7 +147,7 @@ class _HomePageState extends FlipFlopBlocState {
   void _getCardsByCategory(String categoryName) {
     final flipFlopBloc = Provider.of<FlipFlopBloc>(context);
 
-    flipFlopBloc.category.add(categoryName);
+    flipFlopBloc.inCategory.add(categoryName);
 
     Navigator.push(
         context,
@@ -168,8 +167,8 @@ class _HomePageState extends FlipFlopBlocState {
   void _updateLanguageAndLevelToBloc(String lang, String level) {
     final ffBloc = bloc(context);
 
-    ffBloc.lang.add(Language.fromPrefs(lang.split('-')));
-    ffBloc.level.add(Level.fromPrefs(level));
+    ffBloc.inLang.add(Language.fromPrefs(lang.split('-')));
+    ffBloc.inLevel.add(Level.fromPrefs(level));
   }
 }
 

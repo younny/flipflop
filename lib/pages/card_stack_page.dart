@@ -83,10 +83,10 @@ class _CardStackPageState extends State<CardStackPage> {
     List<Map> records = await db.retrieveAll();
 
     if(records.isNotEmpty) {
-      records.forEach((item) {
-        WordViewModel wordItem = WordViewModel.fromMap(item);
-        myCards.add(wordItem);
-      });
+//      records.forEach((item) {
+//        WordViewModel wordItem = WordViewModel.fromMap(item);
+//        myCards.add(wordItem);
+//      });
 
       setState(() {});
     }
@@ -207,13 +207,13 @@ class _CardStackPageState extends State<CardStackPage> {
   }
 
   Future _deleteItem(WordViewModel item) async {
-    LocalDB db = LocalDB.instance;
-    try {
-      int id = await db.delete(item.id);
-      return id;
-    } catch(LocalDatabaseException) {
-      print(LocalDatabaseException);
-    }
+//    LocalDB db = LocalDB.instance;
+//    try {
+//      int id = await db.delete(item.id);
+//      return id;
+//    } catch(LocalDatabaseException) {
+//      print(LocalDatabaseException);
+//    }
   }
 
   void _emptySelectedCards() {

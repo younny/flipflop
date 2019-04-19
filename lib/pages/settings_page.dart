@@ -54,7 +54,7 @@ class _SettingsPageState extends FlipFlopBlocState {
               stream: ffBloc.languages,
               builder: (context, langListSnapshot) {
                 return StreamBuilder<Object>(
-                  stream: ffBloc.selectedLang,
+                  stream: ffBloc.outLang,
                   builder: (context, langSnapshot) {
                     return SettingItemRow(
                       title: "Change Language to learn",
@@ -73,7 +73,7 @@ class _SettingsPageState extends FlipFlopBlocState {
               stream: ffBloc.levels,
               builder: (context, levelListSnapshot) {
                 return StreamBuilder<Object>(
-                  stream: ffBloc.selectedLevel,
+                  stream: ffBloc.outLevel,
                   builder: (context, levelSnapshot) {
                     return SettingItemRow(
                         title: "Set Level",

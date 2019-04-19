@@ -1,4 +1,5 @@
 import 'package:flipflop/fixtures/mock_data.dart';
+import 'package:flipflop/models/korean.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/widgets/card_flipper.dart';
 import 'package:flipflop/widgets/card_list.dart';
@@ -32,10 +33,10 @@ void main() {
     double percent = 0.0;
 
     final List<WordViewModel> cards = [
-      WordViewModel(
+      Korean(
           word: 'TEST'
       ),
-      WordViewModel(
+      Korean(
           word: 'TEST2'
       )
     ];

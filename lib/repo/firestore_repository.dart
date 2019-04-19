@@ -12,25 +12,34 @@ class FirestoreRepository {
 
   FirestoreRepository._internal(this._firestore);
 
-  Future<List<DocumentSnapshot>> create() {
-    // TODO: implement create
-    return null;
-  }
-
-  Future<List<DocumentSnapshot>> delete() {
-    // TODO: implement delete
-    return null;
-  }
-
-  Future<List<DocumentSnapshot>> update() {
-    // TODO: implement update
-    return null;
-  }
-
-  Stream<QuerySnapshot> read(String collectionId) {
+  Future<QuerySnapshot> read(String collectionId) async {
     return _firestore
         .collection(collectionId)
-        .snapshots();
+        .getDocuments()
+        .catchError((e){
+          throw FirestoreException("${FFError.FIRESTORE} ${e.toString()}");
+    });
+  }
+
+  Future<QuerySnapshot> readDeep(List<String> collectionIds, List<String> documentIds) async {
+    if(collectionIds.isEmpty
+        || collectionIds.length < documentIds.length)
+      throw FirestoreException("${FFError.FIRESTORE} Collection ids are empty.");
+
+    if(collectionIds.length == 1)
+      return read(collectionIds[0]);
+
+    DocumentReference tempRef = _firestore.document('');
+    for(int i=0; i<collectionIds.length - 1; i++) {
+      tempRef = tempRef.collection(collectionIds[i])
+          .document(documentIds[i]);
+    }
+    return await tempRef
+        .collection(collectionIds[collectionIds.length - 1])
+        .getDocuments()
+        .catchError((e) {
+          throw FirestoreException("${FFError.FIRESTORE} ${e.toString()}");
+    });
   }
 
   Stream<QuerySnapshot> readByFilter(String collectionId, String filter) {

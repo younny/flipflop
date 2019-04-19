@@ -1,3 +1,4 @@
+import 'package:flipflop/models/korean.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/utils/string_formatter.dart';
 import 'package:flipflop/widgets/wordcard_widget.dart';
@@ -11,7 +12,7 @@ void main() {
 
     final key = Key('word-card');
     const String word = 'TEST';
-    final WordViewModel viewModel = WordViewModel(
+    final WordViewModel viewModel = Korean(
       word: word
     );
 
@@ -33,7 +34,7 @@ void main() {
 
     final key = Key('word-card');
     String word;
-    final WordViewModel viewModel = WordViewModel(
+    final WordViewModel viewModel = Korean(
         word: word
     );
 
@@ -56,7 +57,7 @@ void main() {
     final key = Key('word-card');
     const String word = 'TEST';
     final String meaning = 'This is test.';
-    final WordViewModel viewModel = WordViewModel(
+    final WordViewModel viewModel = Korean(
         word: word,
         meaning: meaning
     );
@@ -83,7 +84,7 @@ void main() {
           'is is test.This is test.This is test. test.This This is test.'
           'is test.This is test.This is test.This is test.This is test.';
 
-    final WordViewModel viewModel = WordViewModel(
+    final WordViewModel viewModel = Korean(
         word: word,
         meaning: meaning
     );
@@ -107,7 +108,7 @@ void main() {
     final key = Key('word-card');
     const String word = 'TEST';
 
-    final WordViewModel viewModel = WordViewModel(
+    final WordViewModel viewModel = Korean(
         word: word,
         meaning: null
     );
