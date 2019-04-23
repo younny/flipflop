@@ -51,27 +51,30 @@ class FlipFlopBloc {
   Stream<List<Level>> get levels => _levels;
 
   FlipFlopBloc(this._firestoreRepository) {
-    _levels = _firestoreRepository
-        .read("levels")
-        .then((QuerySnapshot snapshot) {
+
+    _levels = Observable.fromFuture(
+        _firestoreRepository
+            .read("levels")
+            .then((QuerySnapshot snapshot) {
           return snapshot
               .documents.map((doc) => Level.fromJson(doc.data))
               .toList();
         })
-        .catchError((e) {
-          print(e.toString());
-        }).asStream();
+            .catchError((e) {
+          print(e);
+        })).asBroadcastStream();
 
-    _languages = _firestoreRepository
-        .read("languages")
-        .then((QuerySnapshot snapshot) {
+    _languages = Observable.fromFuture(
+        _firestoreRepository
+            .read("languages")
+            .then((QuerySnapshot snapshot) {
           return snapshot
               .documents.map((doc) => Language.fromJson(doc.data))
               .toList();
         })
-        .catchError((e) {
-          print(e.toString());
-        }).asStream();
+            .catchError((e) {
+          print(e);
+        })).asBroadcastStream();
 
     _cards = _category
         .asyncMap((category) {
