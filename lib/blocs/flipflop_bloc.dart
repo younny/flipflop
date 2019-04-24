@@ -59,11 +59,7 @@ class FlipFlopBloc {
               snapshot
                 .documents.map((doc) => Level.fromJson(doc.data))
                 .toList()
-            )).doOnResume(() =>print("doOnResume"))
-            .doOnDone(() => print("doOnDone"))
-            .doOnListen(()=> print("doOnListen"))
-            .doOnCancel(()=> print("doOnCancel"))
-            .asBroadcastStream(),
+            )).asBroadcastStream(),
         reusable: true
     );
 
@@ -88,7 +84,7 @@ class FlipFlopBloc {
             .then((QuerySnapshot snapshot) {
               return snapshot
                   .documents
-                  .map((doc) => convertMapToViewModel(langCode, doc.data))
+                  .map((doc) => convertMapToViewModel(lang: langCode, map: doc.data))
                   .toList();
             })
             .catchError((e) {
