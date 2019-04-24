@@ -1,15 +1,13 @@
 abstract class WordViewModel {
   String word;
   String meaning;
-  String created;
+  String lang;
 
   WordViewModel({
     this.word,
     this.meaning,
-    this.created
+    this.lang
   });
-  
-  WordViewModel.fromMap(Map data);
 
   Map<String, dynamic> toMap();
 }

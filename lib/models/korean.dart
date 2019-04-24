@@ -5,23 +5,26 @@ class Korean extends WordViewModel {
   final String meaning;
   final String pronunciation;
   final String created;
+  final String lang;
 
   Korean({
     this.word,
     this.meaning,
     this.pronunciation,
-    this.created
+    this.created,
+    this.lang = "ko"
   }) : super(
       word: word,
       meaning: meaning,
-      created: created
+      lang: lang
   );
 
   Korean.fromMap(Map map)
   : word = map['word'],
     meaning = map['meaning'],
     pronunciation = map['pronunciation'],
-    created = map['created'].toString();
+    created = map['created'].toString(),
+    lang = map['lang'];
 
   @override
   Map<String, dynamic> toMap() {
@@ -29,7 +32,8 @@ class Korean extends WordViewModel {
       'word': word,
       'meaning': meaning,
       'pronunciation': pronunciation,
-      'created': created
+      'created': created,
+      'lang': lang
     };
   }
 }

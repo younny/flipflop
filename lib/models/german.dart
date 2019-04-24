@@ -7,6 +7,7 @@ class German extends WordViewModel {
   final String plural;
   final String oppo;
   final String created;
+  final String lang;
 
   German({
     this.word,
@@ -14,11 +15,12 @@ class German extends WordViewModel {
     this.form = "",
     this.plural = "",
     this.oppo = "",
-    this.created
+    this.created,
+    this.lang = "de"
   }) : super(
     word: word,
     meaning: meaning,
-    created: created
+    lang: lang
   );
 
   German.fromMap(Map map)
@@ -27,7 +29,8 @@ class German extends WordViewModel {
         form = map['form'],
         plural = map['plural'],
         oppo = map['oppo'],
-        created = map['created'].toString();
+        created = map['created'].toString(),
+        lang = map['lang'];
 
   @override
   Map<String, dynamic> toMap() {
@@ -37,7 +40,8 @@ class German extends WordViewModel {
       'form': form,
       'plural': plural,
       'oppo': oppo,
-      'created': created
+      'created': created,
+      'lang': lang
     };
   }
 }
