@@ -63,10 +63,12 @@ class LocalDB {
       $columnId text primary key,
       $columnWord text not null,
       $columnMeaning text not null,
-      $columnPron text not null,
-      $columnLang text not null,
-      $columnCategory text not null,
-      $columnLevel integer not null)
+      $columnCreated text not null,
+      $columnLang text,
+      $columnPron text,
+      $columnForm text,
+      $columnOpposite text,
+      $columnPlural text)
       ''');
   }
 
