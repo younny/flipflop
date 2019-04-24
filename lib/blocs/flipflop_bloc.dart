@@ -52,29 +52,33 @@ class FlipFlopBloc {
 
   FlipFlopBloc(this._firestoreRepository) {
 
-    _levels = Observable.fromFuture(
-        _firestoreRepository
+    _levels = Observable.defer(() =>
+        Observable.fromFuture(_firestoreRepository
             .read("levels")
-            .then((QuerySnapshot snapshot) {
-          return snapshot
-              .documents.map((doc) => Level.fromJson(doc.data))
-              .toList();
-        })
-            .catchError((e) {
-          print(e);
-        })).asBroadcastStream();
+            .then((QuerySnapshot snapshot) =>
+              snapshot
+                .documents.map((doc) => Level.fromJson(doc.data))
+                .toList()
+            )).doOnResume(() =>print("doOnResume"))
+            .doOnDone(() => print("doOnDone"))
+            .doOnListen(()=> print("doOnListen"))
+            .doOnCancel(()=> print("doOnCancel"))
+            .asBroadcastStream(),
+        reusable: true
+    );
 
-    _languages = Observable.fromFuture(
+    _languages = Observable.defer(() =>
+        Observable.fromFuture(
         _firestoreRepository
             .read("languages")
             .then((QuerySnapshot snapshot) {
           return snapshot
-              .documents.map((doc) => Language.fromJson(doc.data))
-              .toList();
-        })
-            .catchError((e) {
-          print(e);
-        })).asBroadcastStream();
+              .documents.map((doc) {
+                return Language.fromJson(doc.data);
+          }).toList();
+        })).asBroadcastStream(),
+        reusable: true
+    );
 
     _cards = _category
         .asyncMap((category) {
