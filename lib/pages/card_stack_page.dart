@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:flipflop/models/german.dart';
+import 'package:flipflop/models/korean.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/repo/local_db.dart';
+import 'package:flipflop/utils/view_model_converter.dart';
 import 'package:flipflop/widgets/stackcard_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -83,10 +86,10 @@ class _CardStackPageState extends State<CardStackPage> {
     List<Map> records = await db.retrieveAll();
 
     if(records.isNotEmpty) {
-//      records.forEach((item) {
-//        WordViewModel wordItem = WordViewModel.fromMap(item);
-//        myCards.add(wordItem);
-//      });
+      records.forEach((item) {
+        WordViewModel word = convertMapToViewModel(map: item);
+        myCards.add(word);
+      });
 
       setState(() {});
     }
