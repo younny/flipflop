@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flipflop/constant/keys.dart';
+import 'package:flipflop/constant/lang.dart';
 import 'package:flipflop/models/SharedPrefItem.dart';
 import 'package:flipflop/models/language_view_model.dart';
 import 'package:flipflop/models/level_view_model.dart';
@@ -12,7 +14,10 @@ import 'package:rxdart/rxdart.dart';
 class FlipFlopBloc {
   static final defaultLevel = Level(level: '0');
 
-  static final defaultLanguage = Language(code: 'de', label: 'German');
+  static final defaultLanguage = Language(
+      code: LangCode.GERMAN,
+      label: LangCode.label(LangCode.GERMAN)
+  );
 
   final FirestoreRepository _firestoreRepository;
 
@@ -54,7 +59,7 @@ class FlipFlopBloc {
 
     _levels = Observable.defer(() =>
         Observable.fromFuture(_firestoreRepository
-            .read("levels")
+            .read(Keys.FIRESTORE_COLLECTION_LEVEL)
             .then((QuerySnapshot snapshot) =>
               snapshot
                 .documents.map((doc) => Level.fromJson(doc.data))
@@ -66,7 +71,7 @@ class FlipFlopBloc {
     _languages = Observable.defer(() =>
         Observable.fromFuture(
         _firestoreRepository
-            .read("languages")
+            .read(Keys.FIRESTORE_COLLECTION_LANG)
             .then((QuerySnapshot snapshot) {
           return snapshot
               .documents.map((doc) {
@@ -80,7 +85,7 @@ class FlipFlopBloc {
         .asyncMap((category) {
           String langCode = _lang.value.code;
           return _firestoreRepository
-            .readDeep([langCode, category], ['categories'])
+            .readDeep([langCode, category], [Keys.FIRESTORE_COLLECTION_CAT])
             .then((QuerySnapshot snapshot) {
               return snapshot
                   .documents
@@ -97,7 +102,7 @@ class FlipFlopBloc {
           return _firestoreRepository
               .read(lang.code)
               .then((QuerySnapshot snapshot) {
-                return List.of(snapshot.documents[0].data['names'])
+                return List.of(snapshot.documents[0].data[Keys.FIRESTORE_CAT_NAME])
                     .map((cat) => cat.toString())
                     .toList();
               })
