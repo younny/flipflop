@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flipflop/constant/error.dart';
 import 'package:flipflop/exception.dart';
-import 'package:flipflop/models/db_model.dart';
+import 'package:flipflop/models/db_columns.dart';
 import 'package:flipflop/models/korean.dart';
 import 'package:flipflop/repo/local_db.dart';
 import 'package:flutter/services.dart';

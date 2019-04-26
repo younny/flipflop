@@ -1,4 +1,4 @@
-import 'package:flipflop/models/db_model.dart';
+import 'package:flipflop/models/db_columns.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/pages/settings_page.dart';
 import 'package:flipflop/repo/local_db.dart';
