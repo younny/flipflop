@@ -35,7 +35,7 @@ class FlipFlopBloc {
 
   Sink<SharedPrefItem> either(Type T) => T == Level ? _level : _lang;
 
-  BehaviorSubject<String> _category = BehaviorSubject<String>(seedValue: 'expression');
+  BehaviorSubject<String> _category = BehaviorSubject<String>(seedValue: Keys.FIRESTORE_CAT_EXPRESSION);
 
   Sink<String> get inCategory => _category;
 
@@ -102,7 +102,7 @@ class FlipFlopBloc {
           return _firestoreRepository
               .read(lang.code)
               .then((QuerySnapshot snapshot) {
-                return List.of(snapshot.documents[0].data[Keys.FIRESTORE_CAT_NAME])
+                return List.of(snapshot.documents[0].data[Keys.FIRESTORE_CAT_LIST])
                     .map((cat) => cat.toString())
                     .toList();
               })

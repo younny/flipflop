@@ -8,5 +8,6 @@ class Keys {
   static const String FIRESTORE_COLLECTION_LANG = "languages";
   static const String FIRESTORE_COLLECTION_LEVEL = "levels";
   static const String FIRESTORE_COLLECTION_CAT = "categories";
-  static const String FIRESTORE_CAT_NAME = "names";
+  static const String FIRESTORE_CAT_LIST = "names";
+  static const String FIRESTORE_CAT_EXPRESSION = "expression";
 }
