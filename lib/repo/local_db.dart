@@ -1,6 +1,6 @@
 import 'package:flipflop/constant/error.dart';
 import 'package:flipflop/exception.dart';
-import 'package:flipflop/models/db_model.dart';
+import 'package:flipflop/models/db_columns.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/utils/db_name_provider.dart';
 import 'package:path/path.dart';
