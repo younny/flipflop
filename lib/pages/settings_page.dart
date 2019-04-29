@@ -130,12 +130,37 @@ class _SettingsPageState extends FlipFlopBlocState {
     sharedPrefHelper.set<String>(key, item.toPrefs());
   }
 
-  void _openEmailEditor() {
+  Future _openEmailEditor() async {
     try {
-      launchURL(Keys.URL_EMAIL_TYPE, "flipflop@gmail.com");
+      await launchURL(Keys.URL_EMAIL_TYPE, "flipflop@gmail.com");
     } catch(e) {
-      print(e);
+      _showErrorAlert(e.toString());
     }
+  }
+
+  Future<void> _showErrorAlert(String error) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text("Error"),
+            contentPadding: const EdgeInsets.all(16.0),
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(error),
+              ),
+              Center(
+                child: FlatButton(
+                  color: Theme.of(context).accentColor,
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Ok")
+                ),
+              )
+            ],
+          );
+      }
+    );
   }
 }
 
