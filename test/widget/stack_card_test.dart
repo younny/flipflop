@@ -1,3 +1,4 @@
+import 'package:flipflop/models/korean.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/widgets/stackcard_widget.dart';
 import 'package:flutter/material.dart';
@@ -7,20 +8,12 @@ import '../helper/widget_wrapper.dart';
 
 void main() {
   testWidgets("Stack card renders correctly", (WidgetTester tester) async {
-
-    DateTime dateTime = DateTime.now();
     final stackCard = StackCardWidget(
-        card: WordViewModel(
+        card: Korean(
             word: "foo",
-            meaning: "Test",
-            pronunciation: "Blah",
-            created: dateTime,
-            level: 0,
-            category: "test",
-            lang: "en"
+            meaning: "Test"
         )
     );
-
     await tester.pumpWidget(wrap(stackCard));
 
     expect(find.byWidget(stackCard), findsOneWidget);
@@ -38,14 +31,9 @@ void main() {
     WordViewModel wordViewModel;
 
     final stackCard = StackCardWidget(
-        card: WordViewModel(
+        card: Korean(
             word: "foo",
-            meaning: "Test",
-            pronunciation: "Blah",
-            created: DateTime.now(),
-            level: 0,
-            category: "test",
-            lang: "en"
+            meaning: "Test"
         ),
         onLongPress: (card) {
           longPressed = true;
@@ -68,14 +56,9 @@ void main() {
   testWidgets("passes null to onLongPress", (WidgetTester tester) async {
 
     final stackCard = StackCardWidget(
-      card: WordViewModel(
+      card: Korean(
           word: "foo",
-          meaning: "Test",
-          pronunciation: "Blah",
-          created: DateTime.now(),
-          level: 0,
-          category: "test",
-          lang: "en"
+          meaning: "Test"
       ),
       onLongPress: null
     );
@@ -90,14 +73,9 @@ void main() {
     bool parentSelectionModeOn = false;
     WordViewModel selectedWord;
     final stackCard = StackCardWidget(
-        card: WordViewModel(
+        card: Korean(
             word: "foo",
-            meaning: "Test",
-            pronunciation: "Blah",
-            created: DateTime.now(),
-            level: 0,
-            category: "test",
-            lang: "en"
+            meaning: "Test"
         ),
         onLongPress: (card) {
           parentSelectionModeOn = true;

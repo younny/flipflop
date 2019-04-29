@@ -71,7 +71,7 @@ class WordCardWidget extends StatelessWidget {
             )
           ),
           Text(
-              StringFormatter.formatPronunciation(viewModel.pronunciation),
+              StringFormatter.formatPronunciation(""),
               style: TextStyle(
                   fontSize: 23.0,
                   letterSpacing: 1,

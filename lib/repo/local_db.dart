@@ -1,6 +1,6 @@
 import 'package:flipflop/constant/error.dart';
 import 'package:flipflop/exception.dart';
-import 'package:flipflop/models/db_model.dart';
+import 'package:flipflop/models/db_columns.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/utils/db_name_provider.dart';
 import 'package:path/path.dart';
@@ -63,10 +63,12 @@ class LocalDB {
       $columnId text primary key,
       $columnWord text not null,
       $columnMeaning text not null,
-      $columnPron text not null,
-      $columnLang text not null,
-      $columnCategory text not null,
-      $columnLevel integer not null)
+      $columnCreated text not null,
+      $columnLang text,
+      $columnPron text,
+      $columnForm text,
+      $columnOpposite text,
+      $columnPlural text)
       ''');
   }
 
@@ -80,17 +82,17 @@ class LocalDB {
   }
   
   Future<WordViewModel> retrieve(String id) async {
-    List<Map> maps = await _db.query(tableName,
-    columns: [columnId, columnWord],
-    where: '$columnId = ?',
-    whereArgs: [id]).catchError((error) {
-      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
-    }) ?? List<Map<String, dynamic>>();
-
-    if(maps.length > 0)
-      return WordViewModel.fromJson(id, maps.first);
-
-    return null;
+//    List<Map> maps = await _db.query(tableName,
+//    columns: [columnId, columnWord],
+//    where: '$columnId = ?',
+//    whereArgs: [id]).catchError((error) {
+//      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+//    }) ?? List<Map<String, dynamic>>();
+//
+//    if(maps.length > 0)
+//      return WordViewModel.fromJson(id, maps.first);
+//
+     return null;
   }
 
   Future<List<Map>> retrieveAll() async {
@@ -111,11 +113,12 @@ class LocalDB {
   }
 
   Future<int> update(WordViewModel item) async {
-    return await _db.update(tableName, item.toMap(),
-        where: '$columnId = ?', whereArgs: [item.id])
-    .catchError((error) {
-      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
-    });
+//    return await _db.update(tableName, item.toMap(),
+//        where: '$columnId = ?', whereArgs: [item.id])
+//    .catchError((error) {
+//      throw LocalDatabaseException("${FFError.LOCAL_DATABASE} ${error.toString()}");
+//    });
+    return null;
   }
 
   Future close() async {

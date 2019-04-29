@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flipflop/constant/error.dart';
 import 'package:flipflop/exception.dart';
-import 'package:flipflop/models/db_model.dart';
-import 'package:flipflop/models/word_view_model.dart';
+import 'package:flipflop/models/db_columns.dart';
+import 'package:flipflop/models/korean.dart';
 import 'package:flipflop/repo/local_db.dart';
 import 'package:flutter/services.dart';
 import 'package:mockito/mockito.dart';
@@ -19,7 +19,10 @@ void main() {
   Directory tempDir;
   const MethodChannel channel = MethodChannel('com.tekartik.sqflite');
   final List<MethodCall> log = <MethodCall>[];
-
+  final Korean word = Korean(
+      word: 'Test',
+      meaning: 'This is test'
+  );
   group("database path exception", () {
     setUp(() async {
       mockDatabase = MockDatabase();
@@ -96,16 +99,6 @@ void main() {
     });
 
     test("insert data", () async {
-      WordViewModel word = WordViewModel(
-          id: "1234567",
-          word: 'Test',
-          meaning: 'This is test',
-          lang: 'en',
-          level: 0,
-          category: 'foo',
-          pronunciation: 'blah'
-      );
-
       await localDB.open();
 
       await localDB.insert(word);
@@ -153,15 +146,6 @@ void main() {
   });
 
   group("other exceptions", () {
-    WordViewModel word = WordViewModel(
-        id: "1234567",
-        word: 'Test',
-        meaning: 'This is test',
-        lang: 'en',
-        level: 0,
-        category: 'foo',
-        pronunciation: 'blah'
-    );
     String id = 'test';
 
     setUp(() async {
@@ -203,14 +187,9 @@ void main() {
     });
 
     test("insert data", () async {
-      WordViewModel word = WordViewModel(
-          id: "1234567",
+      Korean word = Korean(
           word: 'Test',
-          meaning: 'This is test',
-          lang: 'en',
-          level: 0,
-          category: 'foo',
-          pronunciation: 'blah'
+          meaning: 'This is test'
       );
 
       await localDB.open();
@@ -223,16 +202,6 @@ void main() {
     });
 
     test("insert data which is already exsists", () async {
-      WordViewModel word = WordViewModel(
-          id: "1234567",
-          word: 'Test',
-          meaning: 'This is test',
-          lang: 'en',
-          level: 0,
-          category: 'foo',
-          pronunciation: 'blah'
-      );
-
       await localDB.open();
 
       await localDB.insert(word);

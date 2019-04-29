@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:flipflop/models/german.dart';
+import 'package:flipflop/models/korean.dart';
 import 'package:flipflop/models/word_view_model.dart';
 import 'package:flipflop/pages/game_page.dart';
 import 'package:flipflop/repo/local_db.dart';
+import 'package:flipflop/utils/view_model_converter.dart';
 import 'package:flipflop/widgets/stackcard_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -84,8 +87,8 @@ class _CardStackPageState extends State<CardStackPage> {
 
     if(records.isNotEmpty) {
       records.forEach((item) {
-        WordViewModel wordItem = WordViewModel.fromMap(item);
-        myCards.add(wordItem);
+        WordViewModel word = convertMapToViewModel(map: item);
+        myCards.add(word);
       });
 
       setState(() {});
@@ -207,13 +210,13 @@ class _CardStackPageState extends State<CardStackPage> {
   }
 
   Future _deleteItem(WordViewModel item) async {
-    LocalDB db = LocalDB.instance;
-    try {
-      int id = await db.delete(item.id);
-      return id;
-    } catch(LocalDatabaseException) {
-      print(LocalDatabaseException);
-    }
+//    LocalDB db = LocalDB.instance;
+//    try {
+//      int id = await db.delete(item.id);
+//      return id;
+//    } catch(LocalDatabaseException) {
+//      print(LocalDatabaseException);
+//    }
   }
 
   void _emptySelectedCards() {

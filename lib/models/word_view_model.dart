@@ -1,60 +1,13 @@
-import 'package:flipflop/models/db_model.dart';
-
-class WordViewModel {
-  final String id;
-  final String word;
-  final String meaning;
-  final String pronunciation;
-  final String category;
-  final int level;
-  final DateTime created;
-  final String lang;
+abstract class WordViewModel {
+  String word;
+  String meaning;
+  String lang;
 
   WordViewModel({
-    this.id,
     this.word,
     this.meaning,
-    this.pronunciation,
-    this.category,
-    this.level,
-    this.created,
     this.lang
   });
 
-  WordViewModel.fromJson(String id, Map json)
-      : id = id,
-        word = json['word'],
-        meaning = json['meaning'],
-        pronunciation = json['pron'],
-        category = json['category'],
-        level = json['level'],
-        created = json['created'],
-        lang = json['lang'];
-
-  WordViewModel.fromMap(Map map)
-      : id = map[columnId],
-        word = map[columnWord],
-        meaning = map[columnMeaning],
-        pronunciation = map[columnPron],
-        category = map[columnCategory],
-        level = map[columnLevel],
-        created = DateTime.now(),
-        lang = map[columnLang];
-
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic> {
-      columnWord: word,
-      columnMeaning: meaning,
-      columnPron: pronunciation,
-      columnCategory: category,
-      columnLevel: level,
-      columnLang: lang,
-    };
-
-    if(id != null) {
-      map[columnId] = id;
-    }
-    return map;
-  }
-
+  Map<String, dynamic> toMap();
 }

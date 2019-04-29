@@ -1,16 +1,15 @@
-# flip
+# FlipFlop
 
-A new Flutter project.
+Learn basic Korean words.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+This application is working with [FireStore Database](https://firebase.google.com/docs/firestore/) to retrieve words, categories and so on.
 
-A few resources to get you started if this is your first Flutter project:
+The basic functions provided by this application are,
+- Show list of words by categories.
+- Play game by flipping cards.
+- Store card in your stack to practice later.
+- Upgrade your level for more difficult ones.
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+### Made by [DY.G](https://www.linkedin.com/in/dooyoung-gi-067b90110/)
