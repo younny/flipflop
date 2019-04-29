@@ -14,7 +14,7 @@ Future<bool> launchURL(String type, String url) async {
     break;
 
     default:
-      throw Exception("This type is not supported.");
+      throw Exception("This URL launch type is not supported.");
     break;
   }
 
