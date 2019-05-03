@@ -88,19 +88,43 @@ void main() {
 
     await tester.pumpWidget(wrap(stackCard));
 
-    final RaisedButton button = tester.widget(find.byType(RaisedButton));
-    expect(button.color, equals(Colors.amber));
-
     await tester.longPress(find.byWidget(stackCard));
     expect(parentSelectionModeOn, isTrue);
 
-   // expect(buttonAfter.color, equals(Colors.amber.withOpacity(0.5)));
-
     await tester.tap(find.byWidget(stackCard));
     expect(parentSelectionModeOn, isTrue);
+
     expect(selectedWord.word, equals("foo"));
     await tester.pump();
-    expect(button.color, equals(Colors.amber));
+  });
+
+  testWidgets("color changed correctly when parent selection mode is on", (WidgetTester tester) async {
+
+    final stackCard = StackCardWidget(
+        card: Korean(
+            word: "foo",
+            meaning: "Test"
+        ),
+        onLongPress: (_) {
+        },
+        onPress: (_) {
+        },
+        selectMode: true
+    );
+    await tester.pumpWidget(wrap(stackCard));
+
+    StatefulElement element = tester.element(find.byWidget(stackCard));
+    StackCardWidgetState state = element.state;
+
+    RaisedButton button = tester.widget(find.byType(RaisedButton));
+
+    await tester.tap(find.byWidget(button));
+    expect(state.selected, isTrue);
+    expect(state.color, Colors.amberAccent);
+
+    await tester.tap(find.byWidget(button));
+    expect(state.selected, isFalse);
+    expect(state.color, Colors.amber.withOpacity(0.5));
 
   });
 
